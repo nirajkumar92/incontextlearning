@@ -1,0 +1,7 @@
+{
+  "model": "tiny", "device": "cpu", "cpu_threads": 1, "seed": 1729,
+  "steps": 3, "global_batch": 2, "finance_share": 0, "finance_adapter": true,
+  "optimizer": "adamw", "adam_lr": 0.0003, "muon_lr": 0.0008,
+  "gradient_clip": 10, "bf16": false, "checkpoint_every": 1,
+  "static_overrides": {"n_support": 16, "n_query": 8, "n_features": 8}
+}

@@ -1,0 +1,58 @@
+{
+  "status": "Executed NumPy algebra/contract probes only; no trained model or measured latency",
+  "seed": 20261002,
+  "small_probe_dimensions": {
+    "width": 16,
+    "hidden": 24,
+    "rows": 37
+  },
+  "zero_router_dense_split_max_absolute_error": 6.661338147750939e-16,
+  "zero_down_dense_widening_max_absolute_error": 0.0,
+  "tokenwise_routing_query_chunk_max_absolute_error": 1.3322676295501878e-15,
+  "scaled_top1_task_gradient_finite_difference_max_absolute_error": 1.9984874866096902e-11,
+  "nonzero_router_gate_gradient_norm": 0.08302190785007826,
+  "parameters": {
+    "dense": 315021456,
+    "moe_total": 418863248,
+    "moe_nominal_active_proxy": 315054224,
+    "wide_dense": 418830480
+  },
+  "arithmetic_core_cache_examples": [
+    {
+      "support_rows": 1024,
+      "core_bf16_kv_cache_bytes": 100663296,
+      "core_bf16_kv_cache_gib": 0.09375,
+      "support_attention_pairs_per_head_layer": 1048576,
+      "query_attention_pairs_per_head_layer_q4096": 4194304
+    },
+    {
+      "support_rows": 8192,
+      "core_bf16_kv_cache_bytes": 805306368,
+      "core_bf16_kv_cache_gib": 0.75,
+      "support_attention_pairs_per_head_layer": 67108864,
+      "query_attention_pairs_per_head_layer_q4096": 33554432
+    },
+    {
+      "support_rows": 32768,
+      "core_bf16_kv_cache_bytes": 3221225472,
+      "core_bf16_kv_cache_gib": 3.0,
+      "support_attention_pairs_per_head_layer": 1073741824,
+      "query_attention_pairs_per_head_layer_q4096": 134217728
+    },
+    {
+      "support_rows": 65536,
+      "core_bf16_kv_cache_bytes": 6442450944,
+      "core_bf16_kv_cache_gib": 6.0,
+      "support_attention_pairs_per_head_layer": 4294967296,
+      "query_attention_pairs_per_head_layer_q4096": 268435456
+    },
+    {
+      "support_rows": 131072,
+      "core_bf16_kv_cache_bytes": 12884901888,
+      "core_bf16_kv_cache_gib": 12.0,
+      "support_attention_pairs_per_head_layer": 17179869184,
+      "query_attention_pairs_per_head_layer_q4096": 536870912
+    }
+  ],
+  "limits": "Small FP64 modules test algebra, not a full transformer, BF16 kernels, trained accuracy, or latency. Active proxy counts all non-MoE parameters conventionally; it is not full model FLOPs."
+}

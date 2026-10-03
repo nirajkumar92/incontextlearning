@@ -1,0 +1,1604 @@
+{
+  "date": "2026-10-03",
+  "objectives": [
+    "Standard binary/multiclass classification and regression through frozen-weight ICL",
+    "Finance prediction on large tables, fraud around1e-4, missingness, bursts and label availability",
+    "Performance first; measured GPU batch latency"
+  ],
+  "coverage": "Every regular project file outside local environments and regenerable ignored metadata/caches is classified; the dependency environment is separately classified. Source PDFs/extractions are immutable evidence, not project instructions.",
+  "decisions": {
+    "modify": 22,
+    "keep": 99,
+    "add": 2,
+    "remove": 42
+  },
+  "removed_bytes": 9892715,
+  "local_environment": {
+    "path": ".venv/",
+    "files": 24483,
+    "bytes": 801641171,
+    "decision": "keep_local_ignored",
+    "reason": "Active reproducible local tool/test environment; not repository source or training data."
+  },
+  "verification": {
+    "tests": {
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "warnings_as_errors": true,
+    "distributed_test_executed": true,
+    "runtime_source_unchanged": true,
+    "paper_hashes_verified": 19,
+    "citations_resolved": 51,
+    "budget_gpu_hours": 50000,
+    "native_latex_compile": "success",
+    "pdf_export": "success",
+    "pdf_pages": 53,
+    "overfull_boxes": 0,
+    "visual_review": "All 53 pages passed; no clipping, overlap or broken content found.",
+    "local_markdown_links_checked": 39
+  },
+  "not_executed": [
+    "Competitive pretraining",
+    "MI355X throughput/latency",
+    "Official benchmark/company-data performance"
+  ],
+  "editorial_restructure": {
+    "sections": 11,
+    "flow": [
+      "Previous work and research hypotheses",
+      "Standard and finance prior banks",
+      "Dense architecture, context selection and efficiency experiments",
+      "Training and compute allocation",
+      "Evaluation and actual code map"
+    ],
+    "citations_retained": 51,
+    "displayed_equations_preserved": 39,
+    "equation_typo_fixed": "Finance risk now uses the loss symbol \u2113 rather than literal ell",
+    "obsolete_alternative_removed": "Unimplemented fixed-256 teacher difficulty acceptance mixture; selected validity-only baseline unchanged"
+  },
+  "current_artifact_checks": {
+    "source": "prior_bank_assessment.tex",
+    "sha256": "fc3b58a8b9d8a03b93e96478271db5c75eea5859f857bbee78210e2d6aec8340",
+    "resolved_citation_keys": 51,
+    "bibliography_entries": 51,
+    "ablation_rows": 25,
+    "retained_source_hashes_verified": 19,
+    "selected_specs_and_budget": "passed",
+    "internal_references_and_environment_nesting": "passed",
+    "target_fraud_rate": 0.0001,
+    "native_compile": "not run by this script",
+    "competitive_performance": "not evaluated"
+  },
+  "pdf_sha256": "33e99b170410cf43e98138b7560ee922a9cdf41da59a7dd92559f13dc215754a",
+  "corrected_contracts": [
+    "Manual replicated gradient reduction replaces stale DDP-wrapper description",
+    "General hybrid-context screen is deferred and has zero current allocation",
+    "Standard sampler nonempty support distinguished from generic model empty-support boundary",
+    "Fail-fast implemented generator distinguished from optional eight-attempt queue",
+    "Research narrative consolidated; implemented finance hurdle distinguished from optional heads; base and finance parameter totals qualified"
+  ],
+  "historical_evidence": "code_validation.json preserves the original run configuration, metrics, source hashes and test totals. Deleted raw artifacts are explicitly annotated there; previous cleanup/move records are consolidated below.",
+  "previous_cleanup_history": {
+    "earlier_removed_files": [
+      "research/enterprise_recipe_v3.json",
+      "research/code/enterprise_prior.py",
+      "tests/test_enterprise_prior.py",
+      "research/code/prior_probes.py",
+      "research/results/prior_probes.json",
+      "research/results/validation.json",
+      "research/results/recipe_validation_v3.json",
+      "research/HOW_TO_RUN.txt",
+      "research/notes/prior_bank_redteam.md",
+      "research/notes/finance_context_review.md",
+      "research/notes/finance_prior_review.md",
+      "research/notes/finance_final_math_audit.md",
+      "research/notes/static_assessment_front_v3.tex",
+      "research/notes/finance_recipe_v3.tex",
+      "research/notes/enterprise_recipe_v3.tex",
+      "research/notes/algorithmic_edge_v3.tex",
+      "research/notes/static_recipe_v3.tex",
+      "research/notes/evaluation_recipe_v3.tex",
+      "research/notes/implementation_contract_v3.tex",
+      "research/notes/compute_recipe_v3.tex",
+      "research/notes/icl_architecture_v3.tex",
+      "research/notes/hybrid_context_v3.tex",
+      "research/notes/latency_moe_recipe_v3.tex",
+      "research/external/kumorfm2.pdf",
+      "research/extracted/kumorfm2.txt",
+      "research/external/plurel.pdf",
+      "research/extracted/plurel.txt",
+      "research/external/plurel_rdbpfn.pdf",
+      "research/extracted/plurel_rdbpfn.txt",
+      "research/external/rdbpfn.pdf",
+      "research/extracted/rdbpfn.txt",
+      "research/external/relarena.pdf",
+      "research/extracted/relarena.txt",
+      "research/external/tabstar.pdf",
+      "research/extracted/tabstar.txt"
+    ],
+    "earlier_removed_runs": [
+      "runs/smoke",
+      "runs/finance_smoke",
+      "runs/example_evaluation.json"
+    ],
+    "organization_date": "2026-10-03",
+    "earlier_relocations": {
+      "tabpfn3.5.pdf": "papers/provided/tabpfn3.5.pdf",
+      "exaone.pdf": "papers/provided/exaone.pdf",
+      "kumotabular.pdf": "papers/provided/kumotabular.pdf",
+      "tabpfn2.5.pdf": "papers/provided/tabpfn2.5.pdf",
+      "tabicl.pdf": "papers/provided/tabicl.pdf",
+      "xiaomi.pdf": "papers/provided/xiaomi.pdf",
+      "tabfm.pdf": "papers/provided/tabfm.pdf",
+      "tabpfn2.pdf": "papers/provided/tabpfn2.pdf",
+      "tabpfn3.pdf": "papers/provided/tabpfn3.pdf",
+      "tabicl2.pdf": "papers/provided/tabicl2.pdf",
+      "tabpfn.pdf": "papers/provided/tabpfn.pdf",
+      "research/external/mitra2.pdf": "papers/supplementary/mitra2.pdf",
+      "research/external/prior_evaluation.pdf": "papers/supplementary/prior_evaluation.pdf",
+      "research/external/limix2.pdf": "papers/supplementary/limix2.pdf",
+      "research/external/mitra.pdf": "papers/supplementary/mitra.pdf",
+      "research/external/beyondarena.pdf": "papers/supplementary/beyondarena.pdf",
+      "research/external/oprior.pdf": "papers/supplementary/oprior.pdf",
+      "research/external/mind_gap.pdf": "papers/supplementary/mind_gap.pdf",
+      "research/external/rtfm.pdf": "papers/supplementary/rtfm.pdf",
+      "research/extracted/tabicl.txt": "papers/extracted/tabicl.txt",
+      "research/extracted/kumotabular.txt": "papers/extracted/kumotabular.txt",
+      "research/extracted/tabpfn2.5.txt": "papers/extracted/tabpfn2.5.txt",
+      "research/extracted/tabfm.txt": "papers/extracted/tabfm.txt",
+      "research/extracted/xiaomi_p7.png": "papers/figures/xiaomi_p7.png",
+      "research/extracted/xiaomi.txt": "papers/extracted/xiaomi.txt",
+      "research/extracted/mitra2.txt": "papers/extracted/mitra2.txt",
+      "research/extracted/tabpfn3.5.txt": "papers/extracted/tabpfn3.5.txt",
+      "research/extracted/exaone.txt": "papers/extracted/exaone.txt",
+      "research/extracted/tabpfn2.txt": "papers/extracted/tabpfn2.txt",
+      "research/extracted/tabpfn3.txt": "papers/extracted/tabpfn3.txt",
+      "research/extracted/beyondarena.txt": "papers/extracted/beyondarena.txt",
+      "research/extracted/oprior.txt": "papers/extracted/oprior.txt",
+      "research/extracted/rtfm.txt": "papers/extracted/rtfm.txt",
+      "research/extracted/tabpfn.txt": "papers/extracted/tabpfn.txt",
+      "research/extracted/tabicl2.txt": "papers/extracted/tabicl2.txt",
+      "research/extracted/mind_gap.txt": "papers/extracted/mind_gap.txt",
+      "research/extracted/limix2.txt": "papers/extracted/limix2.txt",
+      "research/extracted/mitra.txt": "papers/extracted/mitra.txt",
+      "research/extracted/prior_evaluation.txt": "papers/extracted/prior_evaluation.txt",
+      "research/notes/moe_architecture_review.md": "research/reviews/moe_architecture_review.md",
+      "research/notes/xiaomi_moe_audit.md": "research/reviews/xiaomi_moe_audit.md",
+      "research/notes/long_context_latency_review.md": "research/reviews/long_context_latency_review.md",
+      "research/notes/competitor_audit.md": "research/reviews/competitor_audit.md",
+      "research/notes/model_scale_audit.md": "research/reviews/model_scale_audit.md",
+      "research/notes/tabpfn_audit.md": "research/reviews/tabpfn_audit.md",
+      "research/notes/prior_literature.md": "research/reviews/prior_literature.md",
+      "research/code/moe_latency_probes.py": "research/probes/moe_latency_probes.py",
+      "research/code/finance_design_probes.py": "research/probes/finance_design_probes.py",
+      "research/code/compute_plan.py": "research/probes/compute_plan.py",
+      "research/code/algorithmic_probes.py": "research/probes/algorithmic_probes.py",
+      "research/prior_bank_spec.json": "research/specs/prior_bank_spec.json",
+      "research/static_recipe_v3.json": "research/specs/static_recipe_v3.json",
+      "research/finance_recipe_v3.json": "research/specs/finance_recipe_v3.json",
+      "research/icl_architecture_v3.json": "research/specs/icl_architecture_v3.json",
+      "research/latency_recipe_v3.json": "research/specs/latency_recipe_v3.json",
+      "research/ablation_plan.csv": "research/specs/ablation_plan.csv",
+      "research/paper_inventory.json": "papers/paper_inventory.json",
+      "research/source_manifest.json": "papers/source_manifest.json",
+      "runs/xgboost_smoke.json": "runs/baselines/xgboost_smoke.json",
+      "runs/catboost_smoke.json": "runs/baselines/catboost_smoke.json",
+      "runs/lightgbm_smoke.json": "runs/baselines/lightgbm_smoke.json",
+      "runs/final_predictions.npz.json": "runs/inference/final_predictions.npz.json",
+      "runs/final_cpu_profile.json": "runs/inference/final_cpu_profile.json",
+      "runs/final_example_evaluation.json": "runs/inference/final_example_evaluation.json",
+      "runs/final_predictions.npz": "runs/inference/final_predictions.npz"
+    }
+  },
+  "files": [
+    {
+      "path": ".gitignore",
+      "decision": "modify",
+      "reason": "Keeps generated runs, local environment and build caches out of repository source.",
+      "bytes": 323,
+      "sha256": "c7d63ec00241e570d759136f53739cebcc6de039a84ce8b11c673470a3092520",
+      "previous_sha256": "f986b0566e57fda5449a12edd1361620d10778dd72b5f6893fc1df07bf7d5c33"
+    },
+    {
+      "path": ".pytest_cache/.gitignore",
+      "bytes": 37,
+      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+      "reason": "Regenerable test cache.",
+      "decision": "remove"
+    },
+    {
+      "path": ".pytest_cache/CACHEDIR.TAG",
+      "bytes": 191,
+      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+      "reason": "Regenerable test cache.",
+      "decision": "remove"
+    },
+    {
+      "path": ".pytest_cache/README.md",
+      "bytes": 302,
+      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+      "reason": "Regenerable test cache.",
+      "decision": "remove"
+    },
+    {
+      "path": ".pytest_cache/v/cache/nodeids",
+      "bytes": 409,
+      "sha256": "cc28b8f3229bcd0bc4ee9103e1c0b99f36e35f7551262c653fb0b5b2c729ba15",
+      "reason": "Regenerable test cache.",
+      "decision": "remove"
+    },
+    {
+      "path": "README.md",
+      "decision": "modify",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 7592,
+      "sha256": "179d53307b26ca7635365e7ad92bd999d56181e3cb541110227d3ed53a996b00",
+      "previous_sha256": "6de8b959e4a1a7a55c2f41eed782236d49a1663ab0e4176aac0743774b806f55"
+    },
+    {
+      "path": "configs/data_schema.example.json",
+      "decision": "keep",
+      "reason": "Runnable standard/finance smoke, pilot or data configuration.",
+      "bytes": 347,
+      "sha256": "775ccffb3f5fea99b0016c06c90dc4c63747f5bf3740bedec50accc23ce3977a",
+      "previous_sha256": "775ccffb3f5fea99b0016c06c90dc4c63747f5bf3740bedec50accc23ce3977a"
+    },
+    {
+      "path": "configs/pilot.json",
+      "decision": "keep",
+      "reason": "Runnable standard/finance smoke, pilot or data configuration.",
+      "bytes": 427,
+      "sha256": "b17d693d1ce20ab183ddacb89ebb7c195a4f70fec15b049a914ba9d30e60e9bc",
+      "previous_sha256": "b17d693d1ce20ab183ddacb89ebb7c195a4f70fec15b049a914ba9d30e60e9bc"
+    },
+    {
+      "path": "configs/smoke.json",
+      "decision": "keep",
+      "reason": "Runnable standard/finance smoke, pilot or data configuration.",
+      "bytes": 344,
+      "sha256": "cfd70f5faad30f5c055108b645b7e15f7fb8d61eed63f258863e1cdcea99c420",
+      "previous_sha256": "cfd70f5faad30f5c055108b645b7e15f7fb8d61eed63f258863e1cdcea99c420"
+    },
+    {
+      "path": "configs/smoke_finance.json",
+      "decision": "keep",
+      "reason": "Runnable standard/finance smoke, pilot or data configuration.",
+      "bytes": 557,
+      "sha256": "f5eb96744acb7e80b842b8c568facd2a18584a50c271597139c059f2c53dd970",
+      "previous_sha256": "f5eb96744acb7e80b842b8c568facd2a18584a50c271597139c059f2c53dd970"
+    },
+    {
+      "path": "configs/smoke_joint.json",
+      "decision": "keep",
+      "reason": "Runnable standard/finance smoke, pilot or data configuration.",
+      "bytes": 703,
+      "sha256": "fa728e8aad6bd54e458b229551e812b52d15e23143f991576ad0261eec11c96b",
+      "previous_sha256": "fa728e8aad6bd54e458b229551e812b52d15e23143f991576ad0261eec11c96b"
+    },
+    {
+      "path": "docs/audit.md",
+      "decision": "modify",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 9764,
+      "sha256": "ec3133c150226d1989ed876c7670980d623aec5f60a9d275cd0396094e8ea597",
+      "previous_sha256": "410538cfb0a49437de430b8b74ab41b76ae869566dad7b07dc7c7fd4fdc0f0b0"
+    },
+    {
+      "path": "docs/data_and_evaluation.md",
+      "decision": "keep",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 8952,
+      "sha256": "f9246eaf4b30412027c4ed5ca708b9c3eeb82da8e77e4217e49ff1c0d624fc0d",
+      "previous_sha256": "f9246eaf4b30412027c4ed5ca708b9c3eeb82da8e77e4217e49ff1c0d624fc0d"
+    },
+    {
+      "path": "docs/implementation.md",
+      "decision": "modify",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 6424,
+      "sha256": "7c6778075200deb91467b006c65fdcf958d7888269fe955ccce9091a1c6a3bd5",
+      "previous_sha256": "8cee51c0b5be080d85df0f527e114b78c184079099339ef879fb8c53495a28ae"
+    },
+    {
+      "path": "docs/repository_scope.md",
+      "decision": "add",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 5410,
+      "sha256": "1520c46345855bf07812879ca67fd4d6ce61dc24601148237fe8faf7157480ce",
+      "previous_sha256": null
+    },
+    {
+      "path": "docs/tabarena.md",
+      "decision": "keep",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 9366,
+      "sha256": "eb45c2a4305c5a7098c203679fff531caa5dad5708f5e7d4b6c76bd467fbccce",
+      "previous_sha256": "eb45c2a4305c5a7098c203679fff531caa5dad5708f5e7d4b6c76bd467fbccce"
+    },
+    {
+      "path": "docs/training.md",
+      "decision": "keep",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 8247,
+      "sha256": "9911b82886c820bbac4e5d7e269717748f674160be1364823f47c733083c53c7",
+      "previous_sha256": "9911b82886c820bbac4e5d7e269717748f674160be1364823f47c733083c53c7"
+    },
+    {
+      "path": "papers/README.md",
+      "decision": "modify",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 2360,
+      "sha256": "42b022203876b97d7d93de2f73c217c79e4c78218bd9b7e7800740c8ca72b0c0",
+      "previous_sha256": "d1f8fac14a4cd38e86a37aaef0a970e0667eddb447d06fc40a71634e937743cd"
+    },
+    {
+      "path": "papers/extracted/beyondarena.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 351219,
+      "sha256": "9f6d44c5365620de05d44012859a1c80a3c7fc484185b5b11fb9cb165972839b",
+      "previous_sha256": "9f6d44c5365620de05d44012859a1c80a3c7fc484185b5b11fb9cb165972839b"
+    },
+    {
+      "path": "papers/extracted/exaone.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 60977,
+      "sha256": "3d9319feaf1d43a69b14fb315bec94462c82f9a62dcf5eaf4bac02d133879cda",
+      "previous_sha256": "3d9319feaf1d43a69b14fb315bec94462c82f9a62dcf5eaf4bac02d133879cda"
+    },
+    {
+      "path": "papers/extracted/kumotabular.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 14047,
+      "sha256": "85a72f4acd3cf4f66c6f141a41144795ff1cc57f73ccc4a23c3b6f98574c58fe",
+      "previous_sha256": "85a72f4acd3cf4f66c6f141a41144795ff1cc57f73ccc4a23c3b6f98574c58fe"
+    },
+    {
+      "path": "papers/extracted/limix2.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 103924,
+      "sha256": "cd881f72ec8040883cc3792bfd0b9b5c5e8e96cc2fb28d0cc89ecb10a50d49a7",
+      "previous_sha256": "cd881f72ec8040883cc3792bfd0b9b5c5e8e96cc2fb28d0cc89ecb10a50d49a7"
+    },
+    {
+      "path": "papers/extracted/mind_gap.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 65742,
+      "sha256": "ddb9dfa4172b56ebb1119f88ce4fd1ff8b48bdb78147e0b9064caa520a3cf4a0",
+      "previous_sha256": "ddb9dfa4172b56ebb1119f88ce4fd1ff8b48bdb78147e0b9064caa520a3cf4a0"
+    },
+    {
+      "path": "papers/extracted/mitra.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 132740,
+      "sha256": "fec3fd026de4cf45efdd67f7aed0e452e2dd5e3415f04af2577c6258e0805f21",
+      "previous_sha256": "fec3fd026de4cf45efdd67f7aed0e452e2dd5e3415f04af2577c6258e0805f21"
+    },
+    {
+      "path": "papers/extracted/mitra2.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 118661,
+      "sha256": "3bace405a04478b22cb6f3b401bc04b28de1d2dde56036893a5c57e19b63d438",
+      "previous_sha256": "3bace405a04478b22cb6f3b401bc04b28de1d2dde56036893a5c57e19b63d438"
+    },
+    {
+      "path": "papers/extracted/oprior.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 76353,
+      "sha256": "7cb781a95a411b6a95a30ffcf616636e004957f92169429d836fc168d27388c4",
+      "previous_sha256": "7cb781a95a411b6a95a30ffcf616636e004957f92169429d836fc168d27388c4"
+    },
+    {
+      "path": "papers/extracted/prior_evaluation.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 34399,
+      "sha256": "22ba9f661a51fb4aae286b36056007259497830c77437a14bb5a22a9031e3f18",
+      "previous_sha256": "22ba9f661a51fb4aae286b36056007259497830c77437a14bb5a22a9031e3f18"
+    },
+    {
+      "path": "papers/extracted/rtfm.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 45023,
+      "sha256": "41beb87d2d004bc313cf48c9d2c5d45423f0786dcd0a5f59f58277ed08c9f763",
+      "previous_sha256": "41beb87d2d004bc313cf48c9d2c5d45423f0786dcd0a5f59f58277ed08c9f763"
+    },
+    {
+      "path": "papers/extracted/tabfm.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 49707,
+      "sha256": "786bd690b338a4234d4e0adc01418d5c2d53fb6aaf191f26d08b5e95065e99bd",
+      "previous_sha256": "786bd690b338a4234d4e0adc01418d5c2d53fb6aaf191f26d08b5e95065e99bd"
+    },
+    {
+      "path": "papers/extracted/tabicl.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 93635,
+      "sha256": "e701fd7a61bcf089bdd1f2227dd62e337679b75d2c7351e913e87bfa89b2368e",
+      "previous_sha256": "e701fd7a61bcf089bdd1f2227dd62e337679b75d2c7351e913e87bfa89b2368e"
+    },
+    {
+      "path": "papers/extracted/tabicl2.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 195435,
+      "sha256": "12ff51456c468113b118b8586129d6be64b396764341c7fa6289f6d74c8468de",
+      "previous_sha256": "12ff51456c468113b118b8586129d6be64b396764341c7fa6289f6d74c8468de"
+    },
+    {
+      "path": "papers/extracted/tabpfn.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 114954,
+      "sha256": "dc39ba99f09cf95f1fd55202a9ba62b427642724d7c97b9cd1147ff15c4417e0",
+      "previous_sha256": "dc39ba99f09cf95f1fd55202a9ba62b427642724d7c97b9cd1147ff15c4417e0"
+    },
+    {
+      "path": "papers/extracted/tabpfn2.5.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 116522,
+      "sha256": "c1d82cc2fc69569660485df6dd9a339af10346b3cdfefe0d2289573ae8986c84",
+      "previous_sha256": "c1d82cc2fc69569660485df6dd9a339af10346b3cdfefe0d2289573ae8986c84"
+    },
+    {
+      "path": "papers/extracted/tabpfn2.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 97523,
+      "sha256": "aae56e03a259b4423aaa87e14dc528c79e8c95d9edb71761199d5ad62556a196",
+      "previous_sha256": "aae56e03a259b4423aaa87e14dc528c79e8c95d9edb71761199d5ad62556a196"
+    },
+    {
+      "path": "papers/extracted/tabpfn3.5.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 96452,
+      "sha256": "7a66f0d1170928f93121bc9a22af5b7ff861699962fe10f1b9d8906f641ea0e2",
+      "previous_sha256": "7a66f0d1170928f93121bc9a22af5b7ff861699962fe10f1b9d8906f641ea0e2"
+    },
+    {
+      "path": "papers/extracted/tabpfn3.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 265711,
+      "sha256": "8168cf510b2af7c8fde957e7f2079f3ef94676efbccce96d1a03cb15babc6b92",
+      "previous_sha256": "8168cf510b2af7c8fde957e7f2079f3ef94676efbccce96d1a03cb15babc6b92"
+    },
+    {
+      "path": "papers/extracted/xiaomi.txt",
+      "decision": "keep",
+      "reason": "Searchable source-paper extraction; useful for auditing claims without re-extracting PDFs.",
+      "bytes": 96215,
+      "sha256": "baf2febbc4b13cac2263aff8f1fe97f70204af904a059fa01fb08e7fbcb4417c",
+      "previous_sha256": "baf2febbc4b13cac2263aff8f1fe97f70204af904a059fa01fb08e7fbcb4417c"
+    },
+    {
+      "path": "papers/figures/xiaomi_p7.png",
+      "bytes": 455079,
+      "sha256": "fc790333e03f444404fd102bb4db4a62656ba1a7771c87f2fe52e1a9e9ee653a",
+      "reason": "Unused screenshot duplicated by page7 of the retained Xiaomi source PDF.",
+      "decision": "remove"
+    },
+    {
+      "path": "papers/paper_inventory.json",
+      "bytes": 26727,
+      "sha256": "e72a98478f68e0bc48f527f942553772828b9924e729d7f6b0b9b7d50825f7b7",
+      "reason": "Redundant first-page inventory; full source PDFs, extracted text and source manifest retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "papers/provided/exaone.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 1327476,
+      "sha256": "27ee093b8d7d3a0e0dfa1d2c3af9200ed2dea2c838a95d8b29390b92903c5502",
+      "previous_sha256": "27ee093b8d7d3a0e0dfa1d2c3af9200ed2dea2c838a95d8b29390b92903c5502"
+    },
+    {
+      "path": "papers/provided/kumotabular.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 6375835,
+      "sha256": "ef54ca9317d5dcf36ee7d61faaa4ceda8b41b1c5dac27ea01b28b1d8216468bf",
+      "previous_sha256": "ef54ca9317d5dcf36ee7d61faaa4ceda8b41b1c5dac27ea01b28b1d8216468bf"
+    },
+    {
+      "path": "papers/provided/tabfm.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 826627,
+      "sha256": "73fc755e0a6ce468b023cee6c2e88bbfbf07e69122dfb0abb03cc5154d2a3698",
+      "previous_sha256": "73fc755e0a6ce468b023cee6c2e88bbfbf07e69122dfb0abb03cc5154d2a3698"
+    },
+    {
+      "path": "papers/provided/tabicl.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 4066189,
+      "sha256": "22b3b112d8e2875edc4e1054073f354dc139594f1d2bfe38754592d49d96bc3e",
+      "previous_sha256": "22b3b112d8e2875edc4e1054073f354dc139594f1d2bfe38754592d49d96bc3e"
+    },
+    {
+      "path": "papers/provided/tabicl2.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 15274950,
+      "sha256": "71554be35ba3847a14267912d9738f6049545cf74a30d860de1ed23d14d95246",
+      "previous_sha256": "71554be35ba3847a14267912d9738f6049545cf74a30d860de1ed23d14d95246"
+    },
+    {
+      "path": "papers/provided/tabpfn.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 3793138,
+      "sha256": "97796b6e6b134b200555a7ebbacea2f6daecb9ab309279ba50d915d5ac5c9df6",
+      "previous_sha256": "97796b6e6b134b200555a7ebbacea2f6daecb9ab309279ba50d915d5ac5c9df6"
+    },
+    {
+      "path": "papers/provided/tabpfn2.5.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 3964623,
+      "sha256": "21f3cb0e28e587aef164a79a8ada9e942da51b052f55e6f366d5744a8b97f90f",
+      "previous_sha256": "21f3cb0e28e587aef164a79a8ada9e942da51b052f55e6f366d5744a8b97f90f"
+    },
+    {
+      "path": "papers/provided/tabpfn2.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 16957699,
+      "sha256": "6b5ce3dba2ef7454ad0868ad733a64b4ac89bcd98307773fad1e0e977caaa013",
+      "previous_sha256": "6b5ce3dba2ef7454ad0868ad733a64b4ac89bcd98307773fad1e0e977caaa013"
+    },
+    {
+      "path": "papers/provided/tabpfn3.5.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 2321191,
+      "sha256": "fc2e1b4d6d08ade01855fc3b8f713684e235861a2d65db2c98cd9ec0a42dbb0c",
+      "previous_sha256": "fc2e1b4d6d08ade01855fc3b8f713684e235861a2d65db2c98cd9ec0a42dbb0c"
+    },
+    {
+      "path": "papers/provided/tabpfn3.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 6826374,
+      "sha256": "68825024d264813f2f094769cbfac5ad9e887883472a50f0c73e1558c6ac4bc7",
+      "previous_sha256": "68825024d264813f2f094769cbfac5ad9e887883472a50f0c73e1558c6ac4bc7"
+    },
+    {
+      "path": "papers/provided/xiaomi.pdf",
+      "decision": "keep",
+      "reason": "Original user-supplied source PDF; preserve unchanged.",
+      "bytes": 3321464,
+      "sha256": "bf9482753ceecce9011a09a0df739c7afa3a856ee6deaed98f93df05857ee821",
+      "previous_sha256": "bf9482753ceecce9011a09a0df739c7afa3a856ee6deaed98f93df05857ee821"
+    },
+    {
+      "path": "papers/source_manifest.json",
+      "decision": "keep",
+      "reason": "Fingerprint/page/source provenance for all retained PDFs.",
+      "bytes": 6285,
+      "sha256": "ddb8687934ffd7257dd727502d29f4f374228872060cf193c1bfcb856376fe5a",
+      "previous_sha256": "ddb8687934ffd7257dd727502d29f4f374228872060cf193c1bfcb856376fe5a"
+    },
+    {
+      "path": "papers/supplementary/beyondarena.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 6752042,
+      "sha256": "7d7f407b087c6c0c8ef716b9745a0a2309ec6cff36d040b97e2e3979b1b31676",
+      "previous_sha256": "7d7f407b087c6c0c8ef716b9745a0a2309ec6cff36d040b97e2e3979b1b31676"
+    },
+    {
+      "path": "papers/supplementary/limix2.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 3678538,
+      "sha256": "81cac82427da6f6b935b53099aa6b29577a9775c2ad94bd5ba513d5df544232f",
+      "previous_sha256": "81cac82427da6f6b935b53099aa6b29577a9775c2ad94bd5ba513d5df544232f"
+    },
+    {
+      "path": "papers/supplementary/mind_gap.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 2550950,
+      "sha256": "d5b41d6cf680d8989b7615e4667ff44ffdde60d3acd778b3fd83bf5fdfb9dd11",
+      "previous_sha256": "d5b41d6cf680d8989b7615e4667ff44ffdde60d3acd778b3fd83bf5fdfb9dd11"
+    },
+    {
+      "path": "papers/supplementary/mitra.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 7182075,
+      "sha256": "c66975821751c08310792e21a9d0169242d4f8291d80bb630eab2e2e068fbd59",
+      "previous_sha256": "c66975821751c08310792e21a9d0169242d4f8291d80bb630eab2e2e068fbd59"
+    },
+    {
+      "path": "papers/supplementary/mitra2.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 10104431,
+      "sha256": "903adb02c60a4774b14c7368d81c9ced9a2e4814e756853f70d1b97bed87ef5b",
+      "previous_sha256": "903adb02c60a4774b14c7368d81c9ced9a2e4814e756853f70d1b97bed87ef5b"
+    },
+    {
+      "path": "papers/supplementary/oprior.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 4581346,
+      "sha256": "c12c522883aa90d7d8439508b3cbf087fff9e002a5d9544e81fca09bb9bee11a",
+      "previous_sha256": "c12c522883aa90d7d8439508b3cbf087fff9e002a5d9544e81fca09bb9bee11a"
+    },
+    {
+      "path": "papers/supplementary/prior_evaluation.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 4472835,
+      "sha256": "b8c3c933f271e0305237688003b7504a378803c24dbea0e27cbc2a98b550c1b2",
+      "previous_sha256": "b8c3c933f271e0305237688003b7504a378803c24dbea0e27cbc2a98b550c1b2"
+    },
+    {
+      "path": "papers/supplementary/rtfm.pdf",
+      "decision": "keep",
+      "reason": "Relevant source evidence for tabular prior, scale or robustness comparisons.",
+      "bytes": 1034890,
+      "sha256": "6d48e465a7c1e9d293c7abdb2c1216ea1228bee56e87482d386a3dda6e69c8d9",
+      "previous_sha256": "6d48e465a7c1e9d293c7abdb2c1216ea1228bee56e87482d386a3dda6e69c8d9"
+    },
+    {
+      "path": "prior_bank_assessment.pdf",
+      "decision": "modify",
+      "reason": "User-requested compiled report, synchronized with source.",
+      "bytes": 324970,
+      "sha256": "33e99b170410cf43e98138b7560ee922a9cdf41da59a7dd92559f13dc215754a",
+      "previous_sha256": "0ab9aa44283083ad2c79d6856c0b90992e35762d697c10af93545e43ef33f3c7"
+    },
+    {
+      "path": "prior_bank_assessment.tex",
+      "decision": "modify",
+      "reason": "Authoritative editable research and training recipe.",
+      "bytes": 196390,
+      "sha256": "fc3b58a8b9d8a03b93e96478271db5c75eea5859f857bbee78210e2d6aec8340",
+      "previous_sha256": "54dd44662958cdb1a767a895a7bea781ef481b170f10089301fd929153bdd9db"
+    },
+    {
+      "path": "pyproject.toml",
+      "decision": "keep",
+      "reason": "Package/dependency/CLI configuration.",
+      "bytes": 898,
+      "sha256": "bfa715fa8e6cf8d5b746df6a0bbfd086fd251446df3b1b953da6ea6ccccedd7c",
+      "previous_sha256": "bfa715fa8e6cf8d5b746df6a0bbfd086fd251446df3b1b953da6ea6ccccedd7c"
+    },
+    {
+      "path": "research/.DS_Store",
+      "bytes": 10244,
+      "sha256": "12540504403563da4a33af4733a65484afbebdd5d04880b8bba74c06227068f8",
+      "reason": "Finder metadata.",
+      "decision": "remove"
+    },
+    {
+      "path": "research/README.md",
+      "decision": "modify",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 1704,
+      "sha256": "9a4a30f8ac7c55fad78030173c0d2e751dfd4595ff8a3c1424c670fad47c64cf",
+      "previous_sha256": "85bda3d5a04f81b15a08b009342539cd3398dcd3dd6e78584f062494765cddcf"
+    },
+    {
+      "path": "research/probes/algorithmic_probes.py",
+      "decision": "keep",
+      "reason": "Reproducible mathematical or compute-accounting check.",
+      "bytes": 3973,
+      "sha256": "d361f1c4ff161a7143340d2ab015fd829cd1cf7f09cfd520b1fdaee87c832138",
+      "previous_sha256": "d361f1c4ff161a7143340d2ab015fd829cd1cf7f09cfd520b1fdaee87c832138"
+    },
+    {
+      "path": "research/probes/compute_plan.py",
+      "decision": "keep",
+      "reason": "Reproducible mathematical or compute-accounting check.",
+      "bytes": 6356,
+      "sha256": "c29568dc316719d12b28985a74583b77d529e91bb4c73b2a4a734ce0d04f00a7",
+      "previous_sha256": "c29568dc316719d12b28985a74583b77d529e91bb4c73b2a4a734ce0d04f00a7"
+    },
+    {
+      "path": "research/probes/finance_design_probes.py",
+      "decision": "keep",
+      "reason": "Reproducible mathematical or compute-accounting check.",
+      "bytes": 4169,
+      "sha256": "346f5f9f3faa4c4fac1536045a4ee7a67a504ed75684282c4293b70aa0e7de97",
+      "previous_sha256": "346f5f9f3faa4c4fac1536045a4ee7a67a504ed75684282c4293b70aa0e7de97"
+    },
+    {
+      "path": "research/probes/moe_latency_probes.py",
+      "decision": "keep",
+      "reason": "Reproducible mathematical or compute-accounting check.",
+      "bytes": 5044,
+      "sha256": "e4abec559365e1efdaea360c655e0a8431b0be449ad3cc376edbec65ed93a4c1",
+      "previous_sha256": "e4abec559365e1efdaea360c655e0a8431b0be449ad3cc376edbec65ed93a4c1"
+    },
+    {
+      "path": "research/results/algorithmic_probes.json",
+      "decision": "keep",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 4755,
+      "sha256": "55608d133404962cab9db62dda755c91f7d72b8fffbce227cb2a7efcfb0b2c6d",
+      "previous_sha256": "55608d133404962cab9db62dda755c91f7d72b8fffbce227cb2a7efcfb0b2c6d"
+    },
+    {
+      "path": "research/results/cleanup_manifest.json",
+      "bytes": 2050,
+      "sha256": "ac4d5560a92a3dc97ec7ca1fa70ad1c40dd935c83fed732c6fdc118c002473a1",
+      "reason": "Deletion history consolidated into repository_scope_audit.json.",
+      "decision": "remove"
+    },
+    {
+      "path": "research/results/code_validation.json",
+      "decision": "modify",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 24056,
+      "sha256": "e708bfca8d25923992f8430ec8e412624c5ab463c4b9f0462643b137f5391808",
+      "previous_sha256": "eaf898010a489782962a3eddec092547351a788477c8f4ecf7b5a9a778aa075c"
+    },
+    {
+      "path": "research/results/compute_plan_50000.json",
+      "decision": "keep",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 2097,
+      "sha256": "6a481189f7cfe0a33d99af2aae93cf27bca4dab9ca36d5f94fe269a5bcb9da95",
+      "previous_sha256": "6a481189f7cfe0a33d99af2aae93cf27bca4dab9ca36d5f94fe269a5bcb9da95"
+    },
+    {
+      "path": "research/results/document_validation.json",
+      "decision": "modify",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 1236,
+      "sha256": "5e8b174652b1c055d823767d56a6d4c78ae18b8fdfcd6e9eb6fb92784e4b10b2",
+      "previous_sha256": "cccf04254e28d25068e09d66c156fefd5f8c49227f8c097bfd0a81ba99a745de"
+    },
+    {
+      "path": "research/results/finance_design_probes.json",
+      "decision": "keep",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 3784,
+      "sha256": "1bf70709e42fe877dadb2e64b62b3dee6296f3a2931ad5c5667e3934d5dc79d1",
+      "previous_sha256": "1bf70709e42fe877dadb2e64b62b3dee6296f3a2931ad5c5667e3934d5dc79d1"
+    },
+    {
+      "path": "research/results/finance_large_world_smoke.json",
+      "decision": "keep",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 907,
+      "sha256": "e8c34911ff3e844fee9cb77d291f5fcf7851d1f15451518858bd215b763184e8",
+      "previous_sha256": "e8c34911ff3e844fee9cb77d291f5fcf7851d1f15451518858bd215b763184e8"
+    },
+    {
+      "path": "research/results/local_environment.txt",
+      "decision": "keep",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 707,
+      "sha256": "a458779de6b026097b208ff5c473dfea40adbf9bfdb03876181280c22caf5c84",
+      "previous_sha256": "a458779de6b026097b208ff5c473dfea40adbf9bfdb03876181280c22caf5c84"
+    },
+    {
+      "path": "research/results/local_tests.xml",
+      "bytes": 14585,
+      "sha256": "82813626f60cec74261839c9746b39c6e46fcf6a27f3ffe17acefe46ce8bb804",
+      "reason": "Raw test report;109-test evidence summary and executable tests retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "research/results/moe_latency_probes.json",
+      "decision": "keep",
+      "reason": "Compact measured evidence, reproducibility environment, document validation or current scope audit.",
+      "bytes": 2183,
+      "sha256": "dffc583b404f37dd8acfcc1674449c11ab0b0527d46b2d1d06c58c9c62119103",
+      "previous_sha256": "dffc583b404f37dd8acfcc1674449c11ab0b0527d46b2d1d06c58c9c62119103"
+    },
+    {
+      "path": "research/results/organization_validation.json",
+      "bytes": 14043,
+      "sha256": "98d0ede691e5b88e25e670ea825bab37784e99bb78be530d0494ea8668a1b415",
+      "reason": "Relocation history consolidated into repository_scope_audit.json.",
+      "decision": "remove"
+    },
+    {
+      "path": "research/results/report_build.log",
+      "bytes": 24459,
+      "sha256": "d8e6bb514a432482dc11bc95750087131ad2ed791424d88a281b453e38d615e9",
+      "reason": "Temporary compiler output; source/PDF validation summaries retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "research/results/repository_scope_audit.json",
+      "decision": "add",
+      "reason": "Current file-by-file decisions, evidence and consolidated cleanup history.",
+      "sha256": null
+    },
+    {
+      "path": "research/reviews/competitor_audit.md",
+      "decision": "modify",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 19126,
+      "sha256": "7118b7f6926310885785732e0f31505dc8be827450c0206dab9bd75d565ebb31",
+      "previous_sha256": "a2d52c354cfdd8b7594f3f5781e22c27003c814c5f627546e691f4e27d9eda02"
+    },
+    {
+      "path": "research/reviews/long_context_latency_review.md",
+      "decision": "modify",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 23249,
+      "sha256": "1c59b3a1b9303a5688b674bf3ce3f1b40e0875baedc25cafefb3f8f3762c4bce",
+      "previous_sha256": "5cffae926d3682135fae45c232a4f32d11a9c0d17243a55ae72289288518fefc"
+    },
+    {
+      "path": "research/reviews/model_scale_audit.md",
+      "decision": "modify",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 25339,
+      "sha256": "509e637932b9975b44cda7b34371f2f6150a28ccdfe542af3a90422988da6d33",
+      "previous_sha256": "3b84a7b3e0c89678954613d031866a21ad4ebab54a70acd4c6e8fb8c3d396224"
+    },
+    {
+      "path": "research/reviews/moe_architecture_review.md",
+      "decision": "modify",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 14247,
+      "sha256": "e0567f418f32da80ad2a6f49b5afd753501101d97ac6a2a6528e72e284178003",
+      "previous_sha256": "edcedc1db990dd034d64848108f763cc7a42f1318697a8932b89d46ce6b06d1b"
+    },
+    {
+      "path": "research/reviews/prior_literature.md",
+      "decision": "modify",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 23263,
+      "sha256": "ac2c90dc672869b347dc9f9c1fb60812ece1e003b06d1bb97f2899a942b030b2",
+      "previous_sha256": "9c0c30c7a77067c0736ac0a11bf21c7bf8456750d7f906857455572bd24746f8"
+    },
+    {
+      "path": "research/reviews/tabpfn_audit.md",
+      "decision": "modify",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 22690,
+      "sha256": "9da71c9410a4b172ada2d863678929d8a8e90a920e52817ece6b4856fb639da8",
+      "previous_sha256": "0149f952f2aa5d8cbab5774b56dee6f9cc304e9bd168d7cb4a046d5ec55b6dce"
+    },
+    {
+      "path": "research/reviews/xiaomi_moe_audit.md",
+      "decision": "keep",
+      "reason": "Focused source/design review for current tabular accuracy, finance or latency objectives.",
+      "bytes": 12799,
+      "sha256": "0c1ce64701d1d168bffdbc2657e074b74c55004474f234d88d1740755144ead4",
+      "previous_sha256": "0c1ce64701d1d168bffdbc2657e074b74c55004474f234d88d1740755144ead4"
+    },
+    {
+      "path": "research/specs/ablation_plan.csv",
+      "decision": "keep",
+      "reason": "Selected scientific specification or controlled ablation plan; optional arms explicitly labeled.",
+      "bytes": 3595,
+      "sha256": "4408be16fd20ba380438fbeab88f0a49f228101e960492b94b7ce1af45b2d2f4",
+      "previous_sha256": "4408be16fd20ba380438fbeab88f0a49f228101e960492b94b7ce1af45b2d2f4"
+    },
+    {
+      "path": "research/specs/finance_recipe_v3.json",
+      "decision": "modify",
+      "reason": "Selected scientific specification or controlled ablation plan; optional arms explicitly labeled.",
+      "bytes": 33784,
+      "sha256": "7b021acbb1d19053687c7cfce711846e33451e664e6cca9bcc43a31553cea35a",
+      "previous_sha256": "e57c4104704643b8e81773dab4c93b37697b56c1ed60c14d2fb098b705314038"
+    },
+    {
+      "path": "research/specs/icl_architecture_v3.json",
+      "decision": "modify",
+      "reason": "Selected scientific specification or controlled ablation plan; optional arms explicitly labeled.",
+      "bytes": 17595,
+      "sha256": "5e25bb12bf144995436f2d582b64a58b3cbf6329e2d6da619bd300a91067312d",
+      "previous_sha256": "74d5caa2cfaaf27097f77baf1a39ce1f3ecb81e9ef6973b377802a9d21574aa8"
+    },
+    {
+      "path": "research/specs/latency_recipe_v3.json",
+      "decision": "modify",
+      "reason": "Selected scientific specification or controlled ablation plan; optional arms explicitly labeled.",
+      "bytes": 9155,
+      "sha256": "684a4f7e525fecad8f1bcafacde1f073d138479fb2256b3fe55c13e42fcd820f",
+      "previous_sha256": "dda4471d7ce0240123013b814be204269ebd47965e002ef8aa96e260f153c474"
+    },
+    {
+      "path": "research/specs/prior_bank_spec.json",
+      "decision": "modify",
+      "reason": "Selected scientific specification or controlled ablation plan; optional arms explicitly labeled.",
+      "bytes": 10406,
+      "sha256": "2259d626d514ec698370df86f0b25a72d6fbea0afb37bc827960bcedfad3562c",
+      "previous_sha256": "5d75ca3949454a8611b9868e304de5e4d21530c6e412aab954608841fdf52c7d"
+    },
+    {
+      "path": "research/specs/static_recipe_v3.json",
+      "decision": "keep",
+      "reason": "Selected scientific specification or controlled ablation plan; optional arms explicitly labeled.",
+      "bytes": 29057,
+      "sha256": "15a78d3ba205fe91931cc9ecc78138938656938d7db5c4e460a2a025e6405528",
+      "previous_sha256": "15a78d3ba205fe91931cc9ecc78138938656938d7db5c4e460a2a025e6405528"
+    },
+    {
+      "path": "runs/.DS_Store",
+      "bytes": 8196,
+      "sha256": "d204e1e98c4c01ee7d78a3fc87d6705e812ad1b55ce8d9d0f41c6db3f812b295",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/README.md",
+      "decision": "modify",
+      "reason": "Current workflow instructions and repository navigation.",
+      "bytes": 888,
+      "sha256": "255a9c6b78bb7cd20b539159119265f505fa5d3f4e852525500a61150567eb13",
+      "previous_sha256": "855402b13ae7411fea9fdb7874eb21af38ce7b63d6460042129e77e35c65bef7"
+    },
+    {
+      "path": "runs/baselines/catboost_smoke.json",
+      "bytes": 2242,
+      "sha256": "cb5e0105922fa3de7daf89c2c619d3d4fe187218aa4681f5aa8008522f5a1376",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/baselines/lightgbm_smoke.json",
+      "bytes": 2220,
+      "sha256": "bfb16d609e3422069361486eb4f36507e69f7ec2ed7d5196bf6c7b9e2abf240a",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/baselines/xgboost_smoke.json",
+      "bytes": 2398,
+      "sha256": "8c9be4ef3173ea98c4a67b0401488c32b5c2c577ec6c047aa712f079420dbf56",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/csv_smoke/data.npz",
+      "bytes": 1509,
+      "sha256": "d01fefa457d2aea2a91e16a56330a0a69381ad2b9dc47f565f5356eb17e25734",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/csv_smoke/source.csv",
+      "bytes": 176,
+      "sha256": "e88d4969667c682191ddbc02937a2f8347cf4814e527de44ba8477f2527cf6cd",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/example_data/query.npz",
+      "bytes": 1753,
+      "sha256": "328371547264f490129329dc2931a5377a8ec69434fe2e0010f948311f194a82",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/example_data/support.npz",
+      "bytes": 2665,
+      "sha256": "f9c2fc901a19411f9f4635f7e28bff2ea0c34a6cc504475e0f2356dccf9504e2",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/example_data/validation.npz",
+      "bytes": 1703,
+      "sha256": "c93771227a607385a0b1c7e50bbe716d2ac072e5fa532a046cf34047dcf19404",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_distributed_smoke/completion.json",
+      "bytes": 97,
+      "sha256": "36327b5c10398d7dc2e4af234892f884ce780c4c20023134a96b6e8c29ff161d",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_distributed_smoke/last.pt",
+      "bytes": 2499295,
+      "sha256": "7ec1e08090244083907a5cca0c44ef7fbd260d7ae913bb620d76e0bf18f03e16",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_distributed_smoke/manifest.json",
+      "bytes": 994,
+      "sha256": "b0a5f85cb7814327211626d7f72bdfc4275d0c7a2350517f0e333f71923225e4",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_distributed_smoke/metrics.jsonl",
+      "bytes": 966,
+      "sha256": "ff6baaaa3bd053006082061ffd7c698c78872777b508405899cfc8e5178092c6",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_finance_smoke/completion.json",
+      "bytes": 97,
+      "sha256": "5f5ce17d61b6dc9bafc9688995636f1debdce3e630cd8b2914834d3d79985123",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_finance_smoke/last.pt",
+      "bytes": 1902588,
+      "sha256": "b8bb73c2f0c15b8a228068fe39bcd2d0d2f0c474b14a2eb1d234cda7188f013f",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_finance_smoke/manifest.json",
+      "bytes": 894,
+      "sha256": "dfd2a43bdd3e6eebd99c6ecb64d0c84c69a020b0ec87064f221c07ac000b0cdf",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_finance_smoke/metrics.jsonl",
+      "bytes": 1284,
+      "sha256": "6b0df27a0a55a0483fe971e2ea85ee889fd793e88abca1a8e80df79f2f8791fd",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_joint_serial/completion.json",
+      "bytes": 97,
+      "sha256": "36327b5c10398d7dc2e4af234892f884ce780c4c20023134a96b6e8c29ff161d",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_joint_serial/last.pt",
+      "bytes": 2499359,
+      "sha256": "05adde8371b632d377b4e49fb5bb0e3e22203b81d9ce597e6e26e6393690955e",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_joint_serial/manifest.json",
+      "bytes": 994,
+      "sha256": "f8c168f521d49007b9fb97ca96c4762740370eea159d82d3564c7da126359050",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_joint_serial/metrics.jsonl",
+      "bytes": 963,
+      "sha256": "64c8d51a9985ac735186993677e8b7b71d61bcaecf5e5497bbf10566f662f533",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_standard_smoke/completion.json",
+      "bytes": 97,
+      "sha256": "36327b5c10398d7dc2e4af234892f884ce780c4c20023134a96b6e8c29ff161d",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_standard_smoke/last.pt",
+      "bytes": 2398107,
+      "sha256": "ae6720e05a6e6ce4d87b453d5be603c31d17bf7da65d2ec8133c83db491c84b5",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_standard_smoke/manifest.json",
+      "bytes": 643,
+      "sha256": "a03775bae427600d969a3baf6d52e0c62524ea39883663a178192cc20e3d3eaf",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/final_standard_smoke/metrics.jsonl",
+      "bytes": 958,
+      "sha256": "ca3ce8e7c4c3f5f76ad492c40feb095eff667c3e13e0b13b8b3e37c909e4f921",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/inference/final_cpu_profile.json",
+      "bytes": 779,
+      "sha256": "1db9ec59692f500f8fd8bcdd4bc5cb723dd2ffd1d977ff1b2188fbd70bd4d826",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/inference/final_example_evaluation.json",
+      "bytes": 671,
+      "sha256": "8b0f5dd3c0b5e8362bd01c3a090d2adab945a9147dbd78c1e66c4617d55d4c53",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/inference/final_predictions.npz",
+      "bytes": 349,
+      "sha256": "36a657132d92f7109449503d15489cd9bbda8f89581abd19d99aac40d9d24185",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "runs/inference/final_predictions.npz.json",
+      "bytes": 199,
+      "sha256": "50d589bdbdd43cd96f956dad81609704f19c4c6afc157e1c294db2c3b2258121",
+      "reason": "Disposable completed tiny smoke output; configs and compact evidence retained.",
+      "decision": "remove"
+    },
+    {
+      "path": "scripts/audit_artifacts.py",
+      "decision": "keep",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 3147,
+      "sha256": "dc1de05793160e1f04fdc632c628e77c00626699d9de595db135df7fdc51cfd3",
+      "previous_sha256": "dc1de05793160e1f04fdc632c628e77c00626699d9de595db135df7fdc51cfd3"
+    },
+    {
+      "path": "scripts/build_report.sh",
+      "decision": "modify",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 677,
+      "sha256": "6f44d3a13de505eebcb982cd4a0c4a73b381033f0b955adaf41c435fd818948f",
+      "previous_sha256": "e365ac48764bd5b8abbd0f58de6282513f31463c9e43daaf0be2b7bde8355ed0"
+    },
+    {
+      "path": "scripts/launch_slurm.sh",
+      "decision": "keep",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 930,
+      "sha256": "a790da96366924cbe2e795beac64c28136bdb63ebabd5066a796e1e24934c218",
+      "previous_sha256": "a790da96366924cbe2e795beac64c28136bdb63ebabd5066a796e1e24934c218"
+    },
+    {
+      "path": "scripts/make_example_data.py",
+      "decision": "keep",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 719,
+      "sha256": "5b2e797c5ebad41bbcf40db06f23d3f902545697a63599ec2ff2eaff60e3b820",
+      "previous_sha256": "5b2e797c5ebad41bbcf40db06f23d3f902545697a63599ec2ff2eaff60e3b820"
+    },
+    {
+      "path": "scripts/plan_training.py",
+      "decision": "keep",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 1674,
+      "sha256": "3ed1042de4a8c7b49ecbd3cc3611184e7ae34a3501326a5328406efeb48af7f4",
+      "previous_sha256": "3ed1042de4a8c7b49ecbd3cc3611184e7ae34a3501326a5328406efeb48af7f4"
+    },
+    {
+      "path": "scripts/prepare_csv.py",
+      "decision": "keep",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 3498,
+      "sha256": "8e1a7878a7333f7364714aa4f270b40a16ab4c0d2fd306d983da9736c6d8c901",
+      "previous_sha256": "8e1a7878a7333f7364714aa4f270b40a16ab4c0d2fd306d983da9736c6d8c901"
+    },
+    {
+      "path": "scripts/run_tabarena.py",
+      "decision": "keep",
+      "reason": "Entry point for cluster launch, data preparation, benchmarking, artifact checks or PDF export.",
+      "bytes": 7443,
+      "sha256": "592dd18105715e112940323e37b14f4a4156fe28f861b7d50ac2412694ee7b09",
+      "previous_sha256": "592dd18105715e112940323e37b14f4a4156fe28f861b7d50ac2412694ee7b09"
+    },
+    {
+      "path": "src/.DS_Store",
+      "bytes": 6148,
+      "sha256": "01c4c9b55d694f1d13bdfa02faa696800a225a7624dac405499a88c1610e3e06",
+      "reason": "Finder metadata.",
+      "decision": "remove"
+    },
+    {
+      "path": "src/tabular_foundation/__init__.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 102,
+      "sha256": "d23fe0cf847089ea6cb49b371abe96b8c0d144a6a1f177990e8204ca4db46b06",
+      "previous_sha256": "d23fe0cf847089ea6cb49b371abe96b8c0d144a6a1f177990e8204ca4db46b06"
+    },
+    {
+      "path": "src/tabular_foundation/baselines.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 11976,
+      "sha256": "7425b1ba3479cd36364f3994f3b34eb4407e3e4b4daf87eadad1de4555624b79",
+      "previous_sha256": "7425b1ba3479cd36364f3994f3b34eb4407e3e4b4daf87eadad1de4555624b79"
+    },
+    {
+      "path": "src/tabular_foundation/codec.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 8665,
+      "sha256": "082a7c9e4cfc45fdd9efb20f6a7d1031221c2c3f35e5c88bb25bf3c588708bad",
+      "previous_sha256": "082a7c9e4cfc45fdd9efb20f6a7d1031221c2c3f35e5c88bb25bf3c588708bad"
+    },
+    {
+      "path": "src/tabular_foundation/data.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 4633,
+      "sha256": "42589362c42caee326eb1038e1fbff84a3cd7584c8d114e4e202a1a3775e6ec4",
+      "previous_sha256": "42589362c42caee326eb1038e1fbff84a3cd7584c8d114e4e202a1a3775e6ec4"
+    },
+    {
+      "path": "src/tabular_foundation/distributions.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 8402,
+      "sha256": "0d3e4f0c74c762ec25edee26e1cabeb8122704aa760af8a4163d3e5ac8f5ac89",
+      "previous_sha256": "0d3e4f0c74c762ec25edee26e1cabeb8122704aa760af8a4163d3e5ac8f5ac89"
+    },
+    {
+      "path": "src/tabular_foundation/evaluate.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 2477,
+      "sha256": "4cc3a7e751d15168af8a019e228b39b334d86fd7b23689797baba136a751415a",
+      "previous_sha256": "4cc3a7e751d15168af8a019e228b39b334d86fd7b23689797baba136a751415a"
+    },
+    {
+      "path": "src/tabular_foundation/finance_prior.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 38512,
+      "sha256": "78f1785a7bde0d60e4d1e13ce8a665c89f6033c1bdca4b8111c0f9321e949a08",
+      "previous_sha256": "78f1785a7bde0d60e4d1e13ce8a665c89f6033c1bdca4b8111c0f9321e949a08"
+    },
+    {
+      "path": "src/tabular_foundation/inference.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 10228,
+      "sha256": "3a087ef9a964cabd7261a432c990636de20b3a3576eb86f23d6690b4a8a15cfa",
+      "previous_sha256": "3a087ef9a964cabd7261a432c990636de20b3a3576eb86f23d6690b4a8a15cfa"
+    },
+    {
+      "path": "src/tabular_foundation/metrics.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 6251,
+      "sha256": "7cc7599f6be10d9f17a0a3b3c9f924359d2bdda0341d85eeeb95c37c42a02923",
+      "previous_sha256": "7cc7599f6be10d9f17a0a3b3c9f924359d2bdda0341d85eeeb95c37c42a02923"
+    },
+    {
+      "path": "src/tabular_foundation/model.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 23146,
+      "sha256": "398ee6ee9d88942fa969e667826ae34c58d405e3b40b33043a6a3fe05059a992",
+      "previous_sha256": "398ee6ee9d88942fa969e667826ae34c58d405e3b40b33043a6a3fe05059a992"
+    },
+    {
+      "path": "src/tabular_foundation/optim.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 5141,
+      "sha256": "7a03d8a08127c36b2a5db843e25277b3b6d0b5b03f090079c5e0ec194705025a",
+      "previous_sha256": "7a03d8a08127c36b2a5db843e25277b3b6d0b5b03f090079c5e0ec194705025a"
+    },
+    {
+      "path": "src/tabular_foundation/predict.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 4240,
+      "sha256": "9e1bd3fcabe8611c2efa5c159b5b904d47cb6f85defde4833dbe3cee0695cf4b",
+      "previous_sha256": "9e1bd3fcabe8611c2efa5c159b5b904d47cb6f85defde4833dbe3cee0695cf4b"
+    },
+    {
+      "path": "src/tabular_foundation/profile.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 2548,
+      "sha256": "e93276fdc979d8166506ddef6e92ff74ed59dc3bfc667a0b3bdc38f5b9a622a2",
+      "previous_sha256": "e93276fdc979d8166506ddef6e92ff74ed59dc3bfc667a0b3bdc38f5b9a622a2"
+    },
+    {
+      "path": "src/tabular_foundation/retrieval.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 9801,
+      "sha256": "622cc08f997e76e11a3b88fd9dc86f0ddb9e217c90c92efcb4c596362fb14df0",
+      "previous_sha256": "622cc08f997e76e11a3b88fd9dc86f0ddb9e217c90c92efcb4c596362fb14df0"
+    },
+    {
+      "path": "src/tabular_foundation/runtime.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 5046,
+      "sha256": "002b7098d90dbef01a0b8133aad41a69b4a0681170c58c6974a721500bb4e30e",
+      "previous_sha256": "002b7098d90dbef01a0b8133aad41a69b4a0681170c58c6974a721500bb4e30e"
+    },
+    {
+      "path": "src/tabular_foundation/schema.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 5190,
+      "sha256": "bf6d373e252b7da2b811e9fb01d39cf1b8d6373978aecc2d33c7e17e40e5ba86",
+      "previous_sha256": "bf6d373e252b7da2b811e9fb01d39cf1b8d6373978aecc2d33c7e17e40e5ba86"
+    },
+    {
+      "path": "src/tabular_foundation/static_prior.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 39096,
+      "sha256": "c965c356ad869661591b2ac4c8b5f9ae79d63067fa445e69218228bae01bb179",
+      "previous_sha256": "c965c356ad869661591b2ac4c8b5f9ae79d63067fa445e69218228bae01bb179"
+    },
+    {
+      "path": "src/tabular_foundation/tabarena_adapter.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 11209,
+      "sha256": "de1ee40e7846108c223377940c557c30c7b10705c9a0dc360e4e98d9b071ae9a",
+      "previous_sha256": "de1ee40e7846108c223377940c557c30c7b10705c9a0dc360e4e98d9b071ae9a"
+    },
+    {
+      "path": "src/tabular_foundation/train.py",
+      "decision": "keep",
+      "reason": "Executable standard/finance ICL, inference or evaluation implementation; no abandoned task branch.",
+      "bytes": 17669,
+      "sha256": "82fe60d4da7430adb3b6554736113df7fb381354b64a7a567a0292912a4fd7b6",
+      "previous_sha256": "82fe60d4da7430adb3b6554736113df7fb381354b64a7a567a0292912a4fd7b6"
+    },
+    {
+      "path": "tests/.DS_Store",
+      "bytes": 6148,
+      "sha256": "ce56134e7238682f062cd9633bc2b53405ac2012ba30231b69255f9512f73133",
+      "reason": "Finder metadata.",
+      "decision": "remove"
+    },
+    {
+      "path": "tests/test_baselines.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 5885,
+      "sha256": "9e72ca4037f9d369dd95a90497de01adf6f3a311b8b5d155862c63d9e8dce6e0",
+      "previous_sha256": "9e72ca4037f9d369dd95a90497de01adf6f3a311b8b5d155862c63d9e8dce6e0"
+    },
+    {
+      "path": "tests/test_compute_plan.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 2350,
+      "sha256": "c018f8bd3793df3d88578a4c618f483541a21a80f2dc714cbce07f795677e6b1",
+      "previous_sha256": "c018f8bd3793df3d88578a4c618f483541a21a80f2dc714cbce07f795677e6b1"
+    },
+    {
+      "path": "tests/test_data_contract.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 1698,
+      "sha256": "17f14ccc43ffe1a28bce75d60d69589e26504913c6e8f60ac2e42dd59e63cd5f",
+      "previous_sha256": "17f14ccc43ffe1a28bce75d60d69589e26504913c6e8f60ac2e42dd59e63cd5f"
+    },
+    {
+      "path": "tests/test_distributions.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 4368,
+      "sha256": "784845aea58ec112a3334a9c5f133ed63c88bb58afec79e68e5b1549e0912a0d",
+      "previous_sha256": "784845aea58ec112a3334a9c5f133ed63c88bb58afec79e68e5b1549e0912a0d"
+    },
+    {
+      "path": "tests/test_finance_prior.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 15372,
+      "sha256": "fa254ce53d0813df42429cbe0070d68296625e177c14c288791f23ae82708da1",
+      "previous_sha256": "fa254ce53d0813df42429cbe0070d68296625e177c14c288791f23ae82708da1"
+    },
+    {
+      "path": "tests/test_inference_audit.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 3880,
+      "sha256": "2ac815cafcad23b2a76b7b6f5998db2954ed4f6f3dd764e0a1ba0fd2f0866fd7",
+      "previous_sha256": "2ac815cafcad23b2a76b7b6f5998db2954ed4f6f3dd764e0a1ba0fd2f0866fd7"
+    },
+    {
+      "path": "tests/test_metrics.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 1183,
+      "sha256": "de03f7f8a020548cc30626601b2fa57d8789528b686690d174d9476408c476bf",
+      "previous_sha256": "de03f7f8a020548cc30626601b2fa57d8789528b686690d174d9476408c476bf"
+    },
+    {
+      "path": "tests/test_model.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 8546,
+      "sha256": "34f3791bb0be813bf8fdade52fef15aac8731856cd6cc685bdfa3238c16cd398",
+      "previous_sha256": "34f3791bb0be813bf8fdade52fef15aac8731856cd6cc685bdfa3238c16cd398"
+    },
+    {
+      "path": "tests/test_optim.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 2678,
+      "sha256": "c0581f80776e3a3840a9b990ce94fa5ef8814c9e1badde7b02a9e5efa835019f",
+      "previous_sha256": "c0581f80776e3a3840a9b990ce94fa5ef8814c9e1badde7b02a9e5efa835019f"
+    },
+    {
+      "path": "tests/test_retrieval.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 4961,
+      "sha256": "4bc2f0e64ab7a23741f541bd584718c77d73ee17d739c2537fec80b2ef2c8058",
+      "previous_sha256": "4bc2f0e64ab7a23741f541bd584718c77d73ee17d739c2537fec80b2ef2c8058"
+    },
+    {
+      "path": "tests/test_runtime.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 1151,
+      "sha256": "24bb3f41766915e9b646e974c0f0b1df4e4fe01bcc9481160d70dd9ecf667b83",
+      "previous_sha256": "24bb3f41766915e9b646e974c0f0b1df4e4fe01bcc9481160d70dd9ecf667b83"
+    },
+    {
+      "path": "tests/test_static_prior.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 9345,
+      "sha256": "f63c1492be43178c0a8524e33a927faf99ad11c5855b9928e75b8cc9caf8e663",
+      "previous_sha256": "f63c1492be43178c0a8524e33a927faf99ad11c5855b9928e75b8cc9caf8e663"
+    },
+    {
+      "path": "tests/test_training_audit.py",
+      "decision": "keep",
+      "reason": "Correctness/integration coverage for the retained workflow.",
+      "bytes": 10498,
+      "sha256": "85e9e193dab523c77a206f567b2c6b37ca6e6c0017ac59972ad90a23f8abd3e0",
+      "previous_sha256": "85e9e193dab523c77a206f567b2c6b37ca6e6c0017ac59972ad90a23f8abd3e0"
+    }
+  ],
+  "record_scope": "File decisions and hashes describe the scope-cleanup/restructuring snapshot. Later scoped changes are recorded separately below; the original snapshot is preserved.",
+  "subsequent_changes": [
+    {
+      "date": "2026-10-03",
+      "reason": "Training-readiness follow-up fixed the missing later-stage multiclass sampler schedule and documented the multi-node/on-demand generation paths. No files added or removed.",
+      "files": [
+        "src/tabular_foundation/static_prior.py",
+        "tests/test_static_prior.py",
+        "docs/training.md",
+        "docs/audit.md",
+        "research/results/code_validation.json"
+      ],
+      "evidence": "research/results/code_validation.json: readiness_followup",
+      "unique_tests_passed": 113
+    },
+    {
+      "date": "2026-10-03",
+      "reason": "Independent source audit changed research selection and50kallocation; fixed affine regressionprecision; added focused review/probe/evidence. Prior cleanup snapshot remains historical.",
+      "added_files": [
+        "research/reviews/independent_audit.md",
+        "research/probes/independent_audit_probes.py",
+        "research/results/independent_audit_probes.json"
+      ],
+      "runtime_and_check_changes": [
+        "src/tabular_foundation/distributions.py",
+        "src/tabular_foundation/train.py",
+        "src/tabular_foundation/inference.py",
+        "tests/test_distributions.py",
+        "tests/test_training_audit.py",
+        "tests/test_inference_audit.py",
+        "tests/test_compute_plan.py",
+        "research/probes/compute_plan.py",
+        "research/probes/independent_audit_probes.py",
+        "scripts/audit_artifacts.py"
+      ],
+      "document_changes": "ExistingTeX/PDF, README, operating/auditdocs, researchspecs and budgetresults revised in place",
+      "evidence": "research/results/code_validation.json: independent_research_audit",
+      "unique_tests_passed": 119
+    },
+    {
+      "date": "2026-10-03",
+      "reason": "Reference-derived training candidate and reproducible volume plan retained within standard tabular and finance scope.",
+      "kept_components": [
+        "Pinned TabICLv2 reference source and manifest (35 files)",
+        "Reference adapter and ordered producer",
+        "Hash-bit codec, quantile/hurdle head options, length scaling and grouped query KV",
+        "Covariate-first finance generator and specialist continuation",
+        "Candidate/pilot configurations and prior-volume planner",
+        "Focused unit/integration tests, mathematical probes and compact results",
+        "Main recipe, volume guide and upstream source-code review"
+      ],
+      "evidence": "research/results/code_validation.json:reference_derived_candidate_followup",
+      "unique_tests_passed": 200,
+      "runtime_source_and_check_fingerprints_reverified": 52,
+      "no_competitive_checkpoint_or_hardware_measurement": true
+    },
+    {
+      "date": "2026-10-03",
+      "reason": "Explanatory report and research-paper prose revision; Figure 3/4 collisions and Figure 5 annotation crowding repaired, all five diagrams reviewed.",
+      "modified_files": [
+        "prior_bank_assessment.tex",
+        "prior_bank_assessment.pdf",
+        "README.md",
+        "docs/repository_scope.md",
+        "research/results/document_validation.json"
+      ],
+      "diagram_assets": "Five inline TikZ figures; no separate generated images or build products retained.",
+      "removed_files": [
+        {
+          "path": ".DS_Store",
+          "reason": "Finder metadata",
+          "bytes": 14340
+        }
+      ],
+      "validation": "research/results/document_validation.json",
+      "tex_sha256": "3a3d8c0fce012069cda55bbeb4ccf3efcd67ec46c3e5b98e5902564f752b811e",
+      "pdf_sha256": "8170ff3f604e466d1bb6e4f0edd1d923c1f596c1bf8d133b296999447dfc471a",
+      "pdf_pages": 73,
+      "retained_source_pdf_hashes_verified": 19,
+      "pinned_reference_files_verified": 35,
+      "local_readme_docs_links_checked": 39,
+      "broken_links": 0,
+      "code_changed": false
+    },
+    {
+      "date": "2026-10-03",
+      "reason": "Full methods prose rewrite preserving the complete technical specification and clarifying missing-value support and coverage.",
+      "modified_files": [
+        "prior_bank_assessment.tex",
+        "prior_bank_assessment.pdf",
+        "README.md",
+        "docs/repository_scope.md",
+        "research/results/document_validation.json"
+      ],
+      "validation": "research/results/document_validation.json",
+      "tex_sha256": "e00dc7bcd08772c94993fc58e22befc09bbc41b8dd67103f5c128ce6e9a2b81c",
+      "pdf_sha256": "c41cc262cc9995717f7be88ff2a7e721a6941459b1ba3a26dc65485454eb607b",
+      "pdf_pages": 81,
+      "code_changed": false,
+      "new_repository_files": [],
+      "temporary_drafts_and_renderings": "Retained outside repository only.",
+      "removed_files": [
+        {
+          "path": ".DS_Store",
+          "bytes": 14340,
+          "reason": "Regenerated Finder metadata"
+        },
+        {
+          "path": "src/.DS_Store",
+          "bytes": 6148,
+          "reason": "Regenerated Finder metadata"
+        },
+        {
+          "path": "third_party/.DS_Store",
+          "bytes": 6148,
+          "reason": "Regenerated Finder metadata"
+        },
+        {
+          "path": "papers/.DS_Store",
+          "bytes": 10244,
+          "reason": "Regenerated Finder metadata"
+        },
+        {
+          "path": "research/.DS_Store",
+          "bytes": 14340,
+          "reason": "Regenerated Finder metadata"
+        }
+      ]
+    }
+  ]
+}

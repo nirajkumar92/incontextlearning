@@ -1,0 +1,949 @@
+=== PDF PAGE 1 ===
+Mohamed Bouadi ∗, Nassim Bouarour ∗,
+Varun Kulkarni, Shivam Dubey, Aditya Tanna,
+Vinay Kumar Sankarapu
+Lexsi Labs
+∗Equal contribution
+Abstract
+What determines the quality of a tabular foundation model? Unlike language or vision, tabular foundation
+models acquire their inductive biases almost entirely from synthetic pretraining distributions, yet the design of
+these distributions remains poorly understood. Standard synthetic priors are too well-behaved: they omit the
+irregularities and failure modes that determine deployment robustness. We introduce O’PRIOR, a
+compositional realism prior built around four coupled components: a hierarchical SCM meta-generator
+spanning diverse functional families; a modular realism engine covering heterogeneous marginals, missingness,
+and target transforms; an explicit stress module injecting confounding and support-query mismatch; and a
+curriculum-governed, leakage-safe generation protocol. To isolate prior design as the scientific variable, we
+hold architecture, optimizer, and compute budget fixed and vary only the synthetic task distribution. O’PRIOR
+yields consistent and substantial improvements in downstream accuracy and robustness across real tabular
+benchmarks, with gains concentrated in regimes characterized by distributional irregularities. Ablations
+confirm that mechanism diversity, realism composition, and shift-aware stress each contribute independently,
+their effects are not interchangeable. These results establish synthetic prior construction as a first-order and
+largely overlooked determinant of tabular foundation model quality. Code and implementation details are
+publicly availablehttps://github.com/o-prior/O-prior.git.
+Keywords:Tabular Foundation Models, Synthetic Prior Design, In-Context Learning, Structural Causal
+Models
+1 Introduction
+Tabular data remains one of the most widely used modalities for predictive modeling, including healthcare, finance,
+industry, and sciences. Yet despite transformative advances in deep learning for language and vision [1, 2], gradient-
+boosted trees (GBT) remain the dominant approach on tabular benchmarks [3, 4, 5], particularly under limited sample
+sizes, mixed feature types, and irregular statistical structure. This gap has motivated the emergence of new class of
+methods: tabular foundation models (TFMs). Recent systems such as TABPFN [ 6], TABPFNV2.5 [ 7], TABICL [ 8],
+ORIONBIX[ 9], ORIONMSP [ 10], and LIMIX[ 11] recast supervised tabular learning as amortized inference. After
+pretraining on a large collection of supervised tasks, the model receives a labeled context set at inference time and
+predicts query labels in a single forward pass without any dataset-specific training nor hyperparameter tuning. While
+this paradigm matches or exceeds strong GBTs baselines [12] on standard benchmarks, these results raise a foundational
+question: what determines the quality of a pretrained tabular model?
+arXiv:2605.18971v1  [cs.LG]  18 May 2026
+
+=== PDF PAGE 2 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Unlike language or vision foundation models, TFMs are not pretrained on naturally occurring data. Their inductive
+biases are induced almost entirely by synthetic tasks sampled from a hand-designed generative prior [ 6]. The prior
+is therefore not merely a data source, it is the mechanism through which the model learns what tabular prediction
+problems look like. This makes prior design a first-order scientific question. Yet it has received almost no systematic
+study. Existing work demonstrates that synthetic pretraining can be effective, but does not establishwhich properties of
+the synthetic distribution are responsiblefor downstream performance.
+We argue this gap is consequential. Standard synthetic priors generate worlds that are too well-behaved: feature
+marginals are smooth, missingness is absent, support and query rows are exchangeable, and no spurious correlations
+exist. Real tabular datasets are shaped by confounding, selection effects, structured missingness, covariate shift, and
+shortcuts that break between training and test populations. A model pretrained on idealized synthetic tasks may learn
+useful generic predictors, but will not acquire the robustness that deployment requires.
+This paper treats prior design as its primary scientific object. We introduce O’PRIOR, a compositional realism prior that
+generates tabular pretraining tasks through a hybrid SCM meta-generator, a modular realism engine, and an explicit
+distribution-shift and shortcut-stress module, all governed by a curriculum-controlled, leakage-safe generation protocol.
+To isolate the contribution of the prior, we hold architecture, optimizer, and compute budget fixed across all comparisons
+and vary only the synthetic task distribution. O’PRIORyields consistent and substantial improvements over simpler
+baselines across real tabular benchmarks, with ablations showing that mechanism diversity, realism composition, and
+shift-aware stress each contribute independently.
+Contributions.This paper makes the following contributions:
+(i) We introduce O’PRIOR, a hierarchical compositional prior unifying structural causal diversity, modular realism
+perturbations, and controlled shift stress within a leakage-safe curriculum framework.
+(ii) We establish a controlled evaluation protocol that isolates prior design as an independent variable, enabling
+clean attribution of downstream performance to specific generative choices.
+(iii) We provide systematic ablations identifying which realism components drive transfer quality, offering principled
+guidance for synthetic pretraining pipeline design.
+2 O’PRIOR: Compositional realism priors for tabular pretraining
+We introduce O’PRIOR, a compositional prior for TFMs pretraining implemented as a batched synthetic task generator.
+Its design rests on a simple but consequential observation: real tabular datasets are not clean samples from smooth
+input-output functions. They are shaped by latent causal structure, heterogeneous feature distributions, structured
+missingness, measurement artifacts, and distributional shifts between training and test populations. Standard synthetic
+priors address the first of these, functional diversity, but systematically neglect the rest.
+O’PRIORaddresses this gap through a sequential generative pipeline as shown in Figure 1. First, a structural causal
+model (SCM) generator samples a raw supervised task from various mechanisms. Second, a modular realism engine
+transforms this raw task to be more realistic by altering feature marginals, adding engineered structure, inducing
+missingness, and reshaping targets. Third, distribution-shifts, support-query mismatches, confounding, and spurious
+correlations are injected to harden in-context predictors against shortcuts. Finally, a curriculum-governed protocol
+controls the difficulty of these components over pretraining while enforcing leakage-safe transformations. Since these
+components are independent, O’PRIORsupports controlled attribution of downstream gains to specific generative
+choices.
+Leakage-safe contract.A TFM is evaluated as an in-context learner: it observes a labeled support set {(xt, yt)}n
+t=1
+and predicts labels for query rows t > n , which are unseen at inference time. Any preprocessing statistic computed over
+query rows would therefore constitute information leakage - it would give the generator knowledge the model cannot
+have at test time. Throughout O’PRIOR, we enforce the following contract:all fitted statistics are Fn-measurable,
+computed exclusively from support rows. Query rows are transformed only by functions of the support:
+˜xtj =h j({xsj}s≤n, x tj), t > n.(1)
+We state this contract once here. All subsequent components respect it without re-statement.
+Task format.Each synthetic task is a supervised tuple D= (X∈R T×d ,y∈R T , n) , where rows t≤n form
+thesupport(labeled context) and rows t > n form thequeryset whose labels are predicted. The target y is either a
+continuous regression or a discrete classification target in{0, . . . , K−1} T . The generator produces complete in-context
+episodes rather than isolated examples.
+2
+
+=== PDF PAGE 3 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Figure 1 Schematic overview of the O’PRIORcompositional realism prior. (i) Task-level hyperparameters and a
+curriculum-controlled realism profileP∈ {LOW,MILD,HARD}are sampled jointly, with curriculum mixing
+Gs = (1−α(s))G P0 +α(s)G P1; (ii) A Hybrid SCM is sampled by composing base mechanisms from five families–MLPs,
+decision trees, one-dimensional convolutions, RBF Gaussian processes, and time-lagged V ARs– into a single random DAG, with
+per-node aggregation rules and a diversity-aware feature/target selector drawn jointly; (iii) The DAG is evaluated in topological order
+under the leakage-safe contract ˜xtj =h j({xsj}s≤n, xtj), so every fitted statistic is Fn-measurable; (iv) A modular realism engine
+maps(X (0), y(0))to( ˜X,˜y, M, τ)through marginal morphing, feature augmentation, MCAR/MAR/MNAR missingness, target
+reshaping, and optional subgroup structure; (v) A shift-and-shortcut stress module injects latent confounding, in-support shortcuts
+that weaken or invert on query rows, affine covariate shift, and seasonal or regime drift, each controlled by independent Bernoulli
+gates and task-level parametersω. The surviving episode is emitted as the final in-context task.
+10PT
+2.1 Structural causal model generator
+The first stage is responsible forfunctional and causal diversity: it determines what variables exist, how they depend
+on one another, and how the target is generated from latent and observed causes. Without this stage, all downstream
+realism perturbations would be applied to a single impoverished family of mechanisms, limiting the prior’s coverage of
+real-world predictive structures.
+Prior and mechanisms.Formally, a synthetic prior is a distribution p(θ) over a space of data-generating mecha-
+nismsΘ. Each mechanismθ∈Θinduces a distribution over supervised tasks:
+θ∼p(θ),(X (0),y (0))∼p θ(X,y).(2)
+3
+
+=== PDF PAGE 4 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+In O’PRIOR, mechanisms are represented as structural causal models (SCMs) [13]: directed acyclic systems of structural
+assignments in which latent causes, observed covariates, and the response are generated from parent variables and
+independent exogenous noise.
+SCM-based Models.To cover the space of functional relationships found in real tabular data, O’PRIORdraws
+from five base mechanism classes. Some were introduced in prior work [6, 8, 11]; others are introduced here.
+• Multilayer perceptrons (MLPs): Previously proposed by [ 6], it randomly initializes an L-layer MLP with
+Gaussian noise injected at each layer, and routes k randomly initialized cause variables from which X and y
+are sampled from the hidden activations.
+• Decision Trees: Structural equations are tree-based regressors fitted on-the-fly at each layer. We extend the
+original XGBoost-only formulation used by [ 8] to include Decision Tree [ 14], Extra Trees [15], Random
+Forest [16], and a directly sampled variant.
+• Convolutional layers: Structurally identical to MLPs but with 1D convolutional layers of kernel size k in place
+of fully connected layers, following [11]. This covers smooth local dependencies along a feature index.
+• Gaussian Process: Each column of X is sampled from a GP with an RBF kernel via Cholesky factorization
+[17]. The target y is generated as a linear, quadratic, or MLP combination of the GP columns, covering
+smooth low-dimensional structure.
+•Time Lagged: A nonlinear vector autoregression of orderp[18] with randomly sampled weights and a linear
+projection as the target. This covers temporal and autoregressive causal structures.
+Hybrid SCM.Previous SCM models generate tasks through a single functional family. Real tabular datasets, however,
+are rarely so uniform: a financial dataset might exhibit linear relationships among macroeconomic indicators and
+polynomial interactions among other covariates, while a clinical dataset might combine tree-structured treatment rules
+with GP-like biological variation. To capture this, we introduce theHybrid SCM, a composition of multiple base classes
+within a single task.
+A Hybrid SCM is defined as an ordered tuple (θ(1), . . . , θ(ℓ)) of base mechanisms, where the output variables of θ(i)
+may serve as inputs to θ(j) for j > i . This defines a random directed acyclic graph whose edges correspond to different
+structural families. Node values are aggregated from their parents using one of five operators: mean, weighted softmax,
+MLP, product, or max, sampled per node. Features and targets are then selected from the full set of nodes using
+one of four diversity-aware strategies:k-meansclustering of node representations,farthest-pointgreedy selection,
+entropy-basedranking via k-nearest-neighbour entropy estimation [ 19], andgraph community detectionvia the Leiden
+or Louvain algorithm [20]. These strategies ensure that the selected features span diverse regions of the representational
+space of the DAG rather than clustering around a single mechanism, which would undermine the heterogeneity the
+Hybrid SCM.
+2.2 Modular realism engine
+The SCM stage produces functionally diverse tasks, but its outputs remain idealized: feature marginals are approximately
+Gaussian, missingness is absent, and no observational artifacts are present. Real tabular datasets differ from this in
+ways that are not cosmetic - heavy tails, structured missing values, measurement noise, and heterogeneous feature types
+systematically affect which predictive signals a model can extract. The realism engine transforms each raw SCM output
+into an observational table that better reflects these properties. Conceptually, this separates thelatent structural signal
+produced by the SCM from theobservational layerintroduced by data collection, measurement, and preprocessing.
+We write the realism map as
+(X(0),y (0))7− →(eX,ey,M,τ),(3)
+where M∈ {0,1} T×d ′
+is a missingness mask and τ stores per-column semantic type and imputation identity. All
+statistics are computed from support rows in accordance with the leakage-safe contract stated above.
+Support-only preprocessing.Real tabular pipelines almost never consume raw generative latents directly.
+Analysts and automated systems routinely rescale, compress extremes, and re-express skewed marginals before
+modeling; separately, real datasets exhibit measurement error, missing fields, and gross outlierson top ofwhatever
+preprocessing has already occurred. We therefore use an initialsupport-consistentpreprocessing block for three
+reasons: (i) it stabilizes scales for later realism modules (e.g., heteroscedastic noise and missingness models defined
+on standardized signals); (ii) it matches the information constraints of ICL (the model must not rely on statistics that
+4
+
+=== PDF PAGE 5 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+require peeking at the query split); and (iii) it yields a clearer scientific separation betweenstructuraldiversity (SCM)
+andobservationaldiversity (noise, missingness, tails).
+Let
+X(0) =
+
+Xsup
+Xq
+
+,X sup ∈R n×d.
+For each column j, the generator computes support-only moments µj and σj, with a small floor on σj. These statistics
+define clipping thresholds
+τ −
+j =µ j −κσ j, τ +
+j =µ j +κσ j.
+We treat τ ±
+j as anoperational rangelearned from the context: support rows may be winsorized or cleaned for extreme
+values, while query rows are clipped to thesame [τ −
+j , τ +
+j ] bounds. Next, optional monotone quantile maps and
+marginal transformations maybe be fitted on support rows and applied to both support and query rows. These include
+standardization, power transforms, skew correction, log-type shifts, and rank-based Gaussianization. This design
+enforces the same information constraint as in-context prediction: query rows may be transformed using functions fit on
+support rows, but not using query-label or global query-distribution information.
+Feature augmentation and marginal morphing.Real datasets often contain engineered features, redundant
+columns, and marginal distributions far from Gaussian. O’PRIORaddresses this in two steps. First, engineered columns
+may be appended: polynomial interactions, low-rank projections (with the projection basis estimated from the support
+and applied to queries), noisy duplicates, and random linear combinations of existing features. Second, selected columns
+undergodistributional morphing: heavy-tailed variables (Student-t or Pareto-like tails), bounded variables (Beta or
+sigmoid maps), count-like variables (Poisson or negative-binomial), ordinalized variables (uniform or quantile bins),
+nonlinear CDF warps (e.g., Kumaraswamy), rank-Gaussian variables, heteroscedastic noise, redundant features, and
+sparse gross outliers. Together, these expose the pretrained model to the feature marginals it will encounter in real
+deployment, rather than the smooth distributions that SCMs naturally produce.
+˜xtj =x tj +σ j exp(α|ztj|)ϵ tj, ϵ tj ∼ N(0,1),(4)
+Structured missingness.Missing values are ubiquitous in real tabular data and arise through distinct
+mechanisms that interact differently with predictive models. For each column j, O’PRIORsamples a mechanism
+Rj ∈ {MCAR,MAR,MNAR} with mixture weights from ω. Under MCAR, entries are missing independently with
+rateπ j. Under MAR, missingness depends on a driver columnk(j)̸=j:
+P(mtj = 1|x t) =σ
+
+βMAR zt,k(j) +b j
+
+,(5)
+withb j calibrated from a target support rate. Under MNAR, missingness depends on the feature’s own value:
+P(mtj = 1|x tj) =σ(β MNAR sj ztj +b j),(6)
+where sj ∈ {−1,+1} is derived from support skewness. Missing entries are imputed using support-only statistics
+- mean, median, constant fills, sampled support values, or Gaussian noise around the support mean - with the imputation
+strategy stored as column metadata so the model can condition on it when metadata is provided.
+Target transformations.The raw target y(0) is transformed to diversify the shape of the prediction problem. For
+regression, support-only normalization is applied first:
+˜yt = yt −¯y
+sy
+,¯y, s y fromt≤n,(7)
+followed by optional skew transforms, heavy-tailed noise, mixture perturbations, bounded reparameterizations, or
+censoring-style transformations that model survival outcomes. For classification, a real-valued latent score is discretized
+into K classes using support quantiles or ranks; class labels may be permuted and label noise may be introduced by
+randomly flipping a fraction of labels, producing tasks with variable class balance, margin structure, and label reliability.
+Subgroup structure.Real datasets frequently contain subgroups - demographic, institutional, or experimental
+- that induce systematic variation in the target beyond the primary predictive signal. O’PRIORoptionally adds a
+categorical subgroup attributeg t ∈ {1, . . . , G}with balanced or imbalanced group probabilities, modifying the target
+through group-specific intercepts, random projections of one-hot encodings, or interactions with continuous features.
+Domain-specific extensions, such as finance-style volatility shocks, are available as independently ablatable modules.
+5
+
+=== PDF PAGE 6 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+2.3 Distribution Shift and Shortcut Stress
+The realism engine improves the marginal and observational properties of each task, but it does not alter the relationship
+between support and query rows. In practice, however, support and query populations routinely differ - through
+confounding, covariate shift, temporal drift, or spurious predictors that are informative in training but unreliable at test
+time. For an in-context learner, these are not edge cases; they are the primary failure modes. This stage injects structured
+support-query mismatch to expose the model to exactly these conditions during pretraining. All shift strengths are
+drawn from ω and controlled by task-level Bernoulli switches, enabling clean isolation of each mechanism in ablations.
+Latent confounding.To model shared unobserved causes, the generator samples a latent vector z∈R T , normalized
+to zero mean and unit variance on support rows. For a random subset of columnsJ cf, it applies:
+˜xtj ←˜xtj +α xzt, j∈ J cf ,˜y t ←˜yt +α yzt,(8)
+with αx, αy proportional to a global confounding strength in ω. The shared factor zt induces feature-target dependence
+that is not a direct causal effect, requiring the model to distinguish genuine predictive signal from confounded
+association.
+Spurious support predictors.To stress-test shortcut reliance, selected columns are made highly predictive on
+support rows but unreliable on query rows. Using support-normalized labels ˇyt = (yt −¯y)/sy, support entries for
+j∈ J sp are set as:
+˜xtj =λˇyt +ϵ tj, t≤n,(9)
+while query entries obey:
+˜xtj =s j ρ λˇyt +ϵ tj, t > n,(10)
+where sj ∈ {−1,+1} may flip the association and ρ∈(0,1] weakens it. These columns are strong shortcuts in-support
+but degraded or inverted out-of-support, a direct stress test for models that over-rely on spurious in-context correlations.
+Covariate shift.For a subsetJ cs, query rows undergo affine perturbation:
+˜xtj ←a j ˜xtj +b j, t > n, j∈ J cs,(11)
+with (aj, bj) scaled relative to support dispersion. This shifts the marginal distribution of query features away from the
+support without altering the causal task structure.
+Temporal and seasonal drift.For sequence-structured tasks, the generator introduces non-stationarity via two
+mechanisms. A seasonal component adds a periodic signal to the target:
+∆yt =Asin(ωt+ϕ), A∝s y.(12)
+Regime drift is produced by sampling one or more change points and applying segment-specific affine transforms to
+selected columns, with sigmoid or abrupt blending at boundaries. Together, these cover the temporal distribution shift
+patterns common in financial, clinical, and sensor tabular data.
+2.4 Curriculum and Leakage-Safe Generation
+The three stages above define a rich family of synthetic tasks, but applying maximal realism uniformly from the start
+of pretraining is not necessarily optimal. Early in training, the model has not yet learned basic predictive structure;
+exposing it immediately to heavy confounding, severe missingness, and adversarial shortcuts may slow convergence
+or prevent the acquisition of fundamental in-context learning behavior. This motivates a curriculum: staging realism
+difficulty over pretraining so that the model builds competence progressively. Critically, the curriculum operates entirely
+on the prior, the model architecture, optimizer, and compute budget remain fixed throughout, making curriculum
+schedule an independently ablatable experimental axis.
+Realism profiles.O’PRIORdefines three realism presets P ∈ {LOW,MILD,HARD} . Each induces a distinct
+hyperprior GP over the same parameterization by restricting the support of key coordinates of ω - missingness rates,
+tail severity, confounding strength, spurious feature fraction, and shift magnitude become progressively less constrained
+fromLOWtoHARD. Because the parameterization is shared, profiles can be directly compared or continuously
+interpolated.
+6
+
+=== PDF PAGE 7 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Curriculum over profiles.Let s denote the synthetic batch index and α(s)∈[0,1] a curriculum schedule (linear,
+cosine, or step) over a warmup horizonS 0. The task hyperprior at stepsis:
+Gs = (1−α(s))G P0 +α(s)G P1 .(13)
+The interpolation mixes discrete choice supports and linearly interpolates numeric ranges for rates, strengths, and
+probabilities. Early batches therefore emphasize simpler mechanisms and mild observational artifacts; later batches
+introduce harder missingness, heavier tails, stronger shifts, and more adversarial shortcuts.
+Quality control.Generated tasks are rejected and resampled when they fail basic validity checks: too few active
+features after pruning near-constant columns, collapsed or severely imbalanced support classes in classification tasks, or
+degenerate target variation in regression tasks. These checks are deliberately minimal, they prevent pathological draws
+without over-filtering the prior toward an unrealistically clean task distribution.
+3 Experimental Evaluation
+We provide an empirical analysis about the contribution of each component of O’PRIOR. We create different variants of
+the prior which are defined by combinations of its components and compare them to state-of-the-art priors, for tabular
+classification, and relying on a real-world playground.
+3.1 Experimental Protocol
+Controlled evaluation principle.The central methodological commitment of this work is isolation: we hold
+the model architecture, optimizer, training budget, and evaluation pipeline fixed across all conditions and vary only
+the synthetic task distribution used for pretraining. Any observed difference in downstream performance is therefore
+attributable to the prior alone, not to differences in capacity, compute, or hyperparameter tuning.
+Model and training infrastructure.NANOTABPFN [ 21] as our base TFM – a lightweight, fully open-source
+reimplementation of the TABPFNV2 [ 22] architecture designed as a research testbed for studying TFMs under
+controlled conditions. All experiments use the TFM-Playground training protocol1, which provides a unified interface
+for loading synthetic prior data and evaluating the resulting model.NANOTABPFN is used deliberately: at reduced
+scale, pretraining requires only tens of thousands of synthetic datasets rather than millions, making controlled prior
+ablations computationally feasible without sacrificing the qualitative conclusions.
+All models are trained under an identical budget: 40,000 synthetic datasets per prior, each of size T∈[512,1024] rows
+and d∈[3,50] features, with a batch size of 4 tables per optimization step, 1,000 steps per epoch, and 10 epochs of
+training, without hyperparameter tuning between conditions.
+Baselines.We compare against three existing generators under the same training budget and model:
+• TabPFN v1generator: the original SCM-based prior from [ 6], which generates synthetic datasets using
+MLP-based SCMs with randomly initialized Bayesian neural network weights and Gaussian noise injected at
+each layer. It provides functional diversity but no realism perturbations, no structured missingness, and no
+distribution shift.
+• TabICL-v1generator [ 8]: extends the MLP-based SCM prior with tree-based structural equations (XGBoost),
+producing tasks whose decision boundaries better reflect the inductive biases of gradient-boosted trees.
+• TabICL-v2generator [ 23]: augments TabICL-v1 with additional SCM diversity and a richer set of feature-
+level transforms, including improved handling of categorical features and target distributions. Relative to v1, it
+broadens functional coverage while remaining free of explicit realism perturbations and shift mechanisms.
+O’Prior ablation groups.To attribute performance gains to specific generative components, we construct nine
+variants organized into four groups following the sequential pipeline of Section 2. We use the following shorthand:
+SM(basic SCM families),SH(Hybrid SCM),MR(moderate realism),SR(strong realism),SD(distribution shift and
+shortcut stress). Groups 1–3 each isolate a single stage by enabling it while holding the others off; Group 4 combines
+all components with a linear mild-to-hard realism curriculum and serves as the full O’PRIORconfiguration. This
+design supports three types of comparison: baselines vs O’PRIORvariants, within-group ablation to isolate individual
+components, and cross-group comparison to assess interactions. Table 1 summarizes all variants.
+1https://github.com/automl/TFM-Playground/
+7
+
+=== PDF PAGE 8 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Table 1O’PRIORablation variants. G4 is the complete O’PRIORconfiguration; all other variants isolate specific generative
+components to enable controlled attribution.
+10PT
+Variant Components Purpose
+G1a SM SCM diversity without Hybrid
+G1b SH Hybrid SCM only
+G1c SM + SH Full SCM diversity
+G2a SM + MR Effect of moderate realism
+G2b SM + SR Effect of strong realism
+G2c SM + SH + SR Realism with full SCM diversity
+G3a SM + SD Shift stress without realism
+G3b SM + SH + SD Shift stress with full SCM diversity
+G4 SM + SH + SR + SD + Curriculum Full O’PRIORpipeline
+Table 2Avg ROC-AUC, Accuracy, and F1-score for different compositions and variants of O’PRIOR.
+10PT
+Group Variants TabArena-v0.1 OpenML-CC18
+ROC-AUC ACC F1-score ROC-AUC ACC F1-score
+Baselines
+TabPFN 0.5758 0.7257 0.3724 0.5189 0.5770 0.3105
+TabICL-v1 0.6361 0.7366 0.3842 0.5754 0.5883 0.3139
+TabICL-v2 0.7910 0.8026 0.5234 0.7240 0.6402 0.4442
+SCM/Hybrid
+SM (G1a) 0.7881 0.8087 0.5555 0.7411 0.6641 0.4929
+SH (G1b)0.8335 0.83490.6148 0.8228 0.7299 0.5789
+SM+SH (G1c) 0.8324 0.8298 0.58790.8313 0.7427 0.5906
+Realism
+SM+MR (G2a) 0.8102 0.8152 0.5699 0.7967 0.7089 0.5473
+SM+SR (G2b) 0.8315 0.8331 0.6143 0.8128 0.7284 0.5848
+SM+SH+SR (G2c) 0.82950.8366 0.6138 0.8011 0.7045 0.5395
+Distribution Shifts SM+SD (G3a) 0.8012 0.8128 0.5400 0.7806 0.6969 0.5023
+SM+SH+SD (G3b) 0.8192 0.8250 0.5725 0.8064 0.7170 0.5271
+Curriculum G4 0.8194 0.8212 0.5829 0.8245 0.7239 0.5693
+Benchmarks.We evaluate on two complementary benchmarks covering 52 tabular classification tasks in total: (i)
+TabArena v0.1[12] – which is included in the TFM-Playground, comprising 21 curated tabular classification datasets
+with documented preprocessing and evaluation splits; (ii)OpenML-CC18 (filtered)– we sample all classification
+datasets from the OpenML-CC18 benchmark [24] satisfying: d∈[2,50] features and N <10,000 samples, yielding 31
+datasets. This subset targets the small-to-medium data regime where in-context tabular learners are most competitive.
+Full dataset IDs and task specifications are provided in Appendix B.
+Metrics.We report ROC-AUC, accuracy (ACC), and macro-averaged F1 score on held-out test splits for all datasets
+and conditions. For multi-class tasks, ROC-AUC is computed using the one-vs-rest formulation. Results are averaged
+across datasets within each benchmark.
+3.2 Main Results
+3.2.1 Ablation Analysis
+Overview and Motivation.The ablation study is designed to answer a specific and narrow question: given a fixed
+architecture and a fixed training budget, how much does the choice of synthetic prior matter, and which components of
+that prior are responsible for downstream gains? This framing is important because prior work conflates architectural
+improvements with prior improvements, TABPFN V2, for instance, enriched both simultaneously, making attribution
+impossible. Here, the prior is the only variable.
+The nine O’PRIORvariants are organized into four sequential groups that mirror the pipeline introduced in Section 2:
+Group 1 targets structural mechanism diversity (SCM and Hybrid SCM), Group 2 adds the realism engine on top of a
+8
+
+=== PDF PAGE 9 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+fixed SCM base, Group 3 adds the distribution-shift and shortcut-stress module, and Group 4 combines all components
+under a curriculum schedule. Three baselines anchor the comparison at the low end.
+Table 2 reports average ROC-AUC, accuracy, and macro F1-score for all conditions across both benchmarks.
+Baseline Progression.The three baselines already reveal that prior design matters substantially, even before any
+O’PRIORvariant is considered. TABPFN, the oldest and simplest prior, obtains the weakest performance across both
+benchmarks, with ROC-AUC of 0.576 on TabArena and 0.519 on OpenML-CC18, and macro F1 below 0.37 on both.
+TABICL-V1, which extends the MLP-based SCM with XGBoost-based structural equations, improves modestly over
+TABPFN across all metrics. The improvement is consistent but small, suggesting that adding tree-based mechanisms
+to an otherwise unchanged prior delivers marginal gains in this budget-constrained setting. TABICL-V2 represents
+a more substantial advance, reaching ROC-AUC of 0.791 on TabArena and 0.724 on OpenML-CC18, with macro
+F1 improving by approximately 14 points over TabICL-v1 on TabArena. This progression across the three baselines
+confirms the central hypothesis: richer synthetic task distributions yield better in-context learners, and the prior is a
+first-order determinant of model quality.
+Structural Mechanism Diversity.Group 1 tests the contribution of the SCM generator stage before any realism
+or shift perturbations are applied. The basic SCM prior (G1a) already matches TABICL-V2 on TabArena ROC-AUC
+(0.788 vs 0.791) and exceeds it on F1 (0.556 vs 0.523), while outperforming it on OpenML-CC18 across all three
+metrics. This is a notable result: diversifying the space of structural mechanisms, without any other modification, is
+sufficient to match or surpass a substantially more complex baseline.
+The Hybrid SCM alone (G1b) delivers the largest single-component gain in the ablation. Adding compositional
+multi-mechanism tasks – where different structural families generate subsets of variables within the same DAG –
+pushes TabArena ROC-AUC to 0.834 and macro F1 to 0.615, the highest F1 of any individual variant on TabArena.
+On OpenML-CC18, G1b reaches 0.823 ROC-AUC and 0.579 F1, representing a 10-point F1 improvement over
+TABICL-V2. Combining basic and Hybrid SCMs (G1c) gives the strongest OpenML-CC18 ROC-AUC among all
+non-curriculum variants (0.831) and the highest OpenML-CC18 accuracy (0.743), suggesting that the two mechanism
+families are complementary: the basic SCM families cover distinct functional regions that the Hybrid SCM alone may
+undersample.
+The Group 1 finding is perhaps the most consequential result in the ablation: mechanism diversity alone, with no
+realism perturbations and no shift stress, accounts for the majority of the gap between the weakest baseline (TABPFN)
+and the best O’PRIORconfigurations. The SCM generator is the primary source of transfer improvement.
+Modular Realism Engine.Group 2 adds the realism engine on top of the basic SCM prior (SM), holding the
+structural mechanisms fixed. The moderate-realism variant (G2a, SM+MR) improves over SM on all metrics on both
+benchmarks. This confirms that realism perturbations, heterogeneous marginals, structured missingness, noisy targets,
+and target-shape variation, are beneficial rather than merely adding noise. The model learns something transferable
+from harder observational artifacts.
+Strong realism (G2b, SM+SR) consistently outperforms moderate realism across all six metric-benchmark combinations.
+TabArena F1 rises from 0.570 to 0.614, and OpenML-CC18 F1 from 0.547 to 0.585. The monotone relationship
+between realism severity and performance suggests that the model benefits from increased exposure to the kinds of
+distributional irregularities it encounters in real datasets, heavy-tailed marginals, MAR and MNAR missingness patterns,
+label noise, and bounded or skewed target distributions.
+The interaction between Hybrid SCM and strong realism (G2c, SM+SH+SR) reveals a nontrivial dependency on
+training budget. While G2c improves over the basic SCM prior on TabArena, it does not uniformly dominate G2b
+on OpenML-CC18, where its ROC-AUC (0.801) is lower than G2b (0.813) and its accuracy (0.705) falls below G2b
+(0.728). The interpretation is that combining maximal structural diversity with maximal realism perturbations places
+a higher learning burden on the model: under a fixed budget of 40,000 synthetic datasets, the model may not fully
+amortize the increased variability of both stages simultaneously. This interaction is not a failure of either component; it
+is a budget-dependent constraint. With larger pretraining budgets, G2c would be expected to dominate.
+Distribution Shift and Shortcut Stress.Group 3 isolates the contribution of the shift stress module: latent
+confounding, spurious support predictors, covariate shift, and temporal drift. Adding the shift module to the basic
+SCM prior (G3a, SM+SD) improves substantially over SM across both benchmarks. Adding the Hybrid SCM
+alongside the shift module (G3b, SM+SH+SD) further improves all metrics, reaching TabArena ROC-AUC of 0.819
+and OpenML-CC18 F1 of 0.527.
+9
+
+=== PDF PAGE 10 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+The average- case gains from the shift module are smaller than those from the realism engine, which is expected by
+design. The shift module is not primarily intended to improve average i.i.d. accuracy; it is designed to expose the model
+to support-query mismatch and shortcut failure modes that manifest most clearly under distributional irregularity. Its
+contribution is therefore best understood as a robustness-oriented component. The benefit will be most pronounced
+when the downstream evaluation explicitly includes shifted or out-of-distribution test conditions – a regime that the
+standard benchmarks used here do not fully capture. Under more targeted robustness evaluations, the shift module’s
+contribution would likely rank higher.
+Full Curriculum.The curriculum variant (G4) combines all O’PRIORcomponents – hybrid SCMs, strong realism,
+shift stress – under a linear mild-to-hard schedule that begins with the LOW realism profile and transitions to HARD
+over the warmup horizon. It substantially outperforms all three baselines: over TABICL-V2, G4 improves TabArena
+ROC-AUC by 2.8 points, accuracy by 1.9 points, and F1 by 5.9 points. On OpenML-CC18, the improvements are 10.1,
+8.4, and 12.5 points respectively.
+However, G4 does not dominate the best static configurations within the O’PRIORablation. Under the fixed budget
+of 40,000 synthetic datasets and 10 epochs, configurations such as G1b, G1c, and G2b outperform G4 on several
+metric-benchmark combinations. The explanation is structural: under a fixed step budget, spending early updates on
+simpler LOW-profile tasks reduces the number of updates drawn from the target HARD distribution. Static strong
+priors allocate every gradient step to the final task distribution, making them more sample-efficient when the budget
+is the binding constraint. Curriculum is not a universally superior strategy; it is a schedule-dependent design choice.
+Its advantage materializes when optimization stability – not sample efficiency – is the bottleneck, or when the total
+pretraining budget is large enough that the warmup phase does not materially reduce exposure to the hardest regime.
+Summary of Ablation Findings.Three conclusions emerge consistently across all conditions.
+• First, structural mechanism diversity is the dominant source of transfer improvement. The Group 1 variants
+outperform all baselines and account for the majority of the performance gap over TABICL-V2, despite using
+no realism perturbations or shift mechanisms. The Hybrid SCM, which composes multiple functional families
+within a single synthetic task, is the single most impactful component in the ablation.
+• Second, realism perturbations and shift stress add complementary, independent gains. Adding the realism en-
+gine to a fixed SCM prior consistently improves all metrics, with stronger realism monotonically outperforming
+moderate realism. The shift stress module similarly improves over the SCM-only prior. Critically, the ablation
+design – with each component toggled independently – confirms that these effects are not interchangeable:
+mechanism diversity and realism each capture qualitatively distinct aspects of what makes a synthetic prior
+useful.
+• Third, curriculum is a schedule-dependent design choice rather than a uniformly superior strategy. Under short
+fixed budgets, static strong priors outperform the curriculum configuration because every training step is drawn
+from the target distribution. Curriculum becomes the right choice when optimization stability is the limiting
+factor or when training budgets are sufficiently large that the warmup cost is amortized.
+3.2.2 Prior Quality Assessment via Structural Alignment
+Downstream benchmark performance measures the effect of a synthetic prior after it has been absorbed by a trained
+tabular foundation model. This is the primary evaluation criterion in our study, but it does not directly answer a
+complementary question: do the synthetic tables generated by the prior exhibit structural properties that resemble
+real tabular data? We therefore evaluate the synthetic generators themselves using a schema-agnostic adaptation of
+TabStruct [25]. The goal is not to reproduce any single real dataset, but to assess whether a prior generates tables with
+realistic marginal behavior and inter-feature dependency structure.
+Schema-agnostic adaptation.TabStruct is originally designed for fixed-schema synthetic data evaluation, where
+synthetic and real tables share aligned columns. This assumption is incompatible with O’PRIOR: by construction,
+O’PRIORgenerates variable-schema supervised tasks with varying numbers of rows, features, and causal mechanisms.
+Column-wise matching would therefore penalize precisely the form of diversity that the prior is designed to produce.
+We instead compare generators through pooled, schema-agnostic statistics. For each real reference dataset, we sample
+synthetic tables from Full O’PRIORand TABICL-V2, then evaluate two complementary properties: one-dimensional
+marginal alignment and correlation-spectrum alignment. This adaptation preserves the spirit of TabStruct while making
+the evaluation appropriate for priors that define distributions over tasks rather than replicas of a fixed table.
+Evaluation protocol.We evaluate against four real tabular reference datasets spanning different dimensionalities
+and domains: Electricity (OpenML ID:151), Diabetes (OpenML ID:37), Telco Churn (OpenML ID:40701), and Home
+10
+
+=== PDF PAGE 11 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Table 3TabStruct-adapted realism evaluation results. Scores are reported as mean ± standard deviation over 10 independent Monte
+Carlo iterations.
+10PT
+Reference Data Synthetic Marginal CorrelationQ
+Electricity (ID:151) Full O’PRIOR0.979±0.003 0.795±0.027 0.882±0.015
+Electricity (ID:151) TABICL-v20.995±0.000 0.760±0.025 0.870±0.014
+Diabetes (ID:37) Full O’PRIOR0.974±0.003 0.745±0.025 0.852±0.015
+Diabetes (ID:37) TABICL-v20.988±0.002 0.710±0.026 0.838±0.015
+Churn (ID:40701) Full O’PRIOR0.971±0.003 0.910±0.013 0.940±0.007
+Churn (ID:40701) TABICL-v20.985±0.000 0.887±0.021 0.934±0.011
+Home Credit Full O’PRIOR0.957±0.002 0.941±0.006 0.949±0.004
+Home Credit TABICL-v20.968±0.001 0.906±0.028 0.937±0.015
+Credit. Electricity and Diabetes provide lower-dimensional references, while Churn and Home Credit contain richer
+inter-feature structure and therefore provide a stronger test of structural realism. For each reference dataset and each
+generator, we run 10 independent Monte Carlo iterations. In each iteration, we sample 50 synthetic tables from the
+generator and compute the structural-alignment metrics described below. Results are reported as mean ± standard
+deviation across iterations.
+Metrics.We compute two scores per iteration. The marginal score measures alignment between the pooled feature-
+value distribution of the synthetic tables and that of the real reference. Feature values from synthetic tables are pooled,
+capped by reservoir sampling when necessary, quantile-normalized to [0,1] , and compared to the reference using the
+first Wasserstein distance:
+Smarginal = exp(−W1).(14)
+The correlation score measures structural alignment. For each synthetic table, we compute the eigenvalue spectrum of
+its feature-correlation matrix, pool spectra across sampled tables, and compare the resulting distribution to the reference
+spectrum:
+Scorr = exp(−5W1).(15)
+The scaling factor makes the correlation score comparable in range to the marginal score. Finally, we combine the two
+dimensions using the geometric mean:
+Q=
+p
+SmarginalScorr.(16)
+This composite score penalizes generators that perform well on only one dimension. A high value of Q therefore
+requires both realistic marginal behavior and realistic dependency structure.
+Results.Table 3 reports the adapted TabStruct scores. O’PRIORachieves the highest composite quality score on all
+four reference datasets. The gains are most pronounced on the structurally richer references: on Churn, O’PRIORobtains
+Q= 0.940±0.007 compared with 0.934±0.011 for TABICL-V2, while on Home Credit it obtains 0.949±0.004
+compared with 0.937±0.015 . O’PRIORalso has substantially lower variance on Home Credit, indicating that its
+structural realism is more stable across Monte Carlo samples.
+The source of this improvement is correlation alignment. O’PRIORobtains higher correlation scores on every reference
+dataset: 0.795 vs. 0.760 on Electricity, 0.745 vs. 0.710 on Diabetes, 0.910 vs. 0.887 on Churn, and 0.941 vs. 0.906
+on Home Credit. This pattern directly supports the design motivation of O’PRIOR. Its compositional SCM generator
+does not merely diversify univariate feature shapes; it produces structured dependencies between variables through
+heterogeneous causal mechanisms, shared latent structure, subgroup effects, and support-query perturbations. These
+mechanisms are exactly what should improve correlation-spectrum realism.
+TABICL-V2 obtains higher marginal scores across all four references. We do not interpret this as evidence of stronger
+overall realism. TABICL-V2 produces fixed-format synthetic tables, so pooling many homogeneous samples yields very
+stable one-dimensional marginal estimates. O’PRIORintentionally generates variable-schema tasks with heterogeneous
+feature counts, mechanisms, and marginal transformations. This broader coverage can increase the Wasserstein distance
+under a pooled marginal metric, even when the generated tasks are more useful and structurally realistic. The composite
+score and correlation score are therefore more informative for evaluating variable-schema priors, because they capture
+whether the generator produces realistic tabular structure rather than whether it matches a single fixed schema.
+11
+
+=== PDF PAGE 12 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Figure 2Structural alignment between real reference datasets and synthetic priors. Eigenvalue spectra and pairwise-correlation
+distributions are aggregated over 50 sampled tables per synthetic source. O’PRIORbetter matches the eigenvalue decay and
+correlation spread of high-dimensional real datasets, while TABICL-v2 produces weaker inter-feature dependence.
+10PT
+Structural visualization.The visualization in Figure 2 provides qualitative support for the numerical results.
+The eigenvalue-spectrum plots show that O’PRIORmore closely follows the decay pattern of real reference datasets,
+especially on Churn and Home Credit, where real tables exhibit stronger inter-feature dependence. In contrast, TABICL-
+V2 produces spectra closer to weakly dependent or overly uniform feature sets. The pairwise-correlation visualizations
+show the same effect from a complementary perspective: O’PRIORgenerates broader and more realistic correlation
+structure, while TABICL-V2 is more concentrated near zero correlation. These visual patterns explain why O’PRIOR
+consistently improvesS corr and, consequently, the composite scoreQ.
+Overall, this experiment shows that O’PRIORimproves the quality of the synthetic prior at the data-generating level,
+not only after model training. The prior generates tables that are more structurally aligned with real tabular datasets,
+particularly in regimes with richer feature interactions. This provides direct evidence that O’PRIORcompositional
+realism is doing what it is designed to do: expanding the synthetic task distribution toward realistic dependency
+structures while preserving broad coverage across schemas and mechanisms.
+3.2.3 Prior Quality via TFM Internal Representations
+The previous experiments evaluate synthetic priors either through downstream benchmark performance or through
+structural alignment of the generated tables themselves. We now ask another question: how does the choice of synthetic
+prior change the internal representations learned by the tabular foundation model? This experiment evaluates whether
+pretraining on O’PRIORinduces progressively more informative representations inside the transformer, rather than
+merely improving final predictions through shallow or dataset-specific effects.
+Motivation.A tabular foundation model trained on a useful prior should not only perform well at the output layer; it
+should organize real tabular examples into internal representations that become increasingly predictive across depth.
+If the synthetic pretraining distribution exposes the model to realistic structural mechanisms, heterogeneous feature
+interactions, missingness patterns, and support–query shifts, then deeper layers should encode more task-relevant
+information. Conversely, if a prior induces only weak or brittle abstractions, linear probes trained on intermediate
+representations should remain flat across layers, degrade with depth, or perform no better than an untrained model.
+This representation-level evaluation is important because it directly probes what the model has learned from the prior. It
+separates genuine representation learning from superficial output behavior and provides a mechanistic view of why
+O’PRIORimproves transfer. In particular, we expect the benefit of O’PRIORto be most visible on datasets with
+12
+
+=== PDF PAGE 13 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Table 4Accuracy of probing logistic regressors across seven real data and based on allNANOTABPFN layers.
+10PT
+Reference Data GeneratorL1L2L3L4L5L6
+Breast Cancer (ID:15)
+Full O’PRIOR0.98 0.98 0.98 0.96 0.96 0.96
+TABICL-v2 0.98 0.98 0.98 0.98 0.97 0.97
+TABPFN 0.98 0.97 0.98 0.980.99 0.99
+Random (untrained) 0.98 0.98 0.98 0.98 0.98 0.98
+Vehicle (ID:54)
+Full O’PRIOR0.330.46 0.48 0.58 0.69 0.67
+TABICL-v20.390.38 0.39 0.39 0.38 0.40
+TABPFN 0.38 0.39 0.40 0.37 0.34 0.33
+Random (untrained) 0.33 0.37 0.39 0.38 0.39 0.39
+Diabetes (ID:37)
+Full O’PRIOR0.700.740.700.77 0.76 0.74
+TABICL-v20.730.73 0.73 0.73 0.740.74
+TABPFN 0.71 0.720.740.72 0.71 0.66
+Random (untrained) 0.710.74 0.740.74 0.73 0.73
+Ionosphere (ID:59)
+Full O’PRIOR0.65 0.730.80 0.80 0.88 0.88
+TABICL-v20.73 0.760.76 0.76 0.76 0.73
+TABPFN0.73 0.760.76 0.61 0.57 0.57
+Random (untrained) 0.65 0.69 0.69 0.69 0.69 0.69
+Segment (ID:36)
+Full O’PRIOR0.320.59 0.68 0.75 0.74 0.83
+TABICL-v2 0.27 0.55 0.56 0.56 0.53 0.53
+TABPFN 0.31 0.52 0.54 0.46 0.39 0.31
+Random (untrained)0.330.51 0.53 0.54 0.54 0.55
+Credit-g (ID:31)
+Full O’PRIOR0.64 0.64 0.61 0.61 0.60 0.63
+TABICL-v20.66 0.660.64 0.640.64 0.64
+TABPFN 0.65 0.650.65 0.65 0.64 0.64
+Random (untrained) 0.65 0.64 0.64 0.640.64 0.64
+Blood (ID:1464)
+Full O’PRIOR0.740.78 0.81 0.79 0.79 0.77
+TABICL-v20.770.74 0.72 0.75 0.75 0.75
+TABPFN 0.74 0.73 0.73 0.74 0.74 0.74
+Random (untrained) 0.74 0.74 0.74 0.74 0.74 0.75
+nonlinear structure, multiple classes, and richer feature dependencies, where a model must progressively refine its
+representation rather than rely on simple marginal or low-level cues.
+Evaluation protocol.We compare three pretrained synthetic priors, O’PRIOR, TABICL-V2, and TABPFN, against
+a Random untrained model. All models share the sameNANOTABPFN architecture. For each real reference dataset, we
+pass the data through the model and extract hidden representations from all six transformer layers, denoted L1 through
+L6. At each layer, we freeze the representation and train a logistic regression probe to predict the target labels. The
+probe accuracy measures how linearly accessible the class information is at that layer.
+This protocol evaluates the quality of the representation learned by the prior, not the capacity of the probing model.
+Since the probe is linear and the architecture is fixed across conditions, differences in probing accuracy reflect how well
+each synthetic prior shapes the internal geometry of the transformer. The Random untrained baseline is included as a
+control for architectural and preprocessing effects: a pretrained model is only meaningfully informative when it exceeds
+the representations produced by random initialization.
+Results.Table 4 reports probing accuracy across all six layers on seven real datasets. The clearest pattern is that
+O’PRIORproduces progressively stronger representations on the datasets where representation learning is genuinely
+required. On Vehicle, accuracy rises from 0.33 at L1 to 0.69 at L5 and 0.67 at L6, while TABICL-V2 remains nearly
+flat around 0.38–0.40 and TABPFN degrades from 0.38 to 0.33. The Random model also remains near the low baseline
+range. This shows that O’PRIORlearns class-relevant structure that becomes increasingly accessible with depth,
+whereas the alternative priors do not produce comparable layerwise refinement.
+A similar pattern appears on Ionosphere and Segment. On Ionosphere, O’PRIORimproves from 0.653 at L1 to 0.884 at
+both L5 and L6, substantially exceeding TABICL-V2, TABPFN, and the Random baseline. On Segment, the trend
+13
+
+=== PDF PAGE 14 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+is even more pronounced: O’PRIORincreases from 0.32 at L1 to 0.83 at L6, while TABICL-V2 reaches only 0.56
+at its best and ends at 0.53, TABPFN declines to 0.31, and the Random model remains around 0.55 at the final layer.
+These results indicate that O’PRIORdoes not merely encode shallow separability; it builds deeper, progressively more
+discriminative representations on structurally challenging tabular tasks.
+The results on Blood and Diabetes provide a more moderate but still informative signal. On Blood, O’PRIORreaches
+its strongest probing accuracy at intermediate layers, peaking at 0.81 in L3 and remaining above the competing priors
+through later layers. On Diabetes, all methods are relatively close, but O’PRIORreaches the highest observed score,
+0.77 at L4, while TABICL-V2 remains nearly constant around 0.73–0.74 and TABPFN decreases to 0.66 by L6. This
+suggests that even when the task is less demanding or partially linearly separable at early layers, O’PRIORstill preserves
+or improves task-relevant information with depth.
+Two datasets, Breast Cancer and Credit-g, are less diagnostic. On Breast Cancer, all models, including the Random
+baseline, achieve very high probing accuracy across layers. This indicates that the dataset is already close to linearly
+separable under the model input representation, making it unsuitable for distinguishing the effect of synthetic priors.
+On Credit-g, all methods remain in a narrow range around 0.60–0.66, with no consistent depth-wise improvement. This
+suggests that either the task is not well captured by the probed representations or that its predictive signal is too weak
+for this probing setup to differentiate the priors.
+Interpretation.The representation-level evidence supports the central claim of this work: the synthetic prior
+determines not only downstream accuracy, but also the internal abstractions learned by a tabular foundation model.
+Across the most informative datasets, O’PRIORproduces a characteristic layerwise progression: early layers encode
+weak or local information, while deeper layers become substantially more linearly predictive. This is precisely
+the behavior expected from a model trained on a richer and more realistic task distribution. The Hybrid SCM
+component exposes the model to heterogeneous mechanisms and nonlinear dependencies; the realism engine introduces
+observational artifacts such as irregular marginals, missingness, and target transformations; and the shift-stress modules
+discourage reliance on brittle shortcuts. Together, these components encourage the transformer to form representations
+that are robust, structured, and increasingly task-aligned with depth.
+By contrast, TABICL-V2 often produces flat representations, and TABPFN frequently degrades on the more challenging
+datasets. This indicates that their pretrained representations are less able to progressively organize real tabular examples
+into linearly separable structures. The Random baseline is crucial for interpreting this result: on easy datasets such
+as Breast Cancer, random features already perform well, so high probing accuracy alone is not evidence of useful
+pretraining. The strongest evidence for O’PRIORcomes from datasets such as Vehicle, Ionosphere, and Segment, where
+the Random model and competing priors remain flat or weak, while O’PRIORimproves substantially across layers.
+Overall, this experiment provides mechanistic support for the value of O’PRIOR. Its gains are not limited to final-task
+performance; they are reflected inside the model as deeper, more discriminative internal representations. This suggests
+that compositional realism in the synthetic prior leads to better representation learning, enabling the tabular foundation
+model to extract and refine class-relevant structure from real datasets more effectively than priors based on simpler or
+less realistic synthetic task distributions.
+4 Related Work
+Tabular learning and tabular foundation models.Tree-based ensembles, XGBoost [ 3], LightGBM [4], and
+CatBoost [5], remain the dominant baseline for supervised tabular prediction, owing to inductive biases well-suited to
+heterogeneous features, irregular marginals, and bounded decision boundaries [1, 2]. TFMs have recently emerged as a
+compelling alternative, achieving competitive performance without dataset-specific training [6, 7, 8, 26, 10, 27, 11]. Our
+work does not propose a new TFM architecture; it treats the synthetic prior as the primary object of study. Recent work
+has also developed unified libraries for TFM inference and fine-tuning [28] and systematic studies of post-pretraining
+adaptation [29].
+Synthetic task generation for tabular pretraining.The prior-data fitted network (PFN) framework [ 30]
+introduced the idea of amortizing Bayesian inference over a synthetic prior via a pretrained transformer. TABPFN [ 6]
+instantiated this for tabular classification using SCM-based priors [31, 32] with random BNN mechanisms, demon-
+strating competitive performance without task-specific training. Subsequent TFMs extended the paradigm: TABPFN
+V2 [22] enriched the prior alongside architectural changes, making it impossible to attribute gains to the prior alone.
+TABFORESTPFN [ 33] augmented generation with tree-based decision boundaries; TABICL [ 8] scaled ICL to 500K
+samples; TABDPT [ 26] departed from synthetic pretraining entirely. Recent work has begun examining SCM-based
+generation more carefully [34, 35], but systematic ablation of prior components remains absent. O’PRIORdirectly
+14
+
+=== PDF PAGE 15 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+addresses this: it is designed to be compositionally ablatable under a controlled protocol that holds architecture,
+optimization, and compute fixed.
+Generative models for tabular data.A broad literature targets statistical fidelity to a fixed dataset, spanning
+GAN-based methods [36], autoregressive models [37], and diffusion models [38]. These methods share a fundamentally
+different objective from O’PRIOR: they approximate the distribution of a single observed table rather than defining a
+distribution over supervised learning problems for general-purpose pretraining.
+5 Conclusion
+This work studies a simple but central question for tabular foundation models: what makes a synthetic pretraining
+prior useful? Unlike language and vision models, tabular foundation models acquire most of their inductive bias from
+synthetic pretraining tasks; the prior is therefore not just a data source, but the mechanism that defines what kinds of
+tabular problems the model learns to solve.
+We introduced O’PRIOR, a compositional realism prior that combines Hybrid SCMs, modular realism perturbations,
+shift-and-shortcut stress, and a leakage-safe curriculum protocol. Under a controlled evaluation in which architecture,
+optimizer, compute budget, and evaluation pipeline are fixed, changing only the prior leads to substantial differences in
+downstream performance. The ablations show that structural mechanism diversity is the strongest driver of transfer,
+while observational realism and shift-aware stress provide complementary gains.
+Beyond benchmark performance, O’PRIORalso improves the quality of the synthetic task distribution itself. The
+structural-alignment analysis shows stronger dependency realism relative to real tabular datasets, and the probing
+experiments show that models pretrained on O’PRIORlearn deeper, more discriminative internal representations on
+structurally challenging tasks. Together, these results support the central claim that better priors produce better tabular
+foundation models not only at the output level, but also in the data-generating distribution and learned representation
+space.
+Overall, O’PRIORprovides both a practical prior for tabular pretraining and a framework for studying prior construction
+as a controllable, ablatable design problem. Future work should scale this framework to larger pretraining budgets,
+evaluate it under targeted distribution-shift benchmarks, and explore domain-specialized realism modules for high-
+impact tabular applications.
+References
+[1] Léo Grinsztajn, Edouard Oyallon, and Gaël Varoquaux. Why do tree-based models still outperform deep learning
+on typical tabular data?Advances in neural information processing systems, 35:507–520, 2022.
+[2] Duncan McElfresh, Sujay Khandagale, and Jonathan Valverde. Vishak prasad c.Ganesh Ramakrishnan, Micah
+Goldblum, and Colin White.“When do neural nets outperform boosted trees on tabular data, 2023.
+[3] Tianqi Chen and Carlos Guestrin. Xgboost: A scalable tree boosting system. InProceedings of the 22nd acm
+sigkdd international conference on knowledge discovery and data mining, pages 785–794, 2016.
+[4] Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, and Tie-Yan Liu.
+Lightgbm: A highly efficient gradient boosting decision tree.Advances in neural information processing systems,
+30, 2017.
+[5] Liudmila Prokhorenkova, Gleb Gusev, Aleksandr V orobev, Anna Veronika Dorogush, and Andrey Gulin. Catboost:
+unbiased boosting with categorical features.Advances in neural information processing systems, 31, 2018.
+[6] Noah Hollmann, Samuel Müller, Katharina Eggensperger, and Frank Hutter. Tabpfn: A transformer that solves
+small tabular classification problems in a second. InThe Eleventh International Conference on Learning
+Representations, ICLR 2023, Kigali, Rwanda, May 1-5, 2023. OpenReview.net, 2023.
+[7] Léo Grinsztajn, Klemens Flöge, Oscar Key, Felix Birkel, Philipp Jund, Brendan Roof, Benjamin Jäger, Dominik
+Safaric, Simone Alessi, Adrian Hayler, Mihir Manium, Rosen Yu, Felix Jablonski, Shi Bin Hoo, Anurag Garg,
+Jake Robertson, Magnus Bühler, Vladyslav Moroshan, Lennart Purucker, Clara Cornu, Lilly Charlotte Wehrhahn,
+Alessandro Bonetto, Bernhard Schölkopf, Sauraj Gambhir, Noah Hollmann, and Frank Hutter. Tabpfn-2.5:
+Advancing the state of the art in tabular foundation models.CoRR, abs/2511.08667, 2025.
+[8] Jingang Qu, David Holzmüller, Gaël Varoquaux, and Marine Le Morvan. Tabicl: A tabular foundation model
+for in-context learning on large data. In Aarti Singh, Maryam Fazel, Daniel Hsu, Simon Lacoste-Julien, Felix
+Berkenkamp, Tegan Maharaj, Kiri Wagstaff, and Jerry Zhu, editors,Forty-second International Conference on
+15
+
+=== PDF PAGE 16 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Machine Learning, ICML 2025, Vancouver, BC, Canada, July 13-19, 2025, Proceedings of Machine Learning
+Research. PMLR / OpenReview.net, 2025.
+[9] Mohamed Bouadi, Pratinav Seth, Aditya Tanna, and Vinay Kumar Sankarapu. Orion-bix: Bi-axial attention for
+tabular in-context learning. In Hakim Hacid, Yoelle Maarek, Francesco Bonchi, Ido Guy, and Emine Yilmaz,
+editors,Proceedings of the ACM Web Conference 2026, WWW 2026, Dubai, United Arab Emirates, originally
+scheduled for April 13-17, 2026, rescheduled for June 29 - July 3, 2026, pages 8673–8676. ACM, 2026.
+[10] Mohamed Bouadi, Pratinav Seth, Aditya Tanna, and Vinay Kumar Sankarapu. Orion-msp: Multi-scale sparse
+attention for tabular in-context learning.CoRR, abs/2511.02818, 2025.
+[11] Xingxuan Zhang, Gang Ren, Han Yu, Hao Yuan, Hui Wang, Jiansheng Li, Jiayun Wu, Lang Mo, Li Mao,
+Mingchao Hao, et al. Limix: Unleashing structured-data modeling capability for generalist intelligence.arXiv
+preprint arXiv:2509.03505, 2025.
+[12] Nick Erickson, Lennart Purucker, Andrej Tschalzev, David Holzmüller, Prateek Mutalik Desai, David Sali-
+nas, and Frank Hutter. Tabarena: A living benchmark for machine learning on tabular data.arXiv preprint
+arXiv:2506.16791, 2025.
+[13] Stephan Bongers, Patrick Forré, Jonas Peters, and Joris M Mooij. Foundations of structural causal models with
+cycles and latent variables.The Annals of Statistics, 49(5):2885–2915, 2021.
+[14] Leo Breiman, Jerome Friedman, Richard A Olshen, and Charles J Stone.Classification and regression trees.
+Chapman and Hall/CRC, 2017.
+[15] Pierre Geurts, Damien Ernst, and Louis Wehenkel. Extremely randomized trees.Machine learning, 63(1):3–42,
+2006.
+[16] Leo Breiman. Random forests.Machine learning, 45(1):5–32, 2001.
+[17] Christopher KI Williams and Carl Edward Rasmussen.Gaussian processes for machine learning, volume 2. MIT
+press Cambridge, MA, 2006.
+[18] Timo Teräsvirta, Dag Tjøstheim, and Clive WJ Granger.Modelling nonlinear economic time series. Oxford
+University Press, 2010.
+[19] Alexander Kraskov, Harald Stögbauer, and Peter Grassberger. Estimating mutual information.Physical Review
+E—Statistical, Nonlinear, and Soft Matter Physics, 69(6):066138, 2004.
+[20] Vincent A Traag, Ludo Waltman, and Nees Jan Van Eck. From louvain to leiden: guaranteeing well-connected
+communities.Scientific reports, 9(1):5233, 2019.
+[21] Alexander Pfefferle, Johannes Hog, Lennart Purucker, and Frank Hutter. nanotabpfn: A lightweight and educa-
+tional reimplementation of tabpfn.arXiv preprint arXiv:2511.03634, 2025.
+[22] Noah Hollmann, Samuel Müller, Lennart Purucker, Arjun Krishnakumar, Max Körfer, Shi Bin Hoo, Robin Tibor
+Schirrmeister, and Frank Hutter. Accurate predictions on small data with a tabular foundation model.Nature,
+637(8045):319–326, 2025.
+[23] Jingang Qu, David Holzmüller, Gaël Varoquaux, and Marine Le Morvan. Tabiclv2: A better, faster, scalable, and
+open tabular foundation model.CoRR, abs/2602.11139, 2026.
+[24] Bernd Bischl, Giuseppe Casalicchio, Matthias Feurer, Pieter Gijsbers, Frank Hutter, Michel Lang, Rafael G Man-
+tovani, Jan N van Rijn, and Joaquin Vanschoren. Openml benchmarking suites.arXiv preprint arXiv:1708.03731,
+2017.
+[25] Xiangjian Jiang, Nikola Simidjievski, and Mateja Jamnik. Tabstruct: Measuring structural fidelity of tabular data.
+arXiv preprint arXiv:2509.11950, 2025.
+[26] Junwei Ma, Valentin Thomas, Rasa Hosseinzadeh, Hamidreza Kamkari, Alex Labach, Jesse C. Cresswell, Keyvan
+Golestan, Guangwei Yu, Maksims V olkovs, and Anthony L. Caterini. Tabdpt: Scaling tabular foundation models.
+CoRR, abs/2410.18164, 2024.
+[27] Mohamed Bouadi, Pratinav Seth, Aditya Tanna, and Vinay Kumar Sankarapu. Orion-bix: Bi-axial attention for
+tabular in-context learning.CoRR, abs/2512.00181, 2025.
+[28] Aditya Tanna, Pratinav Seth, Mohamed Bouadi, Utsav Avaiya, and Vinay Kumar Sankarapu. TabTune: A unified
+library for inference and fine-tuning tabular foundation models.arXiv preprint arXiv:2511.02802, 2025.
+[29] Aditya Tanna, Pratinav Seth, Mohamed Bouadi, and Vinay Kumar Sankarapu. Exploring fine-tuning for tabular
+foundation models. InProceedings of the ACM Web Conference 2026, pages 8613–8616, 2026.
+[30] Samuel Müller, Noah Hollmann, Sebastian Pineda-Arango, Josif Grabocka, and Frank Hutter. Transformers can
+do bayesian inference. InThe Tenth International Conference on Learning Representations, ICLR 2022, Virtual
+Event, April 25-29, 2022. OpenReview.net, 2022.
+[31] Judea Pearl. Causal inference.Causality: objectives and assessment, pages 39–58, 2010.
+16
+
+=== PDF PAGE 17 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+[32] Jonas Peters, Dominik Janzing, and Bernhard Scholkopf.Elements of causal inference: foundations and learning
+algorithms. MIT press, 2017.
+[33] Felix den Breejen, Sangmin Bae, Stephen Cha, and Se-Young Yun. Fine-tuned in-context learning transformers
+are excellent tabular data classifiers. 2024.
+[34] Davide Tugnoli, Andrea De Lorenzo, Marco Virgolin, and Giovanni Cinà. Improving tabpfn’s synthetic data
+generation by integrating causal structure.CoRR, abs/2603.10254, 2026.
+[35] Yanbo Wang, Jiaxuan You, Chuan Shi, and Muhan Zhang. Relational in-context learning via synthetic pre-training
+with structural prior.arXiv preprint arXiv:2603.03805, 2026.
+[36] Lei Xu, Maria Skoularidou, Alfredo Cuesta-Infante, and Kalyan Veeramachaneni. Modeling tabular data using
+conditional gan.Advances in neural information processing systems, 32, 2019.
+[37] Vadim Borisov, Kathrin Seßler, Tobias Leemann, Martin Pawelczyk, and Gjergji Kasneci. Language models are
+realistic tabular data generators. InThe Eleventh International Conference on Learning Representations, ICLR
+2023, Kigali, Rwanda, May 1-5, 2023. OpenReview.net, 2023.
+[38] Akim Kotelnikov, Dmitry Baranchuk, Ivan Rubachev, and Artem Babenko. Tabddpm: Modelling tabular data
+with diffusion models. InInternational conference on machine learning, pages 17564–17579. PMLR, 2023.
+17
+
+=== PDF PAGE 18 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+A Data Visualisation
+Figures 3, 4, 5, 6 shows the PCA-based distributions of G1c, G2c, G3b, G4 variants respectively, introduced in
+Section 3.1 and Table 1. We observe that G1c is the most unpredictable where scale can be different across datasets
+(i.e., i= 1 x-axes reaching 80 units), where the other are more bounded. This suggests the hybrid mechanism may
+amplify variance with no stabilising normalisation. Oh the other head, variant G2c is the most controlled as it tends to
+produce the same shape (i.e., a high plateau fading toward one edge) across multiple runs making this variant the most
+predictable for downstream use. This is due to the injection of statistical properties like skewness and missingness which
+results in distributions that are well-bounded. G3b variants tend to produce data that is organised within a pyramid
+or tent shape in one region, leaving similar-valued areas. This is due to the use of multiple distributional shifts (i.e.,
+seasonal, covariate, and latent confounding) which forbid the spreading of data evenly across the whole space. Finally,
+G4 combines all properties of previous while addresses G3b’s sparsity problem as distributions look denser in Figure 6
+than Figure 5. We also observe some high plateau shapes as in Figure 4, and diversity of surfaces as in Figure 3, which
+making this variant the most diverse of all variants in terms of the breadth of distributional scenarios it covers.
+B Benchmark Dataset Details
+This appendix reports the datasets used in the experimental evaluation. The table includes datasets from the TabArena
+benchmark 5 and the OpenML-CC18 benchmark6. For each dataset, we provide the benchmark source, the re-
+solved OpenML dataset identifier, dataset name, number of samples, number of features, number of classes, and the
+corresponding task type.
+Table 5Summary of the selected TabArena-v0.1 classification datasets used in the evaluation.
+Dataset ID Dataset name Samples Features Classes Task type
+46941 maternal_health_risk 1,014 7 3 multiclass classifica-
+tion
+46905 Amazon_employee_access 32,769 10 2 binary classification
+46906 anneal 898 39 5 multiclass classifica-
+tion
+46952 qsar-biodeg 1,054 42 2 binary classification
+46908 APSFailure 76,000 171 2 binary classification
+46910 bank-marketing 45,211 14 2 binary classification
+46911 Bank_Customer_Churn 10,000 11 2 binary classification
+46912 Bioresponse 3,751 1,777 2 binary classification
+46913 blood-transfusion-service-center 748 5 2 binary classification
+46915 churn 5,000 20 2 binary classification
+46916 coil2000_insurance_policies 9,822 86 2 binary classification
+46963 website_phishing 1,353 10 3 multiclass classifica-
+tion
+46918 credit-g 1,000 21 2 binary classification
+46919 credit_card_clients_default 30,000 24 2 binary classification
+46920 customer_satisfaction_in_airline 129,880 22 2 binary classification
+46921 diabetes 768 9 2 binary classification
+46922 Diabetes130US 71,518 48 2 binary classification
+46980 MIC 1,699 112 8 multiclass classifica-
+tion
+46924 E-CommereShippingData 10,999 11 2 binary classification
+46927 Fitness_Club 1,500 7 2 binary classification
+46938 Is-this-a-good-customer 1,723 14 2 binary classification
+Table 6Summary of OpenML-CC18 datasets used in the evaluation.
+Dataset ID Dataset name Samples Features Classes Task type
+11 balance-scale 625 5 3 multiclass classifica-
+tion
+15 breast-w 699 10 2 binary classification
+18 mfeat-morphological 2,000 7 10 multiclass classifica-
+tion
+Continued on next page
+18
+
+=== PDF PAGE 19 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Dataset ID Dataset name Samples Features Classes Task type
+23 cmc 1,473 10 3 multiclass classifica-
+tion
+29 credit-approval 690 16 2 binary classification
+31 credit-g 1,000 21 2 binary classification
+37 diabetes 768 9 2 binary classification
+50 tic-tac-toe 958 10 2 binary classification
+54 vehicle 846 19 4 multiclass classifica-
+tion
+188 eucalyptus 736 20 5 multiclass classifica-
+tion
+307 vowel 990 13 11 multiclass classifica-
+tion
+469 analcatdata_dmft 797 5 6 multiclass classifica-
+tion
+1063 kc2 522 22 2 binary classification
+1067 kc1 2,109 22 2 binary classification
+1068 pc1 1,109 22 2 binary classification
+1462 banknote-authentication 1,372 5 2 binary classification
+1464 blood-transfusion-service-center 748 5 2 binary classification
+1480 ilpd 583 11 2 binary classification
+1489 phoneme 5,404 6 2 binary classification
+1497 wall-robot-navigation 5,456 25 4 multiclass classifica-
+tion
+23381 dresses-sales 500 13 2 binary classification
+40701 churn 5,000 21 2 binary classification
+40975 car 1,728 7 4 multiclass classifica-
+tion
+40982 steel-plates-fault 1,941 28 7 multiclass classifica-
+tion
+40983 wilt 4,839 6 2 binary classification
+40984 segment 2,310 20 7 multiclass classifica-
+tion
+40994 climate-model-simulation-crashes 540 21 2 binary classification
+19
+
+=== PDF PAGE 20 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Figure 3Distribution of data generated based on G1c (SM+SH).
+20
+
+=== PDF PAGE 21 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Figure 4Distribution of data generated based on G2c (SM+SH+SR).
+21
+
+=== PDF PAGE 22 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Figure 5Distribution of data generated based on G3b (SM+SH+SD).
+22
+
+=== PDF PAGE 23 ===
+Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality
+Figure 6Distribution of data generated based on G4 (G3b with Curriculum).
+23

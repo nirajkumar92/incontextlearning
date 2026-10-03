@@ -1,0 +1,22 @@
+# Local Python environment and build caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Generated runs; keep only the usage guide
+runs/*
+!runs/README.md
+checkpoints/
+
+# OS metadata and generated document/test logs
+.DS_Store
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+research/results/local_tests.xml

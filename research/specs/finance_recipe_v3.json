@@ -1,0 +1,764 @@
+{
+  "recipe_version": "finance-static-v3.2",
+  "code_status": "implemented_selected_numpy_backend_cpu_invariants_verified",
+  "status": "Selected authored pilot implemented for finite lazy NumPy generation and exact observable centroid search; no trained model, finance accuracy or GPU-throughput validation",
+  "scope": [
+    "ordinary binary classification",
+    "ordinary multiclass classification",
+    "ordinary regression",
+    "bounded-context ICL over finite large finance histories"
+  ],
+  "source_documents": [
+    "prior_bank_assessment.tex",
+    "docs/audit.md",
+    "docs/implementation.md"
+  ],
+  "precedence": "This JSON incorporates root final decisions: full verified-negative index primary; 70/20/10 training search coverage; farthest-first P then R centers; prototypes only from selected P; global query proposal before routing; complete-reference-only prevalence metadata.",
+  "joint_profile": {
+    "standard_probability": 0.8,
+    "finance_probability": 0.2,
+    "finance_head_probabilities": {
+      "binary": 0.7,
+      "multiclass": 0.1,
+      "regression": 0.2
+    },
+    "standard_marginal_head_probabilities": {
+      "binary": 0.24166666666666664,
+      "multiclass": 0.3916666666666666,
+      "regression": 0.36666666666666664
+    },
+    "standard_family_probabilities": {
+      "P0": 0.85,
+      "P1": 0.1,
+      "P4": 0.05
+    },
+    "standard_P4_head_probabilities": {
+      "binary": 0.2,
+      "regression": 0.8
+    },
+    "standard_P0_P1_head_probabilities": {
+      "binary": 0.243859649122807,
+      "multiclass": 0.4122807017543859,
+      "regression": 0.34385964912280703
+    },
+    "standard_marginal_exact_formula": "(1/3 - 0.20*finance_head_probability)/0.80",
+    "standard_P0_P1_exact_formula": {
+      "binary": "(standard_binary - 0.05*0.20)/0.95",
+      "multiclass": "standard_multiclass/0.95",
+      "regression": "(standard_regression - 0.05*0.80)/0.95"
+    },
+    "global_nominal_head_probabilities": {
+      "binary": 0.3333333333333333,
+      "multiclass": 0.3333333333333333,
+      "regression": 0.3333333333333333
+    },
+    "pure_standard_control": "Unchanged research/specs/static_recipe_v3.json, including its original head probabilities; joint-standard head allocation is deliberately different.",
+    "profile_draw_unit": "macroepisode; one ordinary episode is one standard macroepisode"
+  },
+  "conventions": {
+    "RU": "uniform integer inclusive [a,b]",
+    "LU": "exp(U(log(a),log(b)))",
+    "continuous_uniform": "lower-inclusive, upper-exclusive",
+    "categorical": "normalize stated masses in float64",
+    "rng": "counter-based independent streams keyed by world_id, namespace, finite_row_id, mechanism/component, and draw index; never mutable request order",
+    "moments": "population ddof=0",
+    "missing_type": "explicit missingness flag, not a nominal category silently conflated with observed data",
+    "stable_ids": "persisted random IDs independent of values and labels, retained across regeneration, deduplication and permutation tests",
+    "precision": "float64 reference generation/count calibration; counts integer; actual model precision follows architecture specification",
+    "integer_day_clock": "historical days -90..-1, future days 1..30, snapshot cutoff0; feature and label availability comparisons use <= cutoff",
+    "world_retry": "never retry a valid world to obtain positives, classes, campaigns or hard negatives; report numerical failures explicitly"
+  },
+  "population_names": {
+    "N_world_history": "all historical records, including unknown/unreported outcomes; maximum3000000",
+    "N_world_future": "all records in the independently generated finite future population",
+    "N_eligible": "historical rows whose selected task target is actually revealed by cutoff under the declared eligibility policy",
+    "M_eligible": "verified eventful rows within N_eligible; fraud or positive fraud loss for event tasks; not latent fraud count",
+    "N_verified_negative": "N_eligible-M_eligible for fraud/event tasks only",
+    "N_reference": "rows of a representative complete adjudicated cohort used for reference frequency; may be a strict subset of eligible history",
+    "M_reference": "known eventful records among those same N_reference rows",
+    "G_count": "actual eligible negative candidates searched, not original total history size",
+    "not_equal": "N_world_history-M_eligible is NOT a verified-negative count"
+  },
+  "finite_world": {
+    "history_size_values": [
+      300000,
+      1000000,
+      3000000
+    ],
+    "history_size_probabilities": [
+      0.2,
+      0.3,
+      0.5
+    ],
+    "history_days": [
+      -90,
+      -1
+    ],
+    "future_days": [
+      1,
+      30
+    ],
+    "cutoff": 0,
+    "future_size": "floor(N_world_history/3)",
+    "calibration_rows": 4096,
+    "calibration_visibility": "independent generator calibration only; not context or scored query rows",
+    "arrival_volume": {
+      "uniform_probability": 0.5,
+      "burst_probability": 0.5,
+      "duration_values": [
+        1,
+        3,
+        7
+      ],
+      "duration_probabilities": [
+        0.5,
+        0.3,
+        0.2
+      ],
+      "multiplier_values": [
+        5,
+        20
+      ],
+      "multiplier_probabilities": [
+        0.5,
+        0.5
+      ],
+      "interval": "draw start RU(0,120-duration) on ordered historical+future day positions; multiply duration consecutive positions by selected multiplier",
+      "daily_counts": "normalize weights separately within historical90/future30 days and draw multinomial totals N_world_history and N_world_future",
+      "independent_of_fraud_risk": true
+    },
+    "prevalence": {
+      "log10_intervals": [
+        [
+          -5,
+          -4.5
+        ],
+        [
+          -4.5,
+          -3.5
+        ],
+        [
+          -3.5,
+          -2
+        ]
+      ],
+      "interval_probabilities": [
+        0.1,
+        0.7,
+        0.2
+      ],
+      "within_interval": "uniform log10 prevalence; pi=10^draw",
+      "standard_prevalence_floor": false,
+      "standard_contamination_floor": false,
+      "support_class_coverage_rejection": false,
+      "fraud_risk_campaign_probability": 0.5,
+      "no_campaign_rule": "g_day=1",
+      "campaign_count": "RU(1,4)",
+      "campaign_center": "uniform among the120 declared integer days",
+      "campaign_length_values": [
+        1,
+        3,
+        7
+      ],
+      "campaign_length_probabilities": [
+        0.5,
+        0.3,
+        0.2
+      ],
+      "campaign_amplitude": "LU(10,100)",
+      "risk_multiplier": "g_d=1+sum_campaign A*exp(-0.5*((d-center)/length)^2)",
+      "intercept": "64 bisection iterations alpha in[-50,20] to match sum_history(N_d*sigmoid(alpha+log(g_d)))/N_world_history=pi",
+      "daily_risk": "p_d=sigmoid(alpha+log(g_d)); future uses same law unless separately flagged drift ablation",
+      "future_drift_default_enabled": false,
+      "future_drift_multiplier_values": [
+        0.3,
+        1,
+        3
+      ],
+      "future_drift_multiplier_probabilities": [
+        0.2,
+        0.6,
+        0.2
+      ],
+      "future_drift_rule": "add log(kappa) to future logits only; this is conditional distribution drift, not merely arrival volume",
+      "learner_visibility": "true pi, alpha, daily probabilities and latent future fractions are excluded from model inputs",
+      "operational_target_prevalence": 0.0001,
+      "operational_target_description": "User-corrected central operating point: one fraud per10000 events; middle interval carries70% of finance worlds.",
+      "subtarget_rarity": "Rates below1e-5 are excluded from the default recipe. Explicit zero-evidence/subtarget boundary tests are not the operational target."
+    },
+    "class_counts": {
+      "daily_fraud": "M_d~Binomial(N_d,p_d), independently conditional on frozen world and day counts",
+      "mode_count_values": [
+        2,
+        3,
+        4
+      ],
+      "mode_count_probabilities": [
+        0.5,
+        0.3,
+        0.2
+      ],
+      "mode_weights": "Dirichlet(0.5*ones(R)) once per world",
+      "daily_fraud_modes": "Multinomial(M_d,mode_weights)",
+      "zero_counts": "retain, including no historical fraud, no revealed fraud, and no future fraud",
+      "campaign_count_interpretation": "daily rates and campaign-shared features induce clustered evidence; model does not additionally claim beta-binomial total-count overdispersion"
+    },
+    "lazy_materialization": {
+      "strata": [
+        "integer_day",
+        "fraud_or_legitimate",
+        "fraud_or_matching_hard_mode",
+        "observable_policy_flag_H",
+        "label_reveal_status"
+      ],
+      "finite_ids": "each stratum stores its exact integer count and a stable finite ID range",
+      "uniform_sample": "multivariate hypergeometric allocation across strata, then uniform IDs within selected strata without replacement",
+      "row_regeneration": "keyed row stream gives identical latent values, rendered features and labels on repeated access",
+      "candidate_processing_chunk": 1024,
+      "index": "generate observable codec/index features for declared searched IDs; never substitute latent-distance selection",
+      "stored_full_rows": "bounded selected support rows; retain only needed index/centers/top-k data during scans",
+      "all_history_branch": "must execute full declared eligible candidate search; do not silently cap it or call sampled order statistics full-history neighbors"
+    }
+  },
+  "finance_task_heads": {
+    "binary": {
+      "target": "eventual true fraud indicator",
+      "declared_vocabulary": [
+        0,
+        1
+      ],
+      "positive_label": "1 before independently declared label-slot injection"
+    },
+    "multiclass": {
+      "target": "0 legitimate;1..R corresponding fraud modes",
+      "declared_K": "R+1",
+      "total_rare_mass": "same daily fraud probability p_d",
+      "enrichment_event": "label!=0"
+    },
+    "regression": {
+      "kind_values": [
+        "full_amount",
+        "realized_fraud_loss"
+      ],
+      "kind_probabilities": [
+        0.5,
+        0.5
+      ],
+      "amount": "exp(2+0.4*v_1+0.2*v_2+epsilon), epsilon~N(0,1); independently multiply by Pareto(shape3,min1) with probability0.05",
+      "fraud_loss": "true_fraud_indicator*amount",
+      "full_amount_inputs": "exclude amount itself from predictor features; reserve its would-be column for an independent distractor",
+      "fraud_loss_inputs": "amount may occupy one ordinary observable feature because it is available at the decision; never include fraud_loss itself",
+      "full_amount_target_availability": "event day+1, authored default",
+      "fraud_loss_target_availability": "fraud verification/maturity process; unresolved fraud status means unresolved fraud-loss target",
+      "density_note": "realized_fraud_loss uses an exact zero atom plus existing continuous density for positive log1p(loss); full_amount retains continuous regression",
+      "zero_atom_probability_head": "bias-free 1024-to-1 scalar head, +1024 parameters; zero-atom logit offset -logit(pi_reference) when a complete reference is available",
+      "model_task": "regression",
+      "hurdle_flag": "true for realized_fraud_loss; false for full_amount"
+    }
+  },
+  "feature_world": {
+    "signal_dimensions": 8,
+    "reserved_columns": [
+      "observable_policy_flag_H",
+      "acquisition_channel",
+      "entity_id",
+      "event_day"
+    ],
+    "width_minimum": 16,
+    "mode_centers": "mu_r~N(0,4*I_4) once per mode",
+    "signal_sigma_values": [
+      0.25,
+      0.5,
+      1
+    ],
+    "signal_sigma_probabilities": [
+      0.25,
+      0.5,
+      0.25
+    ],
+    "separation_values": [
+      0,
+      1,
+      2,
+      4,
+      6
+    ],
+    "separation_probabilities": [
+      0.05,
+      0.15,
+      0.25,
+      0.35,
+      0.2
+    ],
+    "positive_coordinates": {
+      "1_to_4": "N(mu_r,sigma^2*I_4)",
+      "5": "N(Delta,1)",
+      "6": "N((-1)^r*Delta/2,1)",
+      "7_to_8": "independent N(0,1)"
+    },
+    "positive_H_probability": 0.8,
+    "negative_H_probability_values": [
+      1e-06,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "negative_H_probability_probabilities": [
+      0.1,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "ordinary_negative": "when H=0 draw8 independent N(0,1)",
+    "hard_negative": "when H=1 draw matching fraud mode with same mode_weights and positive coordinates except discriminator5",
+    "indistinguishable_overlap_values": [
+      0,
+      0.001,
+      0.01,
+      0.1
+    ],
+    "indistinguishable_overlap_probabilities": [
+      0.4,
+      0.3,
+      0.2,
+      0.1
+    ],
+    "hard_negative_discriminator": "N(-Delta,1) with probability1-xi; N(Delta,1) with probabilityxi",
+    "mixing": "one random orthogonal8x8 map shared by all rows; obtain QR of iid Gaussian matrix with deterministic diagonal-sign convention",
+    "entities": {
+      "count": "min(N_world_history,10000)",
+      "frequencies": "normalize permuted rank^(-1.1)",
+      "signal_offset": "N(0,0.25^2*I_8), fixed per entity"
+    },
+    "campaign_feature_offset": "N(0,0.5^2*I_8), fixed per campaign; same campaign law for positive and matching hard-negative motifs",
+    "campaign_assignment": "given day draw background/campaign in proportion to1 and each campaign risk-kernel contribution",
+    "remaining_features": "existing static-v3 copy/distractor factory on nonreserved columns",
+    "rendering": "existing static-v3 numeric/category rendering, with finance missingness overriding its MCAR module",
+    "bookkeeping_ids": "not predictor columns",
+    "rare_hard_negative_scarcity": "do not retry when searched candidate pool misses rare negative component",
+    "finite_world_feature_distribution": "feature offsets and shared parameters persist across source rows and all4 reused macroepisodes"
+  },
+  "missingness": {
+    "mode_values": [
+      "MCAR",
+      "channel_block",
+      "value_dependent",
+      "outage"
+    ],
+    "mode_probabilities": [
+      0.2,
+      0.4,
+      0.3,
+      0.1
+    ],
+    "block_partition": "random permutation of nonreserved ordinary feature indices, round-robin into4 fixed blocks; reservedH/channel/entity/day remain observable",
+    "MCAR": "world rate LU(0.01,0.20), independent cell masks on ordinary features",
+    "acquisition_channel": "uniform integer0..3 per row",
+    "channel_block": "draw fixed4x4 Bernoulli(0.8) availability matrix; per row/block missing probability0.02 ifavailable else0.95; one shared block-mask draw",
+    "value_dependent": "one latent coordinate per block chosenuniformly; logistic(b+0.75*v_j+0.8*1[channel==0]); one shared block-mask draw",
+    "value_dependent_target_mean_values": [
+      0.05,
+      0.2,
+      0.5
+    ],
+    "value_dependent_target_mean_probabilities": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "value_dependent_intercept": "64 bisection iterations on[-20,20] using independent4096calibration rows; log achieved probability",
+    "outage": "choose oneblock and startRU(0,117) on120-day positions; maskblock withprob0.95 for3selected days and0.02 otherwise; otherblocks unmasked",
+    "query_feature_contract": "only decision-time features; investigation results and future outcomes never appended",
+    "mask_vs_verification": "separate draws conditional on world variables; do not set missing cells from query labels"
+  },
+  "label_observation": {
+    "regime_values": [
+      "complete_delayed_adjudication",
+      "incomplete_verification"
+    ],
+    "regime_probabilities": [
+      0.4,
+      0.6
+    ],
+    "complete_maturity_days_values": [
+      7,
+      30,
+      60
+    ],
+    "complete_maturity_days_probabilities": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "complete_channel": "all task fraud labels become known at day+H_mature",
+    "incomplete_channel": "no universal maturity; old/unreported rows mayremain unknown",
+    "random_audit_probability": 0.001,
+    "random_audit_delay_days": 2,
+    "operational_review_probability_H0": 0.001,
+    "operational_review_probability_H1": 0.05,
+    "operational_review_delay_days": 1,
+    "fraud_self_report_probability_values": [
+      0.5,
+      0.8,
+      1
+    ],
+    "fraud_self_report_probability_probabilities": [
+      0.2,
+      0.4,
+      0.4
+    ],
+    "fraud_self_report_delay": "min(60,max(1,ceil(LogNormal(log(7),1))))",
+    "independent_channels": true,
+    "availability": "earliest successful channel reveal time <= cutoff0",
+    "observed_label_accuracy": "correct when revealed in first version; misclassification is not silently added",
+    "source_stratum_reveal_counts": "binomial counts using union-of-independent-channel probability by day/trueclass/H; fraud-mode labels use same fraud reveal rule",
+    "unreported_outcome": "unlabeled, never negative",
+    "default_eligible_pool": "all correctly revealed historical task targets bycutoff; retain sourceN_world separately",
+    "reference_complete_regime": "separate historical cohort with day+H_mature<=0, all outcomes adjudicated; reference counts use precisely thatcohort, not larger poolcontaining selectedfreshfeedback",
+    "reference_incomplete_regime": "unavailable bydefault; a past/external representativefullyadjudicatedreference may be supplied by separatelydeclared data, never fabricatedfrom selectivepool",
+    "learner_excludes": [
+      "latent unreportedfraudcount",
+      "true selfreportpropensity unless independentlylogged in a separate audit",
+      "futureclasscounts",
+      "latenttrueprevalence"
+    ]
+  },
+  "finance_shape": {
+    "macro_query_count": 128,
+    "stage1_width_values": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "stage1_width_probabilities": [
+      0.45,
+      0.25,
+      0.15,
+      0.15
+    ],
+    "stage2_width_values": [
+      64,
+      128,
+      256,
+      512
+    ],
+    "stage2_width_probabilities": [
+      0.25,
+      0.35,
+      0.25,
+      0.15
+    ],
+    "stage3_width_values": [
+      128,
+      256,
+      512
+    ],
+    "stage3_width_probabilities": [
+      0.25,
+      0.375,
+      0.375
+    ],
+    "cell_cap_scope": "per routed model context, not entire macroepisode; profile and charge allroutegroups",
+    "stage_cell_caps": [
+      524288,
+      2097152,
+      8388608
+    ],
+    "width_condition": "conditionselectedstagewidths on actual boundedcontext+querychunk satisfyingcellcap; never silentlyremovefeatures orroutegroups",
+    "reservoir_caps": [
+      512,
+      1024,
+      2048
+    ],
+    "event_positive_caps": [
+      256,
+      512,
+      1024
+    ],
+    "local_caps": [
+      1024,
+      2048,
+      4096
+    ],
+    "maximum_context_before_dedup": [
+      1792,
+      3584,
+      7168
+    ]
+  },
+  "support_selector": {
+    "default_missing_label_channel": false,
+    "reservoir_R": "simple randomsample min(N_eligible,R_cap) withoutreplacement fromeligiblelabeledpool; sharedallroutes",
+    "codec_fit_rows": "R only, for modelinput and retrievalcodec in finance; not entireenrichedcontext",
+    "codec": "architecture numericmedian/MAD/rank andcategoricalfrequencydefinitions fitonR; reusefrozen transform forR/P/G/query",
+    "event_pool_P": "uniformwithoutreplacement min(M_eligible,P_cap) eligibleeventful IDs; allwhenbelowcap; sharedallroutes",
+    "local_candidate_deployment": "all eligibleverifiednegatives forbinary/multiclass/fraud-loss; all eligiblelabeledrows forfullamount",
+    "candidate_training_cap_values": [
+      65536,
+      262144,
+      "all_available_up_to_world_limit"
+    ],
+    "candidate_training_cap_probabilities": [
+      0.7,
+      0.2,
+      0.1
+    ],
+    "candidate_cap_draw_scope": "onceperworld and reusedforall4macroepisodes",
+    "candidate_sampling": "uniformwithoutreplacement fromappropriateeligiblecandidatepool, independentR/Pdraws; allavailablebranch isexactfullscan",
+    "latency_control": "cap65536 only; report separately fromfullindexprimary",
+    "index_dimension": 128,
+    "index_coordinates": "numeric2*support_midrank-1 andmissingflag; categoricalonehotincludingmissing, feature-specific identities; no generatorlatents",
+    "index_projection": "fixed seeded Rademacher signs +/-1/sqrt(128); divide by sqrt(feature_count); stable hash for categorical indicators",
+    "centers": {
+      "maximum": 64,
+      "maximum_positive_prototypes": 16,
+      "positive_candidates": "selected capped P only, not allobservedpositives",
+      "positive_traversal": "startlowestpersistentrandomID; repeatedly choosecandidatefarthestfromnearestalreadyselectedcenter; tiesstableID; stopat16 or allremainingdistanceszero",
+      "remaining_traversal": "same deterministicfarthest-first overR, measuringdistance toALLalreadyselectedcenters; ifnocenterexists startlowestR ID; stopat64 or no positive remainingdistance",
+      "exclude_duplicate_ids": true,
+      "no_median_partition": true,
+      "when_R_and_P_empty": "single nullroutewithzerolengthsupport; nofakecenterorhiddenpositive"
+    },
+    "local_per_center": "nearestmin(local_cap,|G|) candidateIDs tofixedcenter bysquaredEuclideanobservedindexdistance; stableIDties; streamchunks1024",
+    "dedup_order": "selectR/P/L independentlyunderdeclareddependencies, thenuniondedupIDs; do notexcludeRfromcandidate ranking",
+    "membership_bits": [
+      "in_R",
+      "in_P",
+      "in_L_center"
+    ],
+    "context": "R union P union L_center, onecopyperID andunionmembershipbits",
+    "query_route": "nearestfixedcenter bysquaredEuclideanindexdistance; stablecenterIDties; independentofotherqueries andallqueryoutcomes",
+    "approximation": "nearest-to-center support is not exactnearest-to-query support; fullcandidatecoverage doesnotremove64-routeapproximation",
+    "complexity": "indexprojection/generation plusO(|G|*64*128); queryassignmentO(Q*64*128); chargeallcontextprefills",
+    "full_amount_override": {
+      "P": "independentuniformextraeligiblelabeledpool min(N_eligible,P_cap), nottarget-positive enrichment",
+      "G": "eligiblelabeledpool, not knownnegativepool",
+      "centers": "no positiveprototypephase; allup-to64farthest-first centers fromR",
+      "event_specific_metadata_entries_one_indexed_zero": [
+        2,
+        7,
+        9,
+        10,
+        11,
+        12,
+        14
+      ],
+      "binary_reference_offset": false,
+      "entropy_loss_normalization": false
+    }
+  },
+  "metadata_adapter": {
+    "dimension": 14,
+    "values_in_order": [
+      "log1p(N_eligible)",
+      "log1p(M_eligible)",
+      "log1p(|R|)",
+      "log1p(|P|)",
+      "log1p(|L_center|)",
+      "log1p(|C_center|)",
+      "log1p(number_eventful_in_R)",
+      "log(|R|/N_eligible) ifN_eligible>0 else0",
+      "log(|P|/M_eligible) ifM_eligible>0 else0",
+      "1[M_eligible==0]",
+      "reference_kind:0unavailable,1separatepast/externalcompletecohort,2eligiblecohortitselfcomplete",
+      "clip(logit(pi_reference),-40,40)/20 ifreferenceavailable else0",
+      "log1p(|G|)",
+      "log1p(N_reference) when a complete reference exists; zero when unavailable or full_amount"
+    ],
+    "zero_fraction_guard": "whenpositive denominatorbutnumerator0 use finiteplaceholder0 and availablecountfields identifyzero; never log0",
+    "reference_conditions": {
+      "kind2": "all outcomes ofthe sameeligiblecohort areadjudicated; pi_reference=(M_eligible+0.5)/(N_eligible+1)",
+      "kind1": "separatepast/externalrepresentativefullyadjudicatedcohort; pi_reference=(M_reference+0.5)/(N_reference+1); freezeatcutoff",
+      "kind0": "no defensiblecomplete/adjudicatedreference; useoffset0, referencefeature0; do notcallneutral0.5anestimate",
+      "fresh_feedback_mixture": "ifeligiblepoolmixescompleteoldcohortwithselectedfreshfeedback, referencekind1 and separatecohortcounts, notkind2 usingM_eligible/N_eligible",
+      "N_reference_zero": "kind0"
+    },
+    "forbidden_inputs": [
+      "true simulatorpi",
+      "latentunrevealedpositives",
+      "futureclasscounts",
+      "queryproposalclass",
+      "queryimportanceweights",
+      "queryclassgroupfractions"
+    ],
+    "counts_are_not_union_propensities": "R/N andP/M describesources only; localretrievalcoupling/dedup preventsonegenericinverseweightfortheunion",
+    "episode_path": {
+      "layers": [
+        14,
+        128,
+        1152
+      ],
+      "bias": false,
+      "activation": "GELU_exact",
+      "split_outputs": [
+        128,
+        1024
+      ]
+    },
+    "row_membership_paths": {
+      "early": [
+        3,
+        128
+      ],
+      "late": [
+        3,
+        1024
+      ],
+      "bias": false,
+      "query_bits": [
+        0,
+        0,
+        0
+      ]
+    },
+    "additional_parameters": 152704,
+    "additional_parameter_formula": "14*128+128*1152+3*128+3*1024",
+    "base_dense_plus_adapter_parameters": 315174160,
+    "base_moe_plus_adapter_parameters": 419015952,
+    "standard_profile": "allzero14metadata and3membershipbits; biasfreeGELUpath exactlyzero",
+    "noncentered": true,
+    "scalar_counts_preserve": "do notappendasordinaryconstantnumericcolumns andcenteraway",
+    "hurdle_head_additional_parameters": 1024,
+    "base_dense_plus_adapter_and_hurdle_parameters": 315175184,
+    "base_moe_plus_adapter_and_hurdle_parameters": 419016976
+  },
+  "empty_eligible_history": {
+    "retain_world": true,
+    "support_rows": 0,
+    "positive_pool": 0,
+    "reservoir": 0,
+    "local_pool": 0,
+    "route": "single nullroute; noadditionallearnednullsupportparameter",
+    "metadata": "logcountfields0; fractionplaceholders0; Mzeroindicator1 foreventtasks; referencekind0unless separatelyeligiblepastcompletecohortprovided",
+    "codec": "emptyfinite supportnumericcenter0 scale1 rank0.5; categoricalfrequency0/unseen1; ordinarymissingflagsretained",
+    "attention": "whenkeycount0 returnzeroattentionoutput withoutsoftmaxoveremptyaxis; retainexistingquery/residual/FFNpath",
+    "column_ISAB": "support-to-inducingzero-keyattentionreturnszero; existinginducingresidual/FFNcanproducelearnedprior; noquerystatesbecomesupport",
+    "scope": "Finance populations with zero eligible history can emit empty support. Standard training still samples nonempty support, while the generic model and codec define this boundary for any supported task; it is not a finance-only model capability.",
+    "status": "specified handling; nofakepositivesorresampledpopulation"
+  },
+  "macroepisode_and_query_loss": {
+    "reuse_per_finance_world": 4,
+    "max_same_world_per_optimizer_update": 1,
+    "shared_reuse_state": [
+      "finitehistory",
+      "finitefuturepopulation",
+      "revealedlabelmasks",
+      "R",
+      "codec",
+      "P",
+      "searchedG",
+      "centers",
+      "localsets",
+      "referencecounts"
+    ],
+    "not_reused": "stale/detachedmodelactivationcachesacrossoptimizerupdates",
+    "train_validation_world_namespaces": "disjoint",
+    "query_count": 128,
+    "binary_proposal": "uniformoverpresentfinitefutureclasses;0.5/0.5 ifbothpresent",
+    "multiclass_proposal": "uniformoverdeclaredclasseswithpositivefinitefuturecount",
+    "fraud_loss_proposal": "uniformoverpresentzero-loss/eventful-lossstrata; do notinventeventfulfuturecases",
+    "full_amount_proposal": "uniformfinitefutureIDs, nofraudclassstratification; importanceweight1",
+    "within_stratum_ids": "uniformwithreplacement fromfinitefutureIDs ofproposedclass/stratum",
+    "weight": "(M_future,class/N_world_future)/r_class, forstratifiedproposal; loss-only",
+    "order": [
+      "sampleglobalwhole-futureclassproposal",
+      "drawfinitefutureIDs",
+      "regenerateobservedqueryfeatures",
+      "routeeachquerytofixedcenter",
+      "groupforwardcallsbyroute",
+      "sumoriginalweightedquerylosses/n_query_macro"
+    ],
+    "route_group_reduction": "groupmeansweightedbytheiroriginalquerycounts; neverequalmeanofnonemptygroups",
+    "missing_future_class": "zeroproposalmass; renormalizeoverpresentclasses; neverredrawpopulation",
+    "repeated_ids": "MonteCarlosamplesofsamefinitepopulation; do notcountasindependentfraudcasesforevaluation",
+    "self_normalized_importance": false,
+    "query_outcome_forward_access": false,
+    "finite_risk_target": "meanloss overactualfinitefuturepopulation, conditionalonworld/availablehistory/selector; donotsubstituteprocesspi forrealizedfinitefractions",
+    "natural_evaluation": "uniquequeryIDsatnaturalprevalence andlegalfutureoutcomeavailability; noartificiallybalancedscoringpopulation",
+    "compute_counters": [
+      "macroepisodes",
+      "independentworlds",
+      "distinctpositiveIDs/campaigns",
+      "nonemptyroutegroups",
+      "sumcontextrows/cells",
+      "actualquerytargets",
+      "retrieval/generation/cachingGPUseconds"
+    ],
+    "standard_reuse": "unchanged oneindependentworldperstandardepisode",
+    "evaluation_api": "training=False defaults to natural_queries=True: unique finite future IDs without replacement, weight1, error if requested query_count exceeds finite future size. Explicit natural_queries=False is required to use proposal sampling with a full deployment index."
+  },
+  "prediction_and_loss": {
+    "population_probability_target": "naturalqueryprobability conditionalonselectedsupport andpermittedmetadata; noautomaticposthoccasecontroloffset",
+    "binary_reference_parameterization": "add log(1-pi_reference) tolegitimateclasslogit andlog(pi_reference) tofraudclasslogit; equivalentlogoddsresidual. Withunavailablereference addzerooffset.",
+    "reference_log_numerics": "stable log1p(-pi) andlog(pi) inFP32orwider; avoidrounding1-pi to1beforelog",
+    "multiclass_reference_offset": "Dirichlet(0.5 per declared class) posterior mean probabilities from complete historical cohort only, passed as reference_probs. Scalar event metadata uses separate Jeffreys(0.5,0.5) event frequency; these distinct shrinkage rules are declared, not identical.",
+    "regression_reference_offset": false,
+    "residual_head": "existingsharedheadparameters; trainwithfinanceoffset, noextraheadcount. Do notsilentlyzeroaresumedstandardcheckpointhead.",
+    "classification_loss": "ordinarycrossentropy withdeclaredfinitepopulationqueryimportanceweights",
+    "regression_loss": "hurdle mixed-distribution NLL for fraud loss with exact zero atom, proposal weights, and positive log1p(loss) density Jacobian; full amount uses existing proper continuous-head NLL",
+    "entropy_normalization": {
+      "apply_to": "binary, multiclass, and realized-fraud-loss finance tasks with a complete historical event reference; full_amount multiplier1",
+      "formula": "1/max(-pi_reference*log(pi_reference)-(1-pi_reference)*log1p(-pi_reference),1e-4)",
+      "maximum": 10000,
+      "unavailable_reference_multiplier": 1,
+      "uses": "permittedrepresentativefullyadjudicatedhistoricalreference only",
+      "not_uses": "hiddenworldpi orqueryfractions",
+      "properness": "positiveweightfunctionofpermittedhistoryleavesidealconditionalproperlossoptimumunchanged; changescapacity/gradientallocation",
+      "comparison": "normalizedversusunnormalizedproperlossequalcompute; logclippingfrequencies"
+    },
+    "focal_loss_default": false,
+    "gradient_clip_global_l2": 10,
+    "law_hook": "noautomaticforwardlabel-lawhookforclass-conditionalfinanceworlds; ordinaryhardtargetspluscorrectimportanceestimator",
+    "sampling_correction_boundary": "logitp=logitr+log(s0(x)/s1(x)) onlyifrestimatescalibratedselecteddistributionposteriorwithknownpositivepropensitiesinsamejointlaw; notuniversalretrievalcorrection"
+  },
+  "evaluation_and_controls": {
+    "standard_control": "retainunchangedpurestandardbenchmarkrun andseparatebinary/multiclass/regressionscores",
+    "finance_primary": "rollingtimecutoffs, revealedhistoricaltargetsonly, naturalfutureprevalence",
+    "separate_stress": [
+      "unseenentities",
+      "unseencampaigns",
+      "incompleteverification",
+      "missingreference",
+      "fullindexversuscappedpool",
+      "hardnegativescarcity",
+      "zero-positivehistory"
+    ],
+    "metrics": [
+      "AP/PR-AUC",
+      "precisionatfixedreviewbudget",
+      "recallatbudget",
+      "recallatpredeclaredprecision",
+      "FPR",
+      "properprobabilityscoreandcalibration",
+      "amountweightedcapturedloss"
+    ],
+    "review_unit": "declaretransaction/account/card/campaign; do nottreatduplicatesasindependentreviews",
+    "threshold_calibration": "fitonpastrepresentativeeligiblevalidationonly; freezepriorfuturetest",
+    "baselines": [
+      "tunedfullhistoryLightGBM",
+      "tunedfullhistoryCatBoost",
+      "strongfrozenTFMs",
+      "naturalRonly",
+      "RplusavailableP",
+      "fullselector",
+      "cappedsearchlatencycontrol"
+    ],
+    "uncertainty": "reportactualpositives/campaigns andtime/entitydependence; do notclaimprecisetinyFPRfromafewmillionnegatives",
+    "budget": "withinexisting50000GPUhourcap; generator/fullindex/routeprefillandreuseallcharged; nofreeallhistorybranch"
+  },
+  "source_urls": [
+    "https://dalpozz.github.io/static/pdf/TNNLS_2017.pdf",
+    "https://proceedings.neurips.cc/paper_files/paper/2022/file/d9696563856bd350e4e7ac5e5812f23c-Paper-Datasets_and_Benchmarks.pdf",
+    "https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/BaselineModeling.html",
+    "https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_5_ModelValidationAndSelection/ValidationStrategies.html",
+    "https://cseweb.ucsd.edu/~elkan/posonly.pdf",
+    "https://arxiv.org/abs/1306.3706"
+  ],
+  "implementation_status": {
+    "finance_prior": "src/tabular_foundation/finance_prior.py",
+    "retrieval": "src/tabular_foundation/retrieval.py",
+    "validation": "25 finance/retrieval CPU invariants passed with warnings treated as errors; combined finance/retrieval/inference suite29 passed. Genuine3m-history/1m-future finite-count smoke atpi1e-4 used declared candidate/context caps; research/results/finance_large_world_smoke.json. Full MI355X training/performance unmeasured."
+  },
+  "audit_status": "Interpretable finite-evidence stress generator; H-only/no-H/weakened-H and out-of-family mechanisms mandatory before final selection"
+}

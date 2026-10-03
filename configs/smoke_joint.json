@@ -1,0 +1,35 @@
+{
+  "model": "tiny",
+  "device": "cpu",
+  "cpu_threads": 1,
+  "seed": 4242,
+  "steps": 3,
+  "global_batch": 5,
+  "finance_share": 0.2,
+  "finance_adapter": true,
+  "optimizer": "adamw",
+  "adam_lr": 0.0003,
+  "muon_lr": 0.0008,
+  "gradient_clip": 10,
+  "bf16": false,
+  "checkpoint_every": 1,
+  "finance_overrides": {
+    "history_size": 3000,
+    "future_size": 600,
+    "width": 16,
+    "prevalence": 0.02,
+    "reservoir_cap": 24,
+    "positive_cap": 16,
+    "local_cap": 24,
+    "candidate_cap": 256,
+    "max_centers": 3,
+    "max_positive_centers": 1,
+    "query_count": 16,
+    "calibration_rows": 256
+  },
+  "static_overrides": {
+    "n_support": 16,
+    "n_query": 8,
+    "n_features": 8
+  }
+}

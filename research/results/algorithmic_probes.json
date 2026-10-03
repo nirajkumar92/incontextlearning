@@ -1,0 +1,148 @@
+{
+  "status": "Executed analytic/simulation diagnostics, not a trained PFN or real-data result",
+  "tree_assumptions": "Known equal-probability leaves, independent Bernoulli(.5) leaf labels, noiseless support; unknown tree splits can only make prediction harder.",
+  "tree_occupancy": [
+    {
+      "support": 32,
+      "depth": 3,
+      "leaves": 8,
+      "expected_support_per_leaf": 4.0,
+      "probability_query_leaf_unseen": 0.013939837037683136,
+      "binary_bayes_accuracy_upper_bound": 0.9930300814811585
+    },
+    {
+      "support": 32,
+      "depth": 5,
+      "leaves": 32,
+      "expected_support_per_leaf": 1.0,
+      "probability_query_leaf_unseen": 0.3620552892563166,
+      "binary_bayes_accuracy_upper_bound": 0.8189723553718418
+    },
+    {
+      "support": 32,
+      "depth": 8,
+      "leaves": 256,
+      "expected_support_per_leaf": 0.125,
+      "probability_query_leaf_unseen": 0.8822809129497492,
+      "binary_bayes_accuracy_upper_bound": 0.5588595435251253
+    },
+    {
+      "support": 32,
+      "depth": 10,
+      "leaves": 1024,
+      "expected_support_per_leaf": 0.03125,
+      "probability_query_leaf_unseen": 0.9692184356283222,
+      "binary_bayes_accuracy_upper_bound": 0.5153907821858389
+    },
+    {
+      "support": 128,
+      "depth": 3,
+      "leaves": 8,
+      "expected_support_per_leaf": 16.0,
+      "probability_query_leaf_unseen": 3.775989577235679e-08,
+      "binary_bayes_accuracy_upper_bound": 0.9999999811200521
+    },
+    {
+      "support": 128,
+      "depth": 5,
+      "leaves": 32,
+      "expected_support_per_leaf": 4.0,
+      "probability_query_leaf_unseen": 0.017183023570817902,
+      "binary_bayes_accuracy_upper_bound": 0.991408488214591
+    },
+    {
+      "support": 128,
+      "depth": 8,
+      "leaves": 256,
+      "expected_support_per_leaf": 0.5,
+      "probability_query_leaf_unseen": 0.6059370882290803,
+      "binary_bayes_accuracy_upper_bound": 0.6970314558854598
+    },
+    {
+      "support": 128,
+      "depth": 10,
+      "leaves": 1024,
+      "expected_support_per_leaf": 0.125,
+      "probability_query_leaf_unseen": 0.8824430058011633,
+      "binary_bayes_accuracy_upper_bound": 0.5587784970994183
+    },
+    {
+      "support": 512,
+      "depth": 3,
+      "leaves": 8,
+      "expected_support_per_leaf": 64.0,
+      "probability_query_leaf_unseen": 2.032933382567487e-30,
+      "binary_bayes_accuracy_upper_bound": 1.0
+    },
+    {
+      "support": 512,
+      "depth": 5,
+      "leaves": 32,
+      "expected_support_per_leaf": 16.0,
+      "probability_query_leaf_unseen": 8.717628212001282e-08,
+      "binary_bayes_accuracy_upper_bound": 0.9999999564118589
+    },
+    {
+      "support": 512,
+      "depth": 8,
+      "leaves": 256,
+      "expected_support_per_leaf": 2.0,
+      "probability_query_leaf_unseen": 0.134806285612013,
+      "binary_bayes_accuracy_upper_bound": 0.9325968571939935
+    },
+    {
+      "support": 512,
+      "depth": 10,
+      "leaves": 1024,
+      "expected_support_per_leaf": 0.5,
+      "probability_query_leaf_unseen": 0.6063825025602827,
+      "binary_bayes_accuracy_upper_bound": 0.6968087487198587
+    }
+  ],
+  "ols_assumptions": "Correctly specified no-intercept Gaussian isotropic linear model, independent unit-variance Gaussian noise, OLS, n>d+1; illustrative estimation cost, not optimal Bayes risk.",
+  "ols_effective_dimension": [
+    {
+      "support": 64,
+      "effective_dimension": 4,
+      "test_mse_with_unit_noise": 1.0677966101694916
+    },
+    {
+      "support": 64,
+      "effective_dimension": 16,
+      "test_mse_with_unit_noise": 1.3404255319148937
+    },
+    {
+      "support": 64,
+      "effective_dimension": 32,
+      "test_mse_with_unit_noise": 2.032258064516129
+    },
+    {
+      "support": 64,
+      "effective_dimension": 48,
+      "test_mse_with_unit_noise": 4.2
+    },
+    {
+      "support": 64,
+      "effective_dimension": 60,
+      "test_mse_with_unit_noise": 21.0
+    }
+  ],
+  "rao_blackwell": {
+    "worlds": 30000,
+    "label_replicates_per_fixed_world": 32,
+    "seed": 20261003,
+    "support_per_world": 32,
+    "query_per_world": 8,
+    "student": "Fixed two-parameter context-statistic logistic predictor; no optimization performed",
+    "soft_gradient_variance_trace_across_worlds": 0.0013472811231436436,
+    "analytic_removed_label_noise_gradient_mse": 0.021835282901161053,
+    "observed_removed_label_noise_gradient_mse": 0.021877489070675445,
+    "monte_carlo_standard_error": 2.7839075166212714e-05,
+    "mean_hard_minus_soft_gradient": [
+      4.091955623586593e-05,
+      8.986894928133083e-07
+    ],
+    "six_standard_error_identity_check": "passed",
+    "limitation": "Does not prove faster training, downstream gains, or that a plug-in forward mechanism is valid for anti-causal SCM targets."
+  }
+}

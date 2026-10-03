@@ -1,0 +1,61 @@
+{
+  "budget": {
+    "total_gpu_hours": 50000.0,
+    "total_gpus": 64,
+    "full_cluster_days": 32.552083333333336,
+    "phase_gpu_hours": {
+      "systems_and_reproduction": 5000.0,
+      "prior_screening": 15000.0,
+      "scaling_and_confirmation": 10000.0,
+      "final_pretraining": 12000.0,
+      "locked_evaluation": 5000.0,
+      "uncommitted_reserve": 3000.0
+    },
+    "phase_full_cluster_days": {
+      "systems_and_reproduction": 3.2552083333333335,
+      "prior_screening": 9.765625,
+      "scaling_and_confirmation": 6.510416666666667,
+      "final_pretraining": 7.8125,
+      "locked_evaluation": 3.2552083333333335,
+      "uncommitted_reserve": 1.953125
+    }
+  },
+  "illustrative_sensitivity": [
+    {
+      "status": "ILLUSTRATIVE ASSUMPTION, NOT MEASURED MI355X THROUGHPUT",
+      "assumed_gpu_seconds_per_episode": 0.1,
+      "accepted_episodes": 432000000,
+      "row_tokens_if_one_core_token_per_row": 497664000000,
+      "raw_cells": 31850496000000,
+      "supervised_query_targets": 55296000000,
+      "row_token_to_parameter_ratio_at_300m": 1658.88
+    },
+    {
+      "status": "ILLUSTRATIVE ASSUMPTION, NOT MEASURED MI355X THROUGHPUT",
+      "assumed_gpu_seconds_per_episode": 1.0,
+      "accepted_episodes": 43200000,
+      "row_tokens_if_one_core_token_per_row": 49766400000,
+      "raw_cells": 3185049600000,
+      "supervised_query_targets": 5529600000,
+      "row_token_to_parameter_ratio_at_300m": 165.888
+    },
+    {
+      "status": "ILLUSTRATIVE ASSUMPTION, NOT MEASURED MI355X THROUGHPUT",
+      "assumed_gpu_seconds_per_episode": 10.0,
+      "accepted_episodes": 4320000,
+      "row_tokens_if_one_core_token_per_row": 4976640000,
+      "raw_cells": 318504960000,
+      "supervised_query_targets": 552960000,
+      "row_token_to_parameter_ratio_at_300m": 16.5888
+    }
+  ],
+  "measurement_status": "No GPU measurements supplied; no throughput or optimal model-size estimate.",
+  "dense_proxy_example": {
+    "status": "ARITHMETIC EXAMPLE ONLY; core projections and attention, no encoder",
+    "params_active": 300000000,
+    "layers": 24,
+    "width": 1024,
+    "rows_per_episode": 1152,
+    "flops_per_episode": 2464978894848.0
+  }
+}

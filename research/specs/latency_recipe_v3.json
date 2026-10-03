@@ -1,0 +1,210 @@
+{
+  "recipe_version": "static-icl-latency-v3.1",
+  "status": "Authored proposals plus executed small NumPy algebra checks; no GPU timings or trained models",
+  "deployment": "GPU batch prediction",
+  "primary_objective": "Binary/multiclass/regression predictive quality",
+  "secondary_objective": "Cold-context end-to-end batch latency; also warm cache, memory, throughput",
+  "default": "Dense ICL315 with exact support-only caching and chunked query execution",
+  "precision": "BF16 matrix products; FP32 losses/router/normalization/softmax; reference codec per architecture JSON",
+  "moe": {
+    "enabled": false,
+    "layers_one_indexed": [
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "width": 1024,
+    "shared_experts": 1,
+    "routed_experts": 4,
+    "active_routed_per_row": 1,
+    "expert_swiglu_hidden": 1408,
+    "router_bias": false,
+    "router_shape": [
+      4,
+      1024
+    ],
+    "router_dtype": "float32",
+    "router_init_std": "0.001/sqrt(1024)",
+    "temperature": 1,
+    "tie_break": "lowest expert index",
+    "gate": "F_shared(z)+4*softmax(Wr*z)[argmax(Wr*z)]*F_selected(z); retain full softmax derivative",
+    "capacity_limit": null,
+    "drop_tokens": false,
+    "jitter": 0,
+    "batch_dependent_router_forward": false,
+    "experts_replicated_per_device": true,
+    "inter_device_expert_dispatch": false,
+    "parameters": 418863248,
+    "nominal_active_proxy": 315054224,
+    "parameter_convention": "Counts all non-MoE parameters, not actual per-example touched weights or FLOPs",
+    "conversion": "Consistent random hidden-channel permutation; first1408 shared; clone second1408 into4 routed experts. Near-function-preserving with random router; exact only at zero logits.",
+    "dense_wide_control": {
+      "last8_hidden": 7040,
+      "parameters": 418830480,
+      "init": "Preserve original2816 channels; append4224 independent gate/value rows with std1/sqrt1024 and zero corresponding down columns."
+    },
+    "balance_scope": "Synchronized distributed microbatch, not full accumulated logical batch. Every episode contributes equal totalweight; each support/query role gets half.",
+    "row_weight": "1/(2*B_microbatch*n_role_in_episode)",
+    "balance": "f_e=weighted hard assignment; P_e=weighted fullsoftmax; 4*sum(f_e*P_e)",
+    "zloss": "weighted logsumexp(logits)^2",
+    "layer_reduction": "mean of8 layers",
+    "balance_coefficient": 0.01,
+    "zloss_coefficient": 0.001,
+    "accumulation": "Multiply each microbatch loss by B_microbatch/256; use autograd-aware correctly scaled global reductions. Record microbatch packing.",
+    "continuation_optimizer": "Reset states in all3 arms. AdamW allparameters, peak3e-4, beta(.9,.95),eps1e-8,matrixdecay.01,otherdecay0,globalclip10,2%warmup/cosine to10%peak. Router alwaysAdamW. Muon separately crossed after screening.",
+    "screen": {
+      "arms": 3,
+      "seeds": 2,
+      "gpu_hours_per_arm_seed": 250,
+      "total_gpu_hours": 1500,
+      "budget_source": "Deferred by independent audit; historical proposed cost is not a current allocation; requires explicit reassignment within50000cap",
+      "prefix": "Same already-budgeted dense prefix per seed; charge once",
+      "allocated_gpu_hours": 0
+    }
+  },
+  "profile": {
+    "gpus_per_replica": 1,
+    "support_rows": [
+      512,
+      2048,
+      8192,
+      32768
+    ],
+    "features": [
+      16,
+      64,
+      256
+    ],
+    "query_batch_rows": [
+      128,
+      1024,
+      8192
+    ],
+    "heads": [
+      "binary",
+      "multiclass10",
+      "multiclass100",
+      "multiclass256",
+      "regression"
+    ],
+    "query_chunk_candidates": [
+      128,
+      512,
+      2048
+    ],
+    "warmup_repetitions": 5,
+    "timed_repetitions": 20,
+    "cold_context": "Resident model, clear all support caches each repetition; include CPUcodec and transfers; synchronize before/afterwalltiming",
+    "startup": "Report checkpointload and kernelcompile separately",
+    "statistics": [
+      "median",
+      "p95",
+      "rows_per_second",
+      "peak_device_memory",
+      "failures_and_fallbacks"
+    ],
+    "components": [
+      "codec",
+      "transfers",
+      "support_frontend",
+      "support_trunk",
+      "query_frontend",
+      "query_trunk",
+      "output"
+    ],
+    "stress_support_rows": [
+      65536,
+      131072
+    ],
+    "stress_features": 64,
+    "stress_query_rows": 1024,
+    "wide_stress": {
+      "support_rows": 2048,
+      "features": 1024,
+      "query_rows": 1024
+    },
+    "training_range_note": "Long contexts above32768 are extrapolation diagnostics, not established capabilities"
+  },
+  "cache": {
+    "core_bytes_per_support_row": 98304,
+    "core_dtype": "BF16",
+    "frontend_projected_inducing_kv_bytes_per_feature": 393216,
+    "other_memory_excluded": [
+      "weights",
+      "codec",
+      "intermediate_support_cells",
+      "workspace",
+      "output",
+      "allocator"
+    ],
+    "support_cell_dependency": "Retain or explicitly replay/offload support cells across alternating row/column stages; charge its memory/time."
+  },
+  "quality_rule": "Latency alone does not promote worse point-estimated task quality. Report dataset-paired uncertainty and any preregistered noninferiority margin; nonsignificance is not equivalence. Retain bestquality fullcontext fallback.",
+  "hybrid_context": {
+    "enabled": false,
+    "parameters": 315152528,
+    "extra_global_parameters": 131072,
+    "global_initial_shape": [
+      128,
+      1024
+    ],
+    "global_init_std": 0.02,
+    "frontend": "unchanged",
+    "heads_and_priors": "unchanged",
+    "moe": "off in isolated comparison",
+    "index_dimensions": 128,
+    "index_coordinates": "Numeric2*support_midrank-1 andmissingflag; feature-specific categoricalonehot includingmissing; no labels or label-conditioned neuralstates.",
+    "projection": "Stable seeded Rademacher signs +-1/sqrt128 per coordinate; divide projectedvector bysqrtF; categoricalsigns via stablefeature/category/outputindexhash. Reuse support-fittedmap forqueries.",
+    "leaf_max_rows": 2048,
+    "partition": "Recursively choose maximum populationvariance coordinate (lowestindex ties),sort stably with persistent randomrecordIDs breaking value ties, split floor/ceilhalf until <=2048.",
+    "anchors": 256,
+    "anchor_sampling": "Uniformsupportwithoutreplacement; min(256,ns); query-independent, fixedperestimator",
+    "query_route": "Two closest supportleafcentroids by squaredEuclideandistance; stableleafIDties; if <2leaves useall; groupquerieswithsameroute withoutchangingkeys.",
+    "global_update": "G_l=MAB_l(G_{l-1},support_states_{l-1}); same parametersas ordinarylayer reusedforthis substep; no querykeys or artificialgloballabels.",
+    "support_keys": "Previous-layersupportstates in ownleaf unionanchorIDs, pluscurrentG_l. DeduplicatesupportIDs beforeattention.",
+    "query_keys": "Previous-layersupportstates in selectedtwoleaves unionanchorIDs, pluscurrentG_l. Queryneverkey/value.",
+    "norms_ffns": "Same as dense, calledoneachMAB invocation; layerparametersshared betweenglobalandrowupdates butuntied acrossdepth.",
+    "mass_or_sampling_correction": false,
+    "additional_loss": false,
+    "length_scale": "Actualvisiblekeycount in eachsubstep",
+    "training_activation_probability_short_medium": 0.2,
+    "training_activation_probability_above8192": 1.0,
+    "deployment": "Dense forns<=8192; hybridforlarger; full-densequalityreference retained andtimed separately.",
+    "attention_pair_upper_bound_per_layer": "ns*(2048+256+2*128)+nq*(2*2048+256+128)",
+    "core_cache_bytes_per_support_row": 98304,
+    "extra_global_kv_cache_bytes": 12582912,
+    "screen": {
+      "arms": 2,
+      "seeds": 2,
+      "gpu_hours_per_arm_seed": 250,
+      "proposed_total_gpu_hours": 1000,
+      "current_allocation_gpu_hours": 0,
+      "budget_status": "Deferred and unfunded in the selected project allocation",
+      "budget_source": "Deferred by independent audit; historical proposed cost is not a current allocation; requires explicit reassignment within50000cap",
+      "allocated_gpu_hours": 0
+    },
+    "status": "Exact authoredspecification, notimplemented trained orvalidated"
+  },
+  "separate_followups": {
+    "query_supervision": "128 versus512 querytargets forlongworlds; preserveepisodeaveraging, recalculatecellcaps, differentiate throughsupport; budget-reassignonly",
+    "length_scale": "Baseclipupperlog4 saturatesat4096keys; compareupperlog32 withotherdefaultsunchanged; noautomaticlongcontextextrapolationclaim",
+    "gqa": {
+      "enabled": false,
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 64,
+      "total_parameters": 277272720,
+      "init": "Mean contiguousgroupsof4denseKV head projections; continue training; notfunctionpreserving",
+      "core_cache_reduction": 4,
+      "attention_pair_order": "Stillquadratic",
+      "budget": "Deferred unless profilingjustifies reallocation"
+    }
+  },
+  "implementation_status": "Dense SDPA and exact frontend/trunk cache implemented; MoE/general sparse context/GQA remain specified experimental arms.",
+  "budget_revision": "Independent audit reallocates optionalMoE/hybrid budget to mandatory head/codec/length/prior\u00d7architecture controls. No MoE/hybrid/GQA allocation; named length-scaling pair funded under L in prior_bank_spec.json."
+}

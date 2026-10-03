@@ -1,0 +1,189 @@
+{
+  "source": "prior_bank_assessment.tex",
+  "sha256": "e00dc7bcd08772c94993fc58e22befc09bbc41b8dd67103f5c128ce6e9a2b81c",
+  "resolved_citation_keys": 59,
+  "bibliography_entries": 59,
+  "ablation_rows": 28,
+  "retained_source_hashes_verified": 19,
+  "selected_specs_and_budget": "passed",
+  "screening_and_bridge_budget_arithmetic": "passed",
+  "candidate_config_volume_consistency": "passed",
+  "pinned_reference_files_verified": 35,
+  "internal_references_and_environment_nesting": "passed",
+  "target_fraud_rate": 0.0001,
+  "native_compile": "success",
+  "competitive_performance": "not evaluated",
+  "date": "2026-10-03",
+  "revision": "Complete methods prose rewrite connecting motivation, mechanism, implementation and evidence, with the original quantitative specification preserved; missing-value support and current prior coverage made explicit.",
+  "native_compiler": "Codex desktop compile_latex_document",
+  "pdf_export_engine": "Tectonic 0.17.0",
+  "pdf": "prior_bank_assessment.pdf",
+  "pdf_pages": 81,
+  "pdf_sha256": "c41cc262cc9995717f7be88ff2a7e721a6941459b1ba3a26dc65485454eb607b",
+  "source_is_standalone": true,
+  "inline_tikz_figures": 5,
+  "figure_pages": {
+    "1": 6,
+    "2": 19,
+    "3": 34,
+    "4": 36,
+    "5": 54
+  },
+  "overfull_box_count": 0,
+  "missing_character_warnings": 0,
+  "extracted_replacement_characters": 0,
+  "visual_layout_inspection": {
+    "all_pages_contact_sheets": true,
+    "page_count": 81,
+    "all_five_figures_inspected_at_full_resolution": true,
+    "additional_full_resolution_pages": [
+      4,
+      26,
+      65
+    ],
+    "overlaps_or_clipping_found_after_repair": false,
+    "independent_internal_figure_review": "All five final figure pages inspected at 2x resolution after prose rewrite; no overlaps, clipping or unreadable labels."
+  },
+  "explanatory_content": [
+    "Prior, latent world, table, episode and learned weights",
+    "Beta-Bernoulli posterior predictive example",
+    "Population target objective and amortized Bayesian inference",
+    "Contract-conditioned acceptance law",
+    "Native R, hierarchical P1 and finite-population finance generation",
+    "Model masks, representations and caches",
+    "Protected standard checkpoint and synthetic specialist continuation",
+    "Per-stage expected R/P1 and finance counts"
+  ],
+  "prose_review": "388 narrative passages/items rewritten across background, priors, architecture, training, compute and evaluation; selected method introduced before controls, rationale before operations, and implemented versus proposed versus measured claims distinguished. Independent semantic reviews corrected acceptance-law attribution, feedback-state wording, KL direction, funded status and prospective TALENT/feedback validation.",
+  "document_corrections": [
+    "Native R retains its released predictability filter",
+    "Finance hard-label explanation applies to covariate-first worlds",
+    "Initialization-only gradient probe no longer described as learning"
+  ],
+  "latest_code_test_record": "research/results/code_validation.json:reference_derived_candidate_followup",
+  "latest_code_tests_passed": 200,
+  "code_changed_in_document_revision": false,
+  "source_files_verified": 52,
+  "changed_since_200_test_run": [],
+  "local_markdown_links_checked": 39,
+  "broken_links": [],
+  "foundation_model_pretraining_performed": false,
+  "competitor_benchmark_performed": false,
+  "gpu_latency_measured": false,
+  "detail_preservation": {
+    "baseline_sha256": "3a3d8c0fce012069cda55bbeb4ccf3efcd67ec46c3e5b98e5902564f752b811e",
+    "protected_content": {
+      "display_math": {
+        "original_count": 50,
+        "revised_count": 50,
+        "removed": 0,
+        "added_count": 0
+      },
+      "inline_math": {
+        "original_count": 847,
+        "revised_count": 848,
+        "removed": 0,
+        "added_count": 1,
+        "added": [
+          "$U(.01,.20)$"
+        ]
+      },
+      "figures": {
+        "original_count": 5,
+        "revised_count": 5,
+        "removed": 0,
+        "added_count": 0
+      },
+      "tables": {
+        "original_count": 13,
+        "revised_count": 13,
+        "removed": 0,
+        "added_count": 0
+      },
+      "listings": {
+        "original_count": 5,
+        "revised_count": 5,
+        "removed": 0,
+        "added_count": 0
+      },
+      "paths": {
+        "original_count": 69,
+        "revised_count": 69,
+        "removed": 0,
+        "added_count": 0
+      },
+      "labels": {
+        "original_count": 51,
+        "revised_count": 51,
+        "removed": 0,
+        "added_count": 0
+      },
+      "citations": {
+        "original_count": 71,
+        "revised_count": 71,
+        "removed": 0,
+        "added_count": 0
+      },
+      "urls": {
+        "original_count": 63,
+        "revised_count": 63,
+        "removed": 0,
+        "added_count": 0
+      },
+      "numbers": {
+        "original_count": 2077,
+        "revised_count": 2083,
+        "removed": 0,
+        "added_count": 6,
+        "added": [
+          "90",
+          "64",
+          "30",
+          "01,.20",
+          "1.402",
+          "897,454"
+        ]
+      },
+      "headings": {
+        "original_count": 114,
+        "revised_count": 114,
+        "removed": 0,
+        "added_count": 0
+      },
+      "literal_code": {
+        "original_count": 81,
+        "revised_count": 81,
+        "removed": 0,
+        "added_count": 0
+      },
+      "references": {
+        "original_count": 49,
+        "revised_count": 49,
+        "removed": 0,
+        "added_count": 0
+      },
+      "tabular_blocks": {
+        "original_count": 9,
+        "revised_count": 9,
+        "removed": 0,
+        "added_count": 0
+      }
+    },
+    "bibliography_unchanged": true,
+    "source_files_verified": 52,
+    "changed_since_200_test_run": []
+  },
+  "missing_feature_verification": {
+    "existing_focused_tests_passed": 9,
+    "warnings_as_errors": true,
+    "test_scope": [
+      "tests/test_model.py::test_codec_reservoir_nominal_and_nonfinite_contract",
+      "tests/test_candidate_representation.py::test_hash_bits_have_stable_typed_identity_missingness_and_support_only_counts",
+      "tests/test_finance_prior.py::FinancePriorTests::test_missingness_keeps_reserved_decision_features_observable",
+      "tests/test_inference_audit.py",
+      "tests/test_static_prior.py::StaticPriorTests::test_categorical_codes_are_nominal_and_missing_values_are_explicit"
+    ],
+    "scope": "Explicit numerical and nominal missingness encoding, safe inference and synthetic masking; verifies implementation, not trained robustness. These are existing tests, not nine additions to the 200-test suite.",
+    "standard_prior_gap": "Native R has no deliberate NaN corruption; P1 has a 0.3 mask-enabled probability. Eligibility-weighted expectation is approximately 1.402% mask-enabled standard tasks. Finance has structured missingness in a separate continuation."
+  }
+}

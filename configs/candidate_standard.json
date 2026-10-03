@@ -1,0 +1,49 @@
+{
+  "model": "base",
+  "model_options": {
+    "categorical_encoding": "hash_bits",
+    "regression_head": "quantile",
+    "regression_bins": 1025,
+    "regression_quantiles": 999,
+    "length_scaling": "logarithmic",
+    "trunk_query_kv_heads": 2,
+    "hurdle_target_scale": "positive_support"
+  },
+  "device": "auto",
+  "cpu_threads": 1,
+  "seed": 1729,
+  "steps": 1000,
+  "global_batch": 256,
+  "finance_share": 0,
+  "finance_adapter": true,
+  "optimizer": "muon",
+  "adam_lr": 0.0003,
+  "muon_lr": 0.0008,
+  "weight_decay": 0.0,
+  "gradient_clip": 10,
+  "bf16": true,
+  "activation_checkpointing": true,
+  "checkpoint_every": 100,
+  "gpu_hour_cap": 250,
+  "project_ledger": "runs/project_gpu_hours.json",
+  "stage_end_steps": [
+    900,
+    990,
+    1000
+  ],
+  "standard_prior": "R_P1_05",
+  "reference_task": "mixed",
+  "reference_envelope": {
+    "2": {
+      "max_features": 256,
+      "max_classes": 32
+    },
+    "3": {
+      "max_features": 512,
+      "max_classes": 256
+    }
+  },
+  "reference_envelope_probability": 0.2,
+  "producer_workers": 1,
+  "prefetch_tasks": 2
+}

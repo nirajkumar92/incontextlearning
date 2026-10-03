@@ -1,0 +1,234 @@
+{
+  "status": "CPU representation and score probes; untrained, no competitive evaluation",
+  "environment": {
+    "torch": "2.8.0",
+    "numpy": "1.26.4",
+    "device": "cpu"
+  },
+  "source_sha256": {
+    "src/tabular_foundation/codec.py": "923427ddc6a52556707ee631fd4e73ba3da6674b27b7ee5252bbc0d2a2a1c967",
+    "src/tabular_foundation/model.py": "3730e0d9ca4483979f0f2cdcd9a29c34a4953acbe11f7f5d66b98caa4441a6b6",
+    "src/tabular_foundation/distributions.py": "e19ac2077242ab3ee0478cc47dedf20e780ed4632d78f0065bcbd0c84d6f89db",
+    "research/probes/representation_candidate_probes.py": "dd180d7340c03d3413a9436ad6a61a71e3194cbe543e61fde0e23fd863838c61",
+    "tests/test_candidate_representation.py": "80d16dd1be171fdfdb482619179a477afc103aee4314fc0e02c6898f99227a8c"
+  },
+  "finance_enabled_base_parameters": {
+    "legacy": 315175184,
+    "histogram_candidate": 316093328,
+    "quantile_candidate": 317116304
+  },
+  "categorical_identity": {
+    "support_categories": 50000,
+    "pair": [
+      "category_28838",
+      "category_39200"
+    ],
+    "cases": [
+      {
+        "encoding": "scalar_fourier",
+        "encoding_seed": 0,
+        "model_seed": 1729,
+        "bf16_identical": true,
+        "embedding_max_difference": 0.0
+      },
+      {
+        "encoding": "scalar_fourier",
+        "encoding_seed": 0,
+        "model_seed": 83,
+        "bf16_identical": true,
+        "embedding_max_difference": 0.0
+      },
+      {
+        "encoding": "scalar_fourier",
+        "encoding_seed": 17,
+        "model_seed": 1729,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.7753400802612305
+      },
+      {
+        "encoding": "scalar_fourier",
+        "encoding_seed": 17,
+        "model_seed": 83,
+        "bf16_identical": false,
+        "embedding_max_difference": 3.033233165740967
+      },
+      {
+        "encoding": "scalar_fourier",
+        "encoding_seed": 91,
+        "model_seed": 1729,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.388932704925537
+      },
+      {
+        "encoding": "scalar_fourier",
+        "encoding_seed": 91,
+        "model_seed": 83,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.6670637130737305
+      },
+      {
+        "encoding": "hash_bits",
+        "encoding_seed": 0,
+        "model_seed": 1729,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.4412386417388916
+      },
+      {
+        "encoding": "hash_bits",
+        "encoding_seed": 0,
+        "model_seed": 83,
+        "bf16_identical": false,
+        "embedding_max_difference": 1.7081141471862793
+      },
+      {
+        "encoding": "hash_bits",
+        "encoding_seed": 17,
+        "model_seed": 1729,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.8203868865966797
+      },
+      {
+        "encoding": "hash_bits",
+        "encoding_seed": 17,
+        "model_seed": 83,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.710606098175049
+      },
+      {
+        "encoding": "hash_bits",
+        "encoding_seed": 91,
+        "model_seed": 1729,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.7692933082580566
+      },
+      {
+        "encoding": "hash_bits",
+        "encoding_seed": 91,
+        "model_seed": 83,
+        "bf16_identical": false,
+        "embedding_max_difference": 2.666954517364502
+      }
+    ],
+    "scope": "Observed projected vectors at initialization on CPU. Hash bits do not guarantee injectivity after learned projection."
+  },
+  "regression_resolution": {
+    "histograms": [
+      {
+        "bins": 128,
+        "bin_width": 0.078125,
+        "finite_region_worst_case_mean_rounding_bound_in_support_scale": 0.0390625,
+        "audited_pair_gradient_max_difference": 0.0,
+        "constant_zero_limiting_mean": 0.0390625
+      },
+      {
+        "bins": 1025,
+        "bin_width": 0.00975609756097561,
+        "finite_region_worst_case_mean_rounding_bound_in_support_scale": 0.004878048780487805,
+        "audited_pair_gradient_max_difference": 1.0,
+        "constant_zero_limiting_mean": 0.0
+      }
+    ],
+    "quantile_pair_gradient_max_difference": 0.0010010011028498411,
+    "rare_event_counterexample": {
+      "positive_probability": 0.0001,
+      "positive_value": 1000000.0,
+      "true_mean": 100.0,
+      "all_999_population_quantiles": 0.0,
+      "quantile_average": 0.0
+    },
+    "scope": "Exact head/oracle calculations. Finer bins reduce but cannot remove quantization; finite quantiles cannot identify omitted tails."
+  },
+  "length_scaling": {
+    "rows": [
+      {
+        "keys": 1024,
+        "legacy_initial_temperature": 1.0,
+        "logarithmic_initial_temperature": 1.0,
+        "fixed_gap_anchor_mass": 0.8001172332942555,
+        "matched_4096_logarithmic_anchor_mass": 0.5001933910622766
+      },
+      {
+        "keys": 4096,
+        "legacy_initial_temperature": 1.0,
+        "logarithmic_initial_temperature": 1.2000000476837158,
+        "fixed_gap_anchor_mass": 0.4999999999999999,
+        "matched_4096_logarithmic_anchor_mass": 0.4999999999999999
+      },
+      {
+        "keys": 8192,
+        "legacy_initial_temperature": 1.0,
+        "logarithmic_initial_temperature": 1.2999999523162842,
+        "fixed_gap_anchor_mass": 0.33330620218134455,
+        "matched_4096_logarithmic_anchor_mass": 0.4999643899489346
+      },
+      {
+        "keys": 32768,
+        "legacy_initial_temperature": 1.0,
+        "logarithmic_initial_temperature": 1.5,
+        "fixed_gap_anchor_mass": 0.11109001139384728,
+        "matched_4096_logarithmic_anchor_mass": 0.49993132625132636
+      },
+      {
+        "keys": 131072,
+        "legacy_initial_temperature": 1.0,
+        "logarithmic_initial_temperature": 1.7000000476837158,
+        "fixed_gap_anchor_mass": 0.030296080375242285,
+        "matched_4096_logarithmic_anchor_mass": 0.49991543032865365
+      }
+    ],
+    "scope": "Analytic attention mass for fixed representations, calibrated to equal half mass at4096. Not trained length-generalization evidence."
+  },
+  "query_only_kv": {
+    "tiny_trunk_heads": 4,
+    "retained_query_heads": 1,
+    "tiny_full_trunk_cache_bytes": 65536,
+    "tiny_compact_trunk_storage_bytes": 16384,
+    "tiny_storage_ratio": 0.25,
+    "largest_prefix_difference_across_all_support_layers": 0.0,
+    "largest_full_vs_chunked_query_difference": 2.3283064365386963e-08,
+    "base8192_BF16_full_trunk_cache_MiB": 768.0,
+    "base8192_BF16_one_head_trunk_cache_MiB": 48.0,
+    "scope": "Measured CPU inference storage; base BF16 sizes are analytic. Excludes frontend and training activations. No latency or GPU-kernel claim."
+  },
+  "hurdle_scaling": {
+    "reference_reservoir_targets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "positive_support_targets": [
+      100.0,
+      200.0,
+      300.0,
+      400.0
+    ],
+    "results": [
+      {
+        "policy": "reference",
+        "center": 0.0,
+        "scale": 1.0,
+        "standardized_positive_support": [
+          100.0,
+          200.0,
+          300.0,
+          400.0
+        ],
+        "positive_support_in_finite_bins": 0
+      },
+      {
+        "policy": "positive_support",
+        "center": 250.0,
+        "scale": 148.26,
+        "standardized_positive_support": [
+          -1.011736139214893,
+          -0.3372453797382976,
+          0.3372453797382976,
+          1.011736139214893
+        ],
+        "positive_support_in_finite_bins": 4
+      }
+    ],
+    "scope": "Support-only reparameterization changes bin coverage, not population weighting or tail-family expressiveness."
+  }
+}

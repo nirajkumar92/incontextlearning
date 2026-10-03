@@ -1,0 +1,158 @@
+{
+  "as_of": "2026-10-02",
+  "papers": [
+    {
+      "path": "papers/provided/exaone.pdf",
+      "sha256": "27ee093b8d7d3a0e0dfa1d2c3af9200ed2dea2c838a95d8b29390b92903c5502",
+      "bytes": 1327476,
+      "pages": 18,
+      "metadata_title": "EXAONE Tabular 1.0 : Technical Report",
+      "metadata_arxiv": "https://arxiv.org/abs/2608.25774v1"
+    },
+    {
+      "path": "papers/provided/kumotabular.pdf",
+      "sha256": "ef54ca9317d5dcf36ee7d61faaa4ceda8b41b1c5dac27ea01b28b1d8216468bf",
+      "bytes": 6375835,
+      "pages": 12,
+      "metadata_title": "NVIDIA Kumo Tabular Sets a New Accuracy-Efficiency Frontier for Tabular Prediction",
+      "metadata_arxiv": ""
+    },
+    {
+      "path": "papers/provided/tabfm.pdf",
+      "sha256": "73fc755e0a6ce468b023cee6c2e88bbfbf07e69122dfb0abb03cc5154d2a3698",
+      "bytes": 826627,
+      "pages": 15,
+      "metadata_title": "TabFM: A Zero-Shot Foundation Model for Tabular Data",
+      "metadata_arxiv": "https://arxiv.org/abs/2609.37959v1"
+    },
+    {
+      "path": "papers/provided/tabicl.pdf",
+      "sha256": "22b3b112d8e2875edc4e1054073f354dc139594f1d2bfe38754592d49d96bc3e",
+      "bytes": 4066189,
+      "pages": 31,
+      "metadata_title": "TabICL: A Tabular Foundation Model for In-Context Learning on Large Data",
+      "metadata_arxiv": ""
+    },
+    {
+      "path": "papers/provided/tabicl2.pdf",
+      "sha256": "71554be35ba3847a14267912d9738f6049545cf74a30d860de1ed23d14d95246",
+      "bytes": 15274950,
+      "pages": 79,
+      "metadata_title": "TabICLv2: A better, faster, scalable, and open tabular foundation model",
+      "metadata_arxiv": "https://arxiv.org/abs/2602.11139v2"
+    },
+    {
+      "path": "papers/provided/tabpfn.pdf",
+      "sha256": "97796b6e6b134b200555a7ebbacea2f6daecb9ab309279ba50d915d5ac5c9df6",
+      "bytes": 3793138,
+      "pages": 37,
+      "metadata_title": "",
+      "metadata_arxiv": ""
+    },
+    {
+      "path": "papers/provided/tabpfn2.5.pdf",
+      "sha256": "21f3cb0e28e587aef164a79a8ada9e942da51b052f55e6f366d5744a8b97f90f",
+      "bytes": 3964623,
+      "pages": 35,
+      "metadata_title": "TabPFN-2.5: Advancing the State of the Art in Tabular Foundation Models",
+      "metadata_arxiv": "https://arxiv.org/abs/2511.08667v2"
+    },
+    {
+      "path": "papers/provided/tabpfn2.pdf",
+      "sha256": "6b5ce3dba2ef7454ad0868ad733a64b4ac89bcd98307773fad1e0e977caaa013",
+      "bytes": 16957699,
+      "pages": 23,
+      "metadata_title": "Accurate predictions on small data with a tabular foundation model",
+      "metadata_arxiv": ""
+    },
+    {
+      "path": "papers/provided/tabpfn3.5.pdf",
+      "sha256": "fc2e1b4d6d08ade01855fc3b8f713684e235861a2d65db2c98cd9ec0a42dbb0c",
+      "bytes": 2321191,
+      "pages": 33,
+      "metadata_title": "TabPFN-3.5: Technical Report",
+      "metadata_arxiv": "https://arxiv.org/abs/2609.17895v1"
+    },
+    {
+      "path": "papers/provided/tabpfn3.pdf",
+      "sha256": "68825024d264813f2f094769cbfac5ad9e887883472a50f0c73e1558c6ac4bc7",
+      "bytes": 6826374,
+      "pages": 83,
+      "metadata_title": "TabPFN-3: Technical Report",
+      "metadata_arxiv": "https://arxiv.org/abs/2605.13986v2"
+    },
+    {
+      "path": "papers/provided/xiaomi.pdf",
+      "sha256": "bf9482753ceecce9011a09a0df739c7afa3a856ee6deaed98f93df05857ee821",
+      "bytes": 3321464,
+      "pages": 34,
+      "metadata_title": "Xiaomi-TabLDM: A Tabular Foundation Model Technical Report",
+      "metadata_arxiv": "https://arxiv.org/abs/2609.03880v2"
+    },
+    {
+      "path": "papers/supplementary/beyondarena.pdf",
+      "sha256": "7d7f407b087c6c0c8ef716b9745a0a2309ec6cff36d040b97e2e3979b1b31676",
+      "bytes": 6752042,
+      "pages": 99,
+      "metadata_title": "Beyond IID: How General Are Tabular Foundation Models, Really?",
+      "metadata_arxiv": "https://arxiv.org/abs/2606.30410v1"
+    },
+    {
+      "path": "papers/supplementary/limix2.pdf",
+      "sha256": "81cac82427da6f6b935b53099aa6b29577a9775c2ad94bd5ba513d5df544232f",
+      "bytes": 3678538,
+      "pages": 29,
+      "metadata_title": "LimiX-2: A Contextual Mechanism Network Towards General Structured-Data Intelligence",
+      "metadata_arxiv": "https://arxiv.org/abs/2609.17488v1"
+    },
+    {
+      "path": "papers/supplementary/mind_gap.pdf",
+      "sha256": "d5b41d6cf680d8989b7615e4667ff44ffdde60d3acd778b3fd83bf5fdfb9dd11",
+      "bytes": 2550950,
+      "pages": 26,
+      "metadata_title": "Mind the Gap? A Distributional Comparison of Real and Synthetic Priors for Tabular Foundation Models",
+      "metadata_arxiv": "https://arxiv.org/abs/2605.06343v1"
+    },
+    {
+      "path": "papers/supplementary/mitra.pdf",
+      "sha256": "c66975821751c08310792e21a9d0169242d4f8291d80bb630eab2e2e068fbd59",
+      "bytes": 7182075,
+      "pages": 39,
+      "metadata_title": "Mitra: Mixed Synthetic Priors for Enhancing Tabular Foundation Models",
+      "metadata_arxiv": "https://arxiv.org/abs/2510.21204v1"
+    },
+    {
+      "path": "papers/supplementary/mitra2.pdf",
+      "sha256": "903adb02c60a4774b14c7368d81c9ced9a2e4814e756853f70d1b97bed87ef5b",
+      "bytes": 10104431,
+      "pages": 38,
+      "metadata_title": "Mitra-v2 Technical Report",
+      "metadata_arxiv": "https://arxiv.org/abs/2609.04540v1"
+    },
+    {
+      "path": "papers/supplementary/oprior.pdf",
+      "sha256": "c12c522883aa90d7d8439508b3cbf087fff9e002a5d9544e81fca09bb9bee11a",
+      "bytes": 4581346,
+      "pages": 23,
+      "metadata_title": "Shaping the Prior: How Synthetic Task Distributions Determine Tabular Foundation Model Quality",
+      "metadata_arxiv": "https://arxiv.org/abs/2605.18971v1"
+    },
+    {
+      "path": "papers/supplementary/prior_evaluation.pdf",
+      "sha256": "b8c3c933f271e0305237688003b7504a378803c24dbea0e27cbc2a98b550c1b2",
+      "bytes": 4472835,
+      "pages": 12,
+      "metadata_title": "Towards Evaluating Data Priors for Tabular Foundation Models",
+      "metadata_arxiv": "https://arxiv.org/abs/2606.29241v1"
+    },
+    {
+      "path": "papers/supplementary/rtfm.pdf",
+      "sha256": "6d48e465a7c1e9d293c7abdb2c1216ea1228bee56e87482d386a3dda6e69c8d9",
+      "bytes": 1034890,
+      "pages": 10,
+      "metadata_title": "Robust Tabular Foundation Models",
+      "metadata_arxiv": "https://arxiv.org/abs/2512.03307v1"
+    }
+  ],
+  "retained_paper_count": 19
+}

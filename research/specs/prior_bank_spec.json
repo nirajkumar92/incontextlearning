@@ -1,0 +1,507 @@
+{
+  "name": "Tabular ICL research and implementation v4 \u2014 concrete reference-derived candidate",
+  "status": "Runnable recommended candidate; local mathematical, learned-head and integration checks; no competitive pretraining or GPU calibration",
+  "as_of": "2026-10-03",
+  "primary_objectives": [
+    "standard_benchmark_binary_multiclass_regression",
+    "financial_classification_regression_at_fraud_prevalence_1e-4"
+  ],
+  "inference_contract": "Frozen weights; labeled support conditions query predictions. Ensembles/retrieval are separate inference settings; task fine-tuning is a separate comparator.",
+  "selected_files": {
+    "static_generator": "static_recipe_v3.json",
+    "architecture_and_optimizer": "icl_architecture_v3.json",
+    "assessment": "../../prior_bank_assessment.tex",
+    "experiments": "ablation_plan.csv",
+    "latency_and_moe": "latency_recipe_v3.json",
+    "finance_generator_and_context": "finance_recipe_v3.json"
+  },
+  "configuration_precedence": "main_candidate below, configs/candidate_standard.json, configs/candidate_fraud.json and docs/main_recipe.md define the current recommendation. Older flat prior/curriculum/candidate_model/default_training fields document the authored control and remain for reproducible comparisons. Runtime configs are bounded pilots, not full-volume launch files. Research-only arms are not trainer flags.",
+  "initial_family_probabilities": {
+    "P0": 0.85,
+    "P1": 0.1,
+    "P4": 0.05
+  },
+  "prior_weight_status": "Initial hypotheses, not learned optima",
+  "candidate_model": {
+    "name": "ICL-315",
+    "parameters": 315021456,
+    "native_class_capacity": 256,
+    "shared_tasks": true,
+    "primary_size_search": "Choose architecture family first, including a compact persistent-cell candidate; then two supported sizes",
+    "one_billion_rule": "No initial allocation; requires a named reassignment after measured upper-frontier evidence",
+    "moe_challenger": {
+      "name": "ICL-MoE-419",
+      "total_parameters": 418863248,
+      "nominal_active_proxy": 315054224,
+      "default_enabled": false,
+      "budget_status": "Deferred; zero allocated GPU-hours in revised program"
+    },
+    "finance_parameters": 315175184,
+    "finance_adapter_parameters": 152704,
+    "finance_zero_atom_parameters": 1024,
+    "selection_status": "315M is a challenger, not the final recommended model; shared and separate task checkpoints compete at matched combined cost"
+  },
+  "default_training": {
+    "generator_version": "standard-v3-base plus finance-v3.2 joint pilot",
+    "context_conditioning": false,
+    "conditional_label_loss": false,
+    "adaptive_sampling": false,
+    "auxiliary_consistency": false,
+    "masked_conditional_task": false,
+    "feature_feedback": false,
+    "validity_attempt_cap": 1,
+    "legacy_support_coverage_mode": false,
+    "worlds_per_episode": 1,
+    "episodes_per_world": "standard=1;finance=4; at most one per logical batch",
+    "logical_global_batch_episodes": 256,
+    "validity_failure_policy": "Authored sampler fails fast; ordered process producer does not replace draws. Native R retains its explicit upstream rejection loops and abort bound."
+  },
+  "curriculum": {
+    "fraction_of_final_training_gpu_hours": [
+      0.6,
+      0.25,
+      0.15
+    ],
+    "stage1": {
+      "support": "base three uniform-in-bin buckets",
+      "class_count_multiclass": "RU(3,10)",
+      "cell_cap": 524288,
+      "feature_width": "base distribution"
+    },
+    "stage2": {
+      "short_episode_share": 0.4,
+      "medium_episode_share": 0.6,
+      "medium_support": "DLU(2049,8192)",
+      "multiclass_ranges": [
+        [
+          3,
+          10
+        ],
+        [
+          11,
+          32
+        ],
+        [
+          33,
+          128
+        ]
+      ],
+      "multiclass_range_probabilities": [
+        0.7,
+        0.2,
+        0.1
+      ],
+      "cell_cap": 2097152
+    },
+    "stage3": {
+      "short_episode_share": 0.3,
+      "medium_episode_share": 0.3,
+      "long_episode_share": 0.25,
+      "long_support": "DLU(8193,32768)",
+      "multiclass_ranges": [
+        [
+          3,
+          10
+        ],
+        [
+          11,
+          32
+        ],
+        [
+          33,
+          128
+        ],
+        [
+          129,
+          256
+        ]
+      ],
+      "multiclass_range_probabilities": [
+        0.7,
+        0.2,
+        0.08,
+        0.02
+      ],
+      "cell_cap": 8388608,
+      "wide_episode_share": 0.15,
+      "wide_support": "DLU(1024,4096)"
+    },
+    "short_width": "base generator width probabilities",
+    "medium_width_values": [
+      64,
+      128,
+      256,
+      512
+    ],
+    "medium_width_probabilities": [
+      0.25,
+      0.35,
+      0.25,
+      0.15
+    ],
+    "long_width_values": [
+      128,
+      256,
+      512
+    ],
+    "long_width_probabilities": [
+      0.25,
+      0.375,
+      0.375
+    ],
+    "class_support_floor": "n_support=max(sampled_n_support,16*K); a context-complexity choice, not required by known-vocabulary masking. Log actual sizes.",
+    "query_count": "min(128,max(16,floor(n_support/4)))",
+    "width_condition": "After class floor/query count, renormalize width probabilities over (n_support+n_query)*width<=stage_cell_cap. No silent feature removal.",
+    "late_stage_gate": "Only execute if memory/throughput and development gains support it; otherwise preregister continuation on the best confirmed shape mixture.",
+    "wide_width_values": [
+      512,
+      1024
+    ],
+    "wide_width_probabilities": [
+      0.35,
+      0.65
+    ],
+    "width_bucket_rule": "Use the sampled shape bucket even after the class-dependent support floor; then condition on cell cap.",
+    "wide_bucket_reason": "A width of1024 is impossible with ns>=8193 under2^23 cells. Separate medium-row wide tasks give that width actual training mass."
+  },
+  "optional_experiments": {
+    "context_v1": "90% context-capped tasks /10% exact base replay; static JSON defines caps",
+    "conditional_label_loss": "0/50/100% replacement on valid forward-classification worlds; hard support remains. SCM disabled. Full-loss conditional regression resampling K=4 is separate.",
+    "adaptive_sampling": "Fixed independent diagnostic worlds; current PFN loss vs portfolio, same sampled support shape, q=min256,max16,ns//4; every2%budget; details in assessment.",
+    "world_reuse": "4 episodes per world, at most one per logicalbatch, uniform reuse count; report distinctworlds and changedgradientcorrelation.",
+    "real_data_continuation": "Replace5% episodes with lineage-disjoint development real-data tasks; retain synthetic-only checkpoint; no lockedbenchmarkdata."
+  },
+  "compute": {
+    "gpu": "AMD Instinct MI355X",
+    "nodes": 8,
+    "gpus_per_node": 8,
+    "gpus_per_node_confirmed": true,
+    "total_gpus": 64,
+    "total_project_gpu_hours": 50000,
+    "full_cluster_days": 32.552083333333336,
+    "phase_gpu_hours": {
+      "systems_and_reproduction": 5000,
+      "prior_architecture_optimizer_screening": 15000,
+      "scaling_and_confirmation": 10000,
+      "final_pretraining": 12000,
+      "locked_evaluation": 5000,
+      "uncommitted_reserve": 3000
+    },
+    "scaling_runs": {
+      "main_sizes": "two sizes in the selected architecture family; no initial1B allocation",
+      "short_runs": {
+        "sizes": 2,
+        "seeds": 2,
+        "hours_per_run": 500,
+        "total": 2000
+      },
+      "bridges": {
+        "distinct_finalist_packages": 2,
+        "hours_per_package": 3000,
+        "total": 6000
+      },
+      "resolution": {
+        "runs": 2,
+        "hours_per_run": 1000,
+        "total": 2000
+      },
+      "total": 10000,
+      "horizon_policy": "Completed schedules; final12kh ceiling still extrapolates4x beyond3kh bridge, so conditional on sustained per-task progress; no confident compute-optimal claim"
+    },
+    "throughput": "CPU smoke measured only; no MI355X profile or learning curve. Full index/generation and routed prefills must be charged.",
+    "screening_detail": {
+      "total": 15000,
+      "package_definition": "Total GPU-hours of classifier and regressor checkpoints combined; 50/50 initial split fixed before runs, including classification task mix",
+      "allocation": [
+        {
+          "id": "P",
+          "description": "R, R+P1, R+P4, authored replacement on reference backbone/native heads",
+          "arms": 4,
+          "seeds": 2,
+          "hours_per_arm_seed": 250,
+          "total": 2000
+        },
+        {
+          "id": "A",
+          "description": "2priors x3backbones: reference, authored compressed, compact persistent-cell; matched task-specific heads",
+          "arms": 6,
+          "seeds": 2,
+          "hours_per_arm_seed": 350,
+          "total": 4200
+        },
+        {
+          "id": "H",
+          "description": "Published999-quantile head versus finer1025-bin candidate;128-bin baseline already falsified diagnostically",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 150,
+          "total": 600
+        },
+        {
+          "id": "C",
+          "description": "Scalar Fourier codec versus hash-bit candidate",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 150,
+          "total": 600
+        },
+        {
+          "id": "L",
+          "description": "Current clipped length scaling versus one chosen alternative; other variants diagnostic only",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 150,
+          "total": 600
+        },
+        {
+          "id": "T",
+          "description": "Shared versus classifier/regressor specialist package at equal combined cost",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 200,
+          "total": 800
+        },
+        {
+          "id": "O",
+          "description": "Muon/AdamW versus allAdamW; allLRtriage included within each arm ceiling",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 150,
+          "total": 600
+        },
+        {
+          "id": "F",
+          "description": "Six finance controls; stable weights/selector within paired contrast",
+          "arms": 6,
+          "seeds": 2,
+          "hours_per_arm_seed": 200,
+          "total": 2400
+        },
+        {
+          "id": "V",
+          "description": "At most2surviving combinations,2new confirmation seeds each",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 800,
+          "total": 3200
+        }
+      ],
+      "factorial_prior_rule": "R and ONE graft that survives prior triage; a full replacement may substitute only by recorded selection. If none survives, retainR and do not force a secondprior or spend unusedallocation.",
+      "finance_arms": [
+        "F0standard_only",
+        "F1joint80_20_fullselector_w1",
+        "F2same_entropy_weight",
+        "F3paired_input_H_removed_from_model_and_selector",
+        "F4paired_generative_H_nondiscriminative",
+        "F5selected_weight_reservoir_positive_control"
+      ],
+      "finance_policy": "F3/F4 retain F2 weighting/selector and differ only in stated intervention. F5 normalizer selected before run; final confirmation refits its paired full-selector control. All normalizations retain correct population proposal weights. V two slots include the refitted paired control; no third configuration is funded.",
+      "short_runs": "Triage only. Expensive comparisons require measured enough updates and completed curriculum; reduce scope before launch if infeasible.",
+      "deferred": [
+        "MoE",
+        "general_hybrid_attention",
+        "GQA",
+        "auxiliary_objectives",
+        "adaptive_prior_weights",
+        "combined_grafts_unless_funded",
+        "one_billion_model"
+      ],
+      "fresh_control_policy": "Funded pairs use completed matched horizons, not partial checkpoints from longer decays.",
+      "confirmation_policy": "At most two complete configurations, INCLUDING the necessary paired control, each with two new seeds. All standard and finance panels; gains not assumed additive; no third uncharged control.",
+      "family_comparison_scope": "Different family parameter counts allowed for equal-cost system comparison; not pure topology attribution."
+    },
+    "final_release_gate": "At most12000GPUh total across all final checkpoints, only after faithful reference, repaired precision, funded controls, independent confirmation and two3000h bridges. Start a new declared horizon; exact-config resume cannot change recipe/horizon. Reserve3000 only by logged reassignment.",
+    "final_package_split_gpu_hours": {
+      "standard": 9000,
+      "fraud_specialist": 3000
+    }
+  },
+  "evaluation": {
+    "primary": [
+      "full applicable pinned TabArena protocol",
+      "locked chronological natural-prevalence finance periods versus full-history tuned trees"
+    ],
+    "task_views": [
+      "binary",
+      "multiclass",
+      "regression",
+      "overall"
+    ],
+    "additional": [
+      "TALENT named view",
+      "BCCO",
+      "OpenML-CTR23",
+      "ScoringBench",
+      "applicable BeyondArena static-table slices"
+    ],
+    "information": "Inductive support-only preprocessing, legal training-only vocabulary, no query-label selection",
+    "uncertainty": "Dataset-lineage blocked paired analysis, seed variation and multiplicity",
+    "publication": "No unconditional or universal SOTA claim; scope to executed comparisons",
+    "latency": "Cold-context total GPU batch time is primary; report cached-query time, component costs, median/p95, throughput and peak memory separately. No silent context truncation."
+  },
+  "implementation_status": {
+    "static_full_generator": "Implemented selected P0/P1/P4 baseline and context cap; tests passed",
+    "finance_generator": "Implemented finite strata/ID replay, observation process and selected contexts",
+    "ICL315_model": "Implemented dense architecture/size grid and caches; exact base parameter counts checked on meta device; tiny CPU runs only",
+    "distributed_trainer": "Implemented replicated all-reduce trainer; two actual Gloo ranks tested; ROCm/NCCL not tested",
+    "compute_calculator": "Implemented; accounting tests passed",
+    "algorithmic_probes": "Executed mathematical diagnostics",
+    "optional_moe_hybrid": "Specification and small algebra probes only; not implemented training arms",
+    "external_tabarena_adapter": "Provided; official installed-harness integration not executed",
+    "competitive_model_pretraining": "Not performed",
+    "gpu_latency": "Not measured",
+    "reference_prior": "Implemented pinned source and controls; bitwise native batch and cross-process replay tests",
+    "candidate_model": "Implemented 317116304-parameter selectable candidate; tiny CPU forward/backward, cache and trained-pipeline tests",
+    "producer": "Implemented persistent ordered process prefetch; no GPU utilization measurement",
+    "volume_planner": "Implemented provisional targets and budget-feasible measured horizon calculation"
+  },
+  "secondary_objective": "Measured GPU batch inference efficiency; predictive performance has priority",
+  "deployment_target": "GPU batch prediction",
+  "runtime_entrypoints": {
+    "training": "src/tabular_foundation/train.py",
+    "prediction": "src/tabular_foundation/inference.py",
+    "runtime_configs": "configs/",
+    "documentation": "README.md"
+  },
+  "initial_family_probabilities_scope": "Within authored standard control only; main candidate is R_P1_05",
+  "profile_mixture": {
+    "standard": 0.8,
+    "finance": 0.2,
+    "unit": "emitted macroepisodes, not world draws or GPU-hours",
+    "finance_reuse": 4,
+    "standard_reuse": 1,
+    "target_fraud_rate": 0.0001
+  },
+  "optional_generator_queue": {
+    "implemented": false,
+    "maximum_attempts_per_request": 8,
+    "policy": "Retry within the selected family; record dropped requests and replenish the same quota. No easy-family substitution."
+  },
+  "reference_preserving_prior_experiments": {
+    "implementation_status": "Implemented pinned generator task/shape adapters for R, R_P1_05 and R_P4_05; native-model reproduction and full comparative runner still separate work",
+    "reference": "Pinned released TabICLv2 generator, task-specific models/heads, actual released optimizer behavior",
+    "draw_order": "Reference task and shape first; choose branch once; never change shape/task to fit graft",
+    "G": "95% reference+5% P1 when F>=8; otherwise100%reference",
+    "C": "95% reference+5% P4 on binary/regression with F>=4; otherwise100%reference",
+    "combined": "Only after both individual gains; 90/5/5 where both legal, each illegal mass returned to reference; needs named funded confirmation",
+    "filter": "Preserve released reference filter on reference draws; validity-only on grafts; log proposals, acceptance, realized masses and total generation cost",
+    "initial_interventions_disabled": [
+      "context_caps",
+      "conditional_label_loss",
+      "adaptive_weights",
+      "new_missingness",
+      "real_continuation"
+    ],
+    "authored_replacement": "Retained as fourth triage arm, not presumed superior"
+  },
+  "independent_audit": {
+    "review": "../reviews/independent_audit.md",
+    "probe": "../probes/independent_audit_probes.py",
+    "results": "../results/independent_audit_probes.json",
+    "open_issues": [
+      "real_transfer_of_quantile_and_hash_bit_representation",
+      "risk_partition_finance_coverage_and_real_fraud_validation",
+      "trained_long_context_dilution_and_query_KV_quality",
+      "architecture_family_selection",
+      "shared_negative_transfer_and_specialist_cost",
+      "compact_cell_candidate_and_complete_statistical_runner",
+      "ROCm_NVIDIA_memory_throughput_and_cluster_scaling"
+    ]
+  },
+  "legacy_control_fields": [
+    "initial_family_probabilities",
+    "candidate_model",
+    "default_training",
+    "curriculum",
+    "profile_mixture"
+  ],
+  "main_candidate": {
+    "parameters": 317116304,
+    "model": "base",
+    "model_options": {
+      "categorical_encoding": "hash_bits",
+      "regression_head": "quantile",
+      "regression_bins": 1025,
+      "regression_quantiles": 999,
+      "length_scaling": "logarithmic",
+      "trunk_query_kv_heads": 2,
+      "hurdle_target_scale": "positive_support"
+    },
+    "standard_config": "configs/candidate_standard.json",
+    "fraud_config": "configs/candidate_fraud.json",
+    "training_recipe": "docs/main_recipe.md",
+    "volume_recipe": "docs/prior_volume.md",
+    "volume_plan": "research/results/prior_volume_plan.json",
+    "standard_prior": "R_P1_05",
+    "reference_revision": "0dbff3ec8fc68c123c87af77b0ea8b25cd2d23f3",
+    "standard_task_package_probabilities": {
+      "classification": 0.5,
+      "regression": 0.5
+    },
+    "p1_rule": "Independent 0.05 branch after task/shape draw; requested F>=8; ineligible mass returns to R; observed counts are random",
+    "p4_main_candidate_share": 0,
+    "reference_envelope_probability": 0.2,
+    "reference_envelope": {
+      "2": {
+        "max_features": 256,
+        "max_classes": 32
+      },
+      "3": {
+        "max_features": 512,
+        "max_classes": 256
+      }
+    },
+    "reference_representation_limit": "Native encoded features have no nominal type flags; hash-bit training comes primarily from P1 and typed finance tasks. Realized classes and width may shrink.",
+    "standard_accepted_episode_target": 64000000,
+    "fraud_macroepisode_target": 1024000,
+    "global_batch": 256,
+    "stage_episode_fractions": [
+      0.9,
+      0.09,
+      0.01
+    ],
+    "standard_target_stage_updates": [
+      225000,
+      22500,
+      2500
+    ],
+    "fraud_target_stage_updates": [
+      3600,
+      360,
+      40
+    ],
+    "finance_world_reuse": 4,
+    "finance_target_distinct_worlds": 256000,
+    "world_count_condition": "Completed schedule without skipped updates, replayed attempts or stage-crossing reuse groups; not independent positives",
+    "budget_gpu_hours": {
+      "standard": 9000,
+      "fraud": 3000
+    },
+    "volume_status": "Explicit provisional targets. Complete stage throughput and reserved overhead determine feasible smaller fixed horizons; no MI355X measurement exists.",
+    "fraud_prior": {
+      "task": "binary",
+      "mechanism_family": "risk_partition",
+      "feature_view": "hide_h",
+      "loss_normalization": "unit",
+      "prevalence": 0.0001
+    },
+    "checkpoint_policy": "Protect standard weights; initialize separate binary fraud specialist with fresh optimizer and schedule. Shared80/20 is a control.",
+    "optimizer": {
+      "name": "muon_plus_adamw",
+      "weight_decay": 0.0,
+      "gradient_clip": 10,
+      "standard_muon_lr": 0.0008,
+      "standard_adam_lr": 0.0003,
+      "fraud_muon_lr": 8e-05,
+      "fraud_adam_lr": 3e-05
+    },
+    "producer": "One persistent spawned CPU process per rank, bounded ordered task queue; serial replay tested; no pinned transfer stream or measured GPU utilization",
+    "query_cache": "2 query KV heads, full support KV heads; storage improvement does not imply equal attention FLOP/latency reduction",
+    "evidence": [
+      "research/results/upstream_repository_audit.json",
+      "research/results/representation_candidate_probes.json",
+      "research/results/learned_regression_head_probe.json",
+      "research/results/code_validation.json"
+    ]
+  }
+}

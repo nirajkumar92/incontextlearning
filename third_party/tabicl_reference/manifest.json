@@ -1,0 +1,149 @@
+{
+  "repository": "https://github.com/soda-inria/tabicl",
+  "revision": "0dbff3ec8fc68c123c87af77b0ea8b25cd2d23f3",
+  "retrieved_utc": "2026-10-03",
+  "license": "BSD-3-Clause (prior subtree); complete upstream LICENSE retained",
+  "scope": "Unmodified prior subtree excluding plotting eval, and six native training recipes. No model weights.",
+  "files": {
+    "src/tabicl/prior/__init__.py": {
+      "git_blob_sha1": "9479cc1c5dbbde349f4826a6d1102b53b0658168",
+      "sha256": "87f6627fa1bc3bbb6379fda1d8930d26fb8a92646c7247035ce6408a5e3c8577"
+    },
+    "src/tabicl/prior/__main__.py": {
+      "git_blob_sha1": "5e85c3186b0ef0d508c4c282b20b9e512ade03fc",
+      "sha256": "009739ac1995497fcaf04a15c99de0c6f1de0c6ef1d00ebac5b369ea4b920032"
+    },
+    "src/tabicl/prior/_activations.py": {
+      "git_blob_sha1": "42a97e345f6733b4487c147643a444e4928681ff",
+      "sha256": "a0fb88053f642af1fd99669f681513af0446faccaca5141919ed837d8da48e1a"
+    },
+    "src/tabicl/prior/_dataset.py": {
+      "git_blob_sha1": "5ac18c5fa6e6c8e1c599bb70014ab70977c51bbc",
+      "sha256": "3c3624af9ea9ca99345a64b37962f99422c56eb114f52f3c8f523a928782efbd"
+    },
+    "src/tabicl/prior/_genload.py": {
+      "git_blob_sha1": "210fd1e599590ad13fa1b7933311276cd8b1122b",
+      "sha256": "5e88789ddb203314a5bcb44e530cdb5fde03f4c627cad2f548047e45fbdbbbfd"
+    },
+    "src/tabicl/prior/_graph_scm.py": {
+      "git_blob_sha1": "ff746f06b7004f1cd1a5b52333c25781c4daa62b",
+      "sha256": "89f955bbc9854616ef4f0225a3a391ab2cc2c708be50669a4d9af348abb27684"
+    },
+    "src/tabicl/prior/_hp_sampling.py": {
+      "git_blob_sha1": "7c7e5ac106e27c6bd6e12d33c3b5511a164ac71c",
+      "sha256": "6e973dc1f992658fb61d297c66d0259ba416b941a1844dd08bd7cacace05bceb"
+    },
+    "src/tabicl/prior/_mlp_scm.py": {
+      "git_blob_sha1": "f74f797eae8b97784d7119f4f910380ce6cefdd1",
+      "sha256": "9e565999b5eef77c57027a99b3570719df331f7a5b1c1b27cf4d93bb9e2afd3c"
+    },
+    "src/tabicl/prior/_prior_config.py": {
+      "git_blob_sha1": "06e6a85033db9bc6c888a53021ad949d68568cf1",
+      "sha256": "7e70db056f95e9a14d38d3d8baa25aaa4935d0967fd901a3af32e9616157ba0d"
+    },
+    "src/tabicl/prior/_reg2cls.py": {
+      "git_blob_sha1": "bceb5c422cdb67284bbc5ba6e3b95ed2cae108b7",
+      "sha256": "d1672e2cb3fcf3eb4ee7d0ed72a23f8c9bc73dbce202185a152029fc9fcfbd23"
+    },
+    "src/tabicl/prior/_tree_scm.py": {
+      "git_blob_sha1": "68ca5cd091f2f4b98cbf3cea7fe05687b22230c6",
+      "sha256": "3667136254a3bedb5654969bd8b04f3e365b0b373a26eeb1d6d3940aaa415e13"
+    },
+    "src/tabicl/prior/_utils.py": {
+      "git_blob_sha1": "99bec69eb1c5b0f92b6e7b27772b9f3e16e5d98b",
+      "sha256": "b99f93b5b128b8e40030460af82462ccf7918ea05c9a3fecc33efe8f05432f5b"
+    },
+    "src/tabicl/prior/graph_lib/README.md": {
+      "git_blob_sha1": "03fb2c879e2eba0dd4c6fc06df50f05380e57403",
+      "sha256": "49e0a4a8ba4c7a3be009f79728a05d8a49e3ec5e6541427c8ff9e1678d5efceb"
+    },
+    "src/tabicl/prior/graph_lib/__init__.py": {
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/tabicl/prior/graph_lib/_activation.py": {
+      "git_blob_sha1": "b7b99d6ef47a4790b20ce85bc8c70d63296588b8",
+      "sha256": "11b8bca1e34d11725bbe2a19a229059840fe14ca0f604cbe864c07987bb9f51a"
+    },
+    "src/tabicl/prior/graph_lib/_base.py": {
+      "git_blob_sha1": "87844850755f48179bbabe5230743621531d9f71",
+      "sha256": "065ed93d700fb125222ee60b68656eb419a39c630645d1b8f44fe9d6baf718d7"
+    },
+    "src/tabicl/prior/graph_lib/_config.py": {
+      "git_blob_sha1": "d2cfec1f4754e9901f1dad1103114105036f843f",
+      "sha256": "789f5af746f7a96e3efd2433652c9a2fcdc2bbfe62988b391d3b8572be9baf01"
+    },
+    "src/tabicl/prior/graph_lib/_converter.py": {
+      "git_blob_sha1": "eadf20b751753ef973965970b0df987e5d71b5a1",
+      "sha256": "a402be9663e8fc527af83e31e76406179816afc0ddffc5d9fc7fe0b69af11ea9"
+    },
+    "src/tabicl/prior/graph_lib/_dataset.py": {
+      "git_blob_sha1": "972bf7318558da9df463e2d890ab74da0214a861",
+      "sha256": "7e4237e2f8c34b98000c147b81383b33711b381073d78212191d0761685ec1e1"
+    },
+    "src/tabicl/prior/graph_lib/_function.py": {
+      "git_blob_sha1": "1c005a36078f6d233459200f492e4e64bc1d57f0",
+      "sha256": "ff2939197b353f6d11a3fbaf0e27586998bdf93527dad11f24698ff296ce2f6c"
+    },
+    "src/tabicl/prior/graph_lib/_graph.py": {
+      "git_blob_sha1": "5429430bbd089525c3a0e52e5ecc9196b7e22141",
+      "sha256": "36e9488d481d562387d11ef655510ffb1ad0a28c2d3bb49b48c1edba2f4acabc"
+    },
+    "src/tabicl/prior/graph_lib/_graph_function.py": {
+      "git_blob_sha1": "be12075c3ce6bd9583eda707037f59dbf00b5860",
+      "sha256": "42413eade5ae9064c7ae86e8a0befb51aeb54ee87967fbc4f6691699d375764e"
+    },
+    "src/tabicl/prior/graph_lib/_matrix.py": {
+      "git_blob_sha1": "a3860bcc75dc2cabbbef21eae498e2f1603a40bd",
+      "sha256": "cfb1d766bbe0db14ae8987b8570e5f9392904ed32f63d1af206811882aaf4c41"
+    },
+    "src/tabicl/prior/graph_lib/_multi_function.py": {
+      "git_blob_sha1": "a4f274ee69b0bd39a688516fdd1efd91874daff6",
+      "sha256": "289e747e4b9b5a864b6adccac8531e3cff9dbbcfea31937a748317e71a302b1b"
+    },
+    "src/tabicl/prior/graph_lib/_node_function.py": {
+      "git_blob_sha1": "a1da6b0ccef60426352103b69a65c416ce62476e",
+      "sha256": "3b2345f23d0013442f7390c907454dfd4c6f4b43836a1bd210423242a34964c6"
+    },
+    "src/tabicl/prior/graph_lib/_points.py": {
+      "git_blob_sha1": "8f5c1e07438d5b98ea914c6a9d0517cbf36d4fc3",
+      "sha256": "04dcbd7664004f6acc8453ca866caba0879d87d4ecbcdad08dd79f9ca2ff7a04"
+    },
+    "src/tabicl/prior/graph_lib/_properties.py": {
+      "git_blob_sha1": "f945bd10a583d1e77346bde8340385747b117477",
+      "sha256": "ff64d682258891516a3d5c6b8f65c07f57a8b03cdfccc553a97e75cf070e16b7"
+    },
+    "src/tabicl/prior/graph_lib/_weights.py": {
+      "git_blob_sha1": "9453e8b32ae7d8c98dd15dcf0b49502509204687",
+      "sha256": "5e8ca75184a84ce34337a8b90dbc0ce199395fe03ba51c95c8b622438b85d2d8"
+    },
+    "LICENSE": {
+      "git_blob_sha1": "a77493a7d127c4e8d61c2383730f4c0648684b48",
+      "sha256": "c959a1db8bc4b2f41c315a9b077c822372a4a84e1a83636bdb962715aaae6874"
+    },
+    "scripts/train_v2_clf_stage1.sh": {
+      "git_blob_sha1": "99e8c3ecc47fb7a24f34e0fe33c1a070198fc818",
+      "sha256": "fad14b4a734b4cfb5bc50b424e9b8d0abc3a1c121e00930f808d843fe59654a3"
+    },
+    "scripts/train_v2_clf_stage2.sh": {
+      "git_blob_sha1": "1e100749397dfc2cec5fa65a1f031defae013dda",
+      "sha256": "5ccb2af964ed160d935bb3f5957c4c0a0e4d506bd7e39e7afa5a7b59fcd58b63"
+    },
+    "scripts/train_v2_clf_stage3.sh": {
+      "git_blob_sha1": "17d7dbccf968a53622c9b8ee3397bf60be109e7d",
+      "sha256": "8bca1412adb5b63b12b9003610cac199e6f685414317c5c7a4b4ca0316823740"
+    },
+    "scripts/train_v2_reg_stage1.sh": {
+      "git_blob_sha1": "7d01483faaa196d275c5d48a88955833857909a0",
+      "sha256": "a5fe10679c45677d1ac56f50336a56febfb9c1dc8242e19743aaa1ea2ddf4b9e"
+    },
+    "scripts/train_v2_reg_stage2.sh": {
+      "git_blob_sha1": "7028e8e3fb35b376959fd8170bf5476ed8dca070",
+      "sha256": "c12bb3ed9c3d75d1e701bf82f5d87ff52743e76490472d66dff7105dd1cefe72"
+    },
+    "scripts/train_v2_reg_stage3.sh": {
+      "git_blob_sha1": "a1b010a90cdda235533380664ed56d0e0d42631c",
+      "sha256": "054c1ebe8f6b9504d9761c3f2e90e20ad113df0724afe90a58ad731ad5ec3651"
+    }
+  }
+}

@@ -1,0 +1,2968 @@
+{
+  "as_of": "2026-10-03",
+  "scope": "Complete default-branch trees plus selected full source reads; not a proof that no private or alternative release exists.",
+  "repositories": [
+    {
+      "repository": "PriorLabs/TabPFN",
+      "revision": "15f5e6b2b629b905879b9be907261416f20d0df5",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".gemini/config.yaml",
+          "blob": "7cd1337d0506bcab221d3815638eea20a23e020e"
+        },
+        {
+          "path": ".github/CODEOWNERS",
+          "blob": "892d970023edf2294fe8ecb160ae519586cb12f2"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+          "blob": "d42fd7d72bed67c3f590aed257d998f24207aa68"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/doc_improvement.yml",
+          "blob": "0ef27c3dd97b512b2837cb65258fa024be8d6644"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+          "blob": "ffd083ad73d6452fa03872dc792a4f16a4e941c8"
+        },
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "blob": "d209cd0c8c66d2cd3fb7d712b5e4d293e94cdfd4"
+        },
+        {
+          "path": ".github/dependabot.yml",
+          "blob": "28dce41a2f89090cb0488be5cf3ae89d25a744b8"
+        },
+        {
+          "path": ".github/pr-reviewers.txt",
+          "blob": "1fe76bbd514b3e0b749eb12fa4814a313400341d"
+        },
+        {
+          "path": ".github/workflows/assign-pr-reviewer.yml",
+          "blob": "420ca0939613122dfb27d7f3a9eede349c1d65f4"
+        },
+        {
+          "path": ".github/workflows/check-changelog.yml",
+          "blob": "b6a60c82207155793c24e0802270d999170a3283"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "blob": "fa97e5f1efeb5bf960d6f8375f92de96a4a7ea5e"
+        },
+        {
+          "path": ".github/workflows/claude-code-review.yml",
+          "blob": "5bd01264fa9ea478e0f08fea0dfa45171d54afc0"
+        },
+        {
+          "path": ".github/workflows/claude.yml",
+          "blob": "797217d149b024411716f094ba3bfe75f3fa05db"
+        },
+        {
+          "path": ".github/workflows/nightly-notebook-check.yml",
+          "blob": "f6b73bbcbabbf6f1a7bd4d14309220bf8e384599"
+        },
+        {
+          "path": ".github/workflows/reapprove-internal-prs.yml",
+          "blob": "48fcbd0b1258bcc9acf191c4cf501eba65d3d581"
+        },
+        {
+          "path": ".github/workflows/release-create-pr.yml",
+          "blob": "c826b18a6ca2e195e9eadfba5e900d0f03415962"
+        },
+        {
+          "path": ".github/workflows/release-publish.yml",
+          "blob": "4c7865be87e9a2c6064236ffb5eb90d89d5eb7d6"
+        },
+        {
+          "path": ".github/workflows/release-tag-on-merge.yml",
+          "blob": "7dd8fe945e723f2d6c5cb8e6ca65c113a4ba6341"
+        },
+        {
+          "path": ".github/workflows/slack-ci-alert.yml",
+          "blob": "524f1bb29222130a67cab554256f487ce7e0c2bb"
+        },
+        {
+          "path": ".github/workflows/trigger-slack-ci-alert.yml",
+          "blob": "93f39e0f847e92eeb5b7f00a132320d420b8a631"
+        },
+        {
+          "path": ".gitignore",
+          "blob": "cc6ab04066b175c6eeaeec8fc23b759d68bf36a2"
+        },
+        {
+          "path": ".pre-commit-config.yaml",
+          "blob": "1b0367d71c688436ed1633c8d8e0a56bac6e2c01"
+        },
+        {
+          "path": "CHANGELOG.md",
+          "blob": "b761b635026abe0e80f12dc341802e0dba07b2a0"
+        },
+        {
+          "path": "LICENSE",
+          "blob": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+        },
+        {
+          "path": "NOTICE",
+          "blob": "ff0f056bc3a4cb7a87d2d3bb794d458c3c3f60d2"
+        },
+        {
+          "path": "README.md",
+          "blob": "f782b8c39fd129dfb9dd6b37d51eeef595cab9e8"
+        },
+        {
+          "path": "SECURITY.md",
+          "blob": "6a616d13fc3124c8bb736ff52f61b8c0bde38b7c"
+        },
+        {
+          "path": "THIRD-PARTY-NOTICES.md",
+          "blob": "0e417bca76d1cd1836c5be8752a22ca2c010002e"
+        },
+        {
+          "path": "changelog/README.md",
+          "blob": "c9884a448214f90705c712422d4503d7e49d7044"
+        },
+        {
+          "path": "docs/assets/tabpfn_architecture.svg",
+          "blob": "4bd6473f9b5cdfdb2fc435f26e84fccbf4600074"
+        },
+        {
+          "path": "docs/assets/tabpfn_attention.svg",
+          "blob": "9da2aa9fe0fdbae6ca439fba015745f2ceb9f6d9"
+        },
+        {
+          "path": "examples/batched_classification_cv.py",
+          "blob": "3756a1b478e16c81ed4507fb0943d97167a9199d"
+        },
+        {
+          "path": "examples/batched_regression_m4.py",
+          "blob": "4b57faf0162131e7d72e5b5d75b95762ca3a988e"
+        },
+        {
+          "path": "examples/benchmarking_tabpfn.py",
+          "blob": "0c25af28b19f67c5fa3f2a3ae80832b1601741b3"
+        },
+        {
+          "path": "examples/finetune_classifier.py",
+          "blob": "87e7d07a521bcb6abe6343138c97e7e2eaa56575"
+        },
+        {
+          "path": "examples/finetune_regressor.py",
+          "blob": "6dc8b3b3e06285b6f9ebb2b5771e4f775f9462dd"
+        },
+        {
+          "path": "examples/input_gradients.py",
+          "blob": "485d075f0341f917774206eb3f4bff3bb450d087"
+        },
+        {
+          "path": "examples/kv_cache_fast_prediction.py",
+          "blob": "f79f092722f84755e2f8980820096353141fcde0"
+        },
+        {
+          "path": "examples/notebooks/Databricks_MLflow.ipynb",
+          "blob": "1a77d9150140cb480af1202d694e7a62ebdfd34d"
+        },
+        {
+          "path": "examples/notebooks/TabPFN_Demo_Local.ipynb",
+          "blob": "1ac8cb170556e85ed706f37762ef840417fc462c"
+        },
+        {
+          "path": "examples/plot_regression_distribution.py",
+          "blob": "3412b314aa2923f71f002bed436155112953371a"
+        },
+        {
+          "path": "examples/prompt_tuning_classifier.py",
+          "blob": "46614106844f013907832de33da09f5ddd09f41a"
+        },
+        {
+          "path": "examples/prompt_tuning_regressor.py",
+          "blob": "cfefaca2d360840fd1d691761b3adb3e5bbe26af"
+        },
+        {
+          "path": "examples/sagemaker.py",
+          "blob": "57f8cd1ccbaf5ec290971cf7cf5d429d9b3e96c0"
+        },
+        {
+          "path": "examples/save_and_load_model.py",
+          "blob": "8c8af9596df5f8b9a7ff5e9630314a13ebc3b31d"
+        },
+        {
+          "path": "examples/tabpfn_classifier_with_tuning.py",
+          "blob": "f621b32ee4758b3d1f6dc47f3ccdd10aa1c18d7f"
+        },
+        {
+          "path": "examples/tabpfn_for_binary_classification.py",
+          "blob": "d01d14261d7b9913a0de29ed26054980df1104a7"
+        },
+        {
+          "path": "examples/tabpfn_for_multiclass_classification.py",
+          "blob": "0cc79f2decd455bc06b82408c7a1720f1dbeded2"
+        },
+        {
+          "path": "examples/tabpfn_for_regression.py",
+          "blob": "678068ee0c644ffc4f1315c1dd8f96bf32a2758d"
+        },
+        {
+          "path": "examples/tabpfn_regressor_with_tuning.py",
+          "blob": "43f758590ab5141b8aa45c81bb7bdccbda69f933"
+        },
+        {
+          "path": "pyproject.toml",
+          "blob": "0fb3ec8f20737605b4ceb229448e63ca7200a53d"
+        },
+        {
+          "path": "scripts/__init__.py",
+          "blob": "37ed5e7a5952028a9480e850d51b8fcf378f19f7"
+        },
+        {
+          "path": "scripts/convert_checkpoint_to_safetensors.py",
+          "blob": "cd1de652cd72def7e23c608854c3165ff9e11ce1"
+        },
+        {
+          "path": "scripts/download_all_models.py",
+          "blob": "6b04dae110f764e8c6cdf9c100ce9f5f4af2ec93"
+        },
+        {
+          "path": "src/tabpfn/__init__.py",
+          "blob": "ff902aa1e0f4ec35d7920e2075d26e03c94ac06f"
+        },
+        {
+          "path": "src/tabpfn/architectures/__init__.py",
+          "blob": "538ef17de1884b142bebcf52babc3ad3901d2364"
+        },
+        {
+          "path": "src/tabpfn/architectures/interface.py",
+          "blob": "719a50618f435c230bd91652df5115997b105f74"
+        },
+        {
+          "path": "src/tabpfn/architectures/kv_cache.py",
+          "blob": "dd7d085944e119f2ba03f6cab0cc93f09cb8b311"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/__init__.py",
+          "blob": "5f27c8bef35af6c0610feb9eabe963b267a75dc6"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/attention_backends.py",
+          "blob": "73d78851234868405f41c92f88a0591ea20c5b64"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/attention_gqa_check.py",
+          "blob": "98c7b6e2faddde526643759a19b050f4b51f2b44"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/bar_distribution.py",
+          "blob": "ae4fac97729458c7f50a230bf4d2877ca1a1ded9"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/chunked_evaluate.py",
+          "blob": "96fb1d8d998571311204140349ce7d4b72413556"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/column_embeddings.py",
+          "blob": "7261af2e42e01dedaeac55727a0fab45641a5f8f"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/compile_utils.py",
+          "blob": "c38089260d616ce998e76c853aa894681f787f8d"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/fa3_backend.py",
+          "blob": "f0b613f1cea93e33cc939804cc0126f6e03c2a78"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/fa3_setup.md",
+          "blob": "19fe6583af96447b1d56a64cd9ad6b0c5684baf8"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/mlx_backend.py",
+          "blob": "587fbe6ad146b4e19236b1cc95aabf278ad6c399"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/scaled_dot_product_attention.py",
+          "blob": "84a75b9d966193ce448ad9beec34dec6f22365ba"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/tabpfn_col_embedding.pt",
+          "blob": "95f75bc62323e90afd743f7f0a41bf06e4a5d7c7"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/torch_mps_backend.py",
+          "blob": "2034488fd87d3ae9ff6b21623732360c125a51e7"
+        },
+        {
+          "path": "src/tabpfn/architectures/shared/workaround_mps_linear_bug.py",
+          "blob": "0caa501c3de5bd19004fa35f4280759e879ef9ed"
+        },
+        {
+          "path": "src/tabpfn/architectures/tabpfn_v2.py",
+          "blob": "54b4775ee108cc7945ece6409c3ac9a369500964"
+        },
+        {
+          "path": "src/tabpfn/architectures/tabpfn_v2_5.py",
+          "blob": "b499d558a787294a4487061599319ced32e14fc7"
+        },
+        {
+          "path": "src/tabpfn/architectures/tabpfn_v2_6.py",
+          "blob": "0661d7695339232af253183017a2c2c4a141cd12"
+        },
+        {
+          "path": "src/tabpfn/architectures/tabpfn_v3.py",
+          "blob": "0ce35f6a3c6bdc517e43d365b0e4459d7bd1f5fc"
+        },
+        {
+          "path": "src/tabpfn/architectures/tabpfn_v3_5.py",
+          "blob": "234d6dc00f37c790718c0a37f41386481951d7ce"
+        },
+        {
+          "path": "src/tabpfn/base.py",
+          "blob": "a4b5c4d910053b21e4bc82b6575e265de90bc2c8"
+        },
+        {
+          "path": "src/tabpfn/browser_auth.py",
+          "blob": "8588ed32f1d0fc027b341e47c3fbe107667a8f11"
+        },
+        {
+          "path": "src/tabpfn/checkpoint.py",
+          "blob": "d0088aee52644df6a233b58c10e002df45358940"
+        },
+        {
+          "path": "src/tabpfn/classifier.py",
+          "blob": "959d97f7c55997f6f9906668dad956410dae7d5f"
+        },
+        {
+          "path": "src/tabpfn/constants.py",
+          "blob": "515f03ad25710904c9c664cd76777bfdcbc8974b"
+        },
+        {
+          "path": "src/tabpfn/downsample_correction.py",
+          "blob": "f3236d4c5dfc4c4f2c8a97bee14fd8274339de15"
+        },
+        {
+          "path": "src/tabpfn/errors.py",
+          "blob": "3e72cb6052be77826d04abfd196a05983875f13b"
+        },
+        {
+          "path": "src/tabpfn/finetuning/__init__.py",
+          "blob": "a95c941faf813fb6a6a46ef2b3c70a5453ff52af"
+        },
+        {
+          "path": "src/tabpfn/finetuning/_torch_compat.py",
+          "blob": "d397b8167c181002ab33941e2b5aefe19b9cc9c7"
+        },
+        {
+          "path": "src/tabpfn/finetuning/data_util.py",
+          "blob": "d461b99daadb5c34c78b21f14c0ecada5047d56f"
+        },
+        {
+          "path": "src/tabpfn/finetuning/finetuned_base.py",
+          "blob": "e4c9ce786e00607932c4e5381c20bd7b31df9d54"
+        },
+        {
+          "path": "src/tabpfn/finetuning/finetuned_classifier.py",
+          "blob": "6e23f7cc569100d8953b9796f50ac4f149393f64"
+        },
+        {
+          "path": "src/tabpfn/finetuning/finetuned_regressor.py",
+          "blob": "b2d3449e5a5ca397e9f474da700717aa956dbae4"
+        },
+        {
+          "path": "src/tabpfn/finetuning/logging.py",
+          "blob": "897f7da57ef6aebf9a6c330a98e5ff3034e97214"
+        },
+        {
+          "path": "src/tabpfn/finetuning/train_util.py",
+          "blob": "a5f36e97c84d1f9074e2094b07ab5715eb5213d6"
+        },
+        {
+          "path": "src/tabpfn/inference.py",
+          "blob": "c15d839ac7e4b521b6f44fa15e2ad650756f38a0"
+        },
+        {
+          "path": "src/tabpfn/inference_config.py",
+          "blob": "21a0230f458d192594078ba5870ef38fdfa98a30"
+        },
+        {
+          "path": "src/tabpfn/inference_tuning.py",
+          "blob": "c20278a57c95e0d5ac68d99ca1a19ef45eb1d436"
+        },
+        {
+          "path": "src/tabpfn/memory.py",
+          "blob": "8d0fa1e98055b78b06655057ab11f887e02216be"
+        },
+        {
+          "path": "src/tabpfn/misc/_sklearn_compat.py",
+          "blob": "1419a7a1c80b10ec25b30459ca556bcf7cae1ff0"
+        },
+        {
+          "path": "src/tabpfn/misc/debug_versions.py",
+          "blob": "9ee70e6e28034b17aae741536a5d2e9feb734178"
+        },
+        {
+          "path": "src/tabpfn/model_loading.py",
+          "blob": "5952315b4270a50b53cdcc0281739bab0965f4d6"
+        },
+        {
+          "path": "src/tabpfn/parallel_execute.py",
+          "blob": "0f5c96dc92d6755f45f0937630022bed99254536"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/__init__.py",
+          "blob": "978d8c6e8a6b273bd8688a9ad749ea508b3c6eb3"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/clean.py",
+          "blob": "a194efc194eb3ccfa022e1d6286787d04a094ff2"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/configs.py",
+          "blob": "8babbd6df8e1d53f609d96ba5d8ea4e1032af967"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/datamodel.py",
+          "blob": "31056c7ace9b2c02b91fad987b61dee7d20b40aa"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/datetimes.py",
+          "blob": "7d2d25c8f390a0ad5c4ccee987978b9fbdca75f5"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/ensemble.py",
+          "blob": "2be8b761b3b501b74110f888835797521ad61382"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/label_encoder.py",
+          "blob": "aaa32a664f36083e67f4113122d7c3ac6643d449"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/modality_detection.py",
+          "blob": "2fbf18f5f5c453c5c092814ba86d440970066bad"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/pipeline_factory.py",
+          "blob": "f458cebe725af6852daa464a7feff33eb8a32069"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/pipeline_interface.py",
+          "blob": "00edd5fb13e916d9054ec61fcb852063ee9a8d4b"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/presets.py",
+          "blob": "5be48d73fe7069d889c3092feb851a3c38466803"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/__init__.py",
+          "blob": "f8c6844454cb185ff3259f278232478b0abefa43"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/adaptive_quantile_transformer.py",
+          "blob": "d607efa18db2501e3cde9cfc3b040752c26c3d38"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/add_fingerprint_features_step.py",
+          "blob": "e5dddded3878fb8e8642c01e234d2758cda80ae6"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/add_svd_features_step.py",
+          "blob": "f48824e6982df300884d417b656fcbd89261a74e"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/differentiable_z_norm_step.py",
+          "blob": "e8f6c1d7667f1416e3fc426c09134201b90d4081"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/encode_categorical_features_step.py",
+          "blob": "c13849e4e02f3967569db759264781ba7cb3ff02"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/kdi_transformer.py",
+          "blob": "19b332ee7936a07ed0aede6b0ddca57931fa52b2"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/nan_handling_polynomial_features_step.py",
+          "blob": "f890c6bfcaca3ea137872f1634d10825a92f76ae"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/preprocessing_helpers.py",
+          "blob": "f1deee0d7c3a4d3f7be3ad2c2c88bc6ab6ac4a85"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/remove_constant_features_step.py",
+          "blob": "9f6970c1945de6f3c88d3ae34b55750bb8aa78ea"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/reshape_feature_distribution_step.py",
+          "blob": "4cc8832dc8fed5bafe418a7fe3707cfd37457f8a"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/safe_power_transformer.py",
+          "blob": "d0af9dbd2c971bbe898d86e6788e15b2e53cd995"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/shuffle_features_step.py",
+          "blob": "1acec5db406d2a9bfa489bc19c779717abfd797e"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/squashing_scaler_transformer.py",
+          "blob": "db43ae2a64e905b8881150b497e3f6c6e34805f9"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/steps/utils.py",
+          "blob": "a89e5cde20c7957e7a1b6f3ba91b6f949e23184b"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/text.py",
+          "blob": "e727125cffeeda2e6536a68f4aaaf839d0a713d4"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/__init__.py",
+          "blob": "b481148362b142ddb7c033d1cc390fae608e7e83"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/factory.py",
+          "blob": "31fd55edc8dec70d9bd41b7d96b58f6bc77bf12a"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/gpu_preprocessing_metadata.py",
+          "blob": "99bc59a295bfcb2964da5817d76153f082874cd2"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/ops.py",
+          "blob": "ee5dc53b482b115fb345bd44d8d9716515ac2ce4"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/pipeline_interface.py",
+          "blob": "08bb65f0143af844e9adf3bed9d447f41e32139f"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/steps.py",
+          "blob": "7ff76b90336a2233618a956b8022de0557918a84"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/torch_quantile_transformer.py",
+          "blob": "3b637bb0cd903456cd5a431c720bbff7e4d30a5e"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/torch_soft_clip_outliers.py",
+          "blob": "e2da751e2124bd400bb539c48a952a847252368b"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/torch_squashing_scaler.py",
+          "blob": "1509fc516b5e466049569d90fbd9283fe32a7e3c"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/torch_standard_scaler.py",
+          "blob": "416375914c763321a9333ec59084e2c4d326e1f2"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/torch/torch_svd.py",
+          "blob": "b967250d7583399d4f94a23d6836ddb522d1d1ea"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/transform.py",
+          "blob": "d593ef423e1fccbb48f9c33e7d61f3aeedd6ebf7"
+        },
+        {
+          "path": "src/tabpfn/preprocessing/type_detection.py",
+          "blob": "1b515df67ea431b4d306ca0d8ffc624a64cb7f16"
+        },
+        {
+          "path": "src/tabpfn/regression_metrics.py",
+          "blob": "e4377cb9fad2cb1b7d6a6367b15d24981c94260b"
+        },
+        {
+          "path": "src/tabpfn/regressor.py",
+          "blob": "abc77ed4178418a8474e648ef47fff6feea71b49"
+        },
+        {
+          "path": "src/tabpfn/settings.py",
+          "blob": "818b11a0166da9f8f3c2a79dc61229221e55c2d1"
+        },
+        {
+          "path": "src/tabpfn/utils.py",
+          "blob": "b83e96ce18b3292632ed6a646d6fccc71fd20c53"
+        },
+        {
+          "path": "src/tabpfn/validation.py",
+          "blob": "3fe994c3e27778f2b3176581aa7829bb4f72c80f"
+        },
+        {
+          "path": "src/tabpfn/visualisation/__init__.py",
+          "blob": "2def7bef0b2e769900f024a5d73f3b920d14961e"
+        },
+        {
+          "path": "src/tabpfn/visualisation/regression_distribution.py",
+          "blob": "f04884aec09be819c5186dc5af96d62a84171fd9"
+        },
+        {
+          "path": "tests/README.md",
+          "blob": "d5178641581a03396946049bf13289801b449fff"
+        },
+        {
+          "path": "tests/__init__.py",
+          "blob": "10ab4888af1256accda36a1d8c3aa7dabf3cbe45"
+        },
+        {
+          "path": "tests/conftest.py",
+          "blob": "62037761f182aa6e31ee00d4634b56428cf38623"
+        },
+        {
+          "path": "tests/quick_test.py",
+          "blob": "a2038dd1081d6eb241eff23f8ea39d419fe951fe"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_iris_dataset_several_devices_v2.6.json",
+          "blob": "74e4b4fa1740314411c0cd099f767edb04a3e3d2"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_iris_dataset_several_devices_v3.json",
+          "blob": "a45ea5b51b44ab2ddfc4509bbd1cd098fdfa8979"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_iris_dataset_v2.6.json",
+          "blob": "74e4b4fa1740314411c0cd099f767edb04a3e3d2"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_iris_dataset_v3.json",
+          "blob": "a45ea5b51b44ab2ddfc4509bbd1cd098fdfa8979"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_3_estimators_v2.6.json",
+          "blob": "ad2c58a82a7520ecbf066ad2fdd453a4a53de2f6"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_3_estimators_v3.json",
+          "blob": "db366728f9168eb44d8cb2f298785346e3a79c8f"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_differentiable_input_v2.6.json",
+          "blob": "04af1e1215731557c8e1484bb37f72783a50becf"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_differentiable_input_v3.json",
+          "blob": "179bc54227955eeb6dca466de3103441e385dd70"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_v2.5.json",
+          "blob": "48dfafe5a2eebc6c76fb4eb0a07514f374863c99"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_v2.6.json",
+          "blob": "b7b6efdcee61732846b65a5591374a9051ddf60f"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_v2.json",
+          "blob": "3633855dc30fc50530dedf0cb2dead91e1799c1f"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/classifier_tiny_dataset_v3.json",
+          "blob": "74fd945e95f8fab73108f8e030e40da5576c5ea1"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/regressor_tiny_dataset_several_devices_v2.6.json",
+          "blob": "a63c3a360492ce34412eb76894b5a35244e3aa55"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/regressor_tiny_dataset_several_devices_v3.json",
+          "blob": "4d1cc5723b0a11a7c66ad4fdf3c13802ca749015"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/regressor_tiny_dataset_v2.5.json",
+          "blob": "cc4839ba67108718de085a9680c6bdb1c182c2ab"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/regressor_tiny_dataset_v2.6.json",
+          "blob": "a63c3a360492ce34412eb76894b5a35244e3aa55"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/regressor_tiny_dataset_v2.json",
+          "blob": "aa80480cc651014bbbfbf7eb74197085f109ab80"
+        },
+        {
+          "path": "tests/reference_predictions/darwin_arm64/regressor_tiny_dataset_v3.json",
+          "blob": "4d1cc5723b0a11a7c66ad4fdf3c13802ca749015"
+        },
+        {
+          "path": "tests/test_architectures/__init__.py",
+          "blob": "10ab4888af1256accda36a1d8c3aa7dabf3cbe45"
+        },
+        {
+          "path": "tests/test_architectures/test_attention_backends.py",
+          "blob": "e226bed9496f7fcac24aec573e136e3b3d552e12"
+        },
+        {
+          "path": "tests/test_architectures/test_attention_dispatch.py",
+          "blob": "7c282e3be7aa67c76cb08e1f9f6ba0b7b37ad0a4"
+        },
+        {
+          "path": "tests/test_architectures/test_bar_distribution.py",
+          "blob": "6b0978771e7dc727e80048678309f3cc6dc61476"
+        },
+        {
+          "path": "tests/test_architectures/test_chunked_evaluate.py",
+          "blob": "479a20f3ea19629fad594a7defd46fdda202861d"
+        },
+        {
+          "path": "tests/test_architectures/test_compile.py",
+          "blob": "f0e1fe8720b69ce96bd952d871e324778b7c7669"
+        },
+        {
+          "path": "tests/test_architectures/test_init.py",
+          "blob": "975d6a88df2597dee80bf41d68d6d21729dbcff7"
+        },
+        {
+          "path": "tests/test_architectures/test_kv_cache.py",
+          "blob": "cccf76c26f28b65f624d2aff9edb5497c4043ebf"
+        },
+        {
+          "path": "tests/test_architectures/test_mlx_backend.py",
+          "blob": "428569f567e9dde2fec139531b70a1ca98c65d83"
+        },
+        {
+          "path": "tests/test_architectures/test_regression_target_projection.py",
+          "blob": "a1974283f64135aaede5345112c4dc414350ba52"
+        },
+        {
+          "path": "tests/test_architectures/test_shared/__init__.py",
+          "blob": "ec8ee595e8fdf6706a05db77b277fd10f4423c4d"
+        },
+        {
+          "path": "tests/test_architectures/test_shared/test_attention_backends.py",
+          "blob": "9139ee7b81567ab8bcedcbdee08924279e61ed7b"
+        },
+        {
+          "path": "tests/test_architectures/test_shared/test_scaled_dot_product_attention.py",
+          "blob": "7be5629479210e9015d1347a5aea3c3a2c1c543f"
+        },
+        {
+          "path": "tests/test_architectures/test_shared/test_workaround_mps_linear_bug.py",
+          "blob": "5896533b6b3cbe5d1592184774a1eb61427bea08"
+        },
+        {
+          "path": "tests/test_architectures/test_tabpfn_v2.py",
+          "blob": "ebe9e5d7c8fd358a4b06a773ae36bb0ffcaaecb8"
+        },
+        {
+          "path": "tests/test_architectures/test_tabpfn_v2_5.py",
+          "blob": "32fe07880e95056933e839965e5131e791c0e36b"
+        },
+        {
+          "path": "tests/test_architectures/test_tabpfn_v2_6.py",
+          "blob": "6ddf88547b10ebe8f7805df014c8618aa2833825"
+        },
+        {
+          "path": "tests/test_architectures/test_tabpfn_v3.py",
+          "blob": "bfc0bb92b5ae6e2868f243ca0cc577fc6b4135dd"
+        },
+        {
+          "path": "tests/test_architectures/test_tabpfn_v3_5.py",
+          "blob": "53c095205486276da18c8cdf5033f1daf619add3"
+        },
+        {
+          "path": "tests/test_batched_members.py",
+          "blob": "bf18705bba02a35a8e898405a20db52f5a0c91c5"
+        },
+        {
+          "path": "tests/test_batched_prediction_data_util.py",
+          "blob": "fbe4524865d8db3a2aeec942b3d92e3349e64d86"
+        },
+        {
+          "path": "tests/test_batched_prediction_shape_safety.py",
+          "blob": "08360781d33de8478dd11cba2b72a658d19cf3ae"
+        },
+        {
+          "path": "tests/test_browser_auth.py",
+          "blob": "cf49f19ab88c9a532c589ae4599c3710e87ade02"
+        },
+        {
+          "path": "tests/test_checkpoint.py",
+          "blob": "482486f533587b185fddf5db4833830a19a5fa2a"
+        },
+        {
+          "path": "tests/test_classifier_interface.py",
+          "blob": "32d3ae5abda4fa46f1d669c253aeb1722e045f83"
+        },
+        {
+          "path": "tests/test_config.py",
+          "blob": "d981fd436409c92432f27fccf4bda17c8f560ecc"
+        },
+        {
+          "path": "tests/test_consistency.py",
+          "blob": "fb5d904acfae555de3a9a4163c81ce9eba9fe254"
+        },
+        {
+          "path": "tests/test_debug_versions.py",
+          "blob": "d24317511288f7bfaea54416e701819dfc800009"
+        },
+        {
+          "path": "tests/test_download_fallbacks.py",
+          "blob": "b538b5c946792939fe9a41e095e0520e6efdbdee"
+        },
+        {
+          "path": "tests/test_downsample_correction.py",
+          "blob": "b2c0892a9c5fc2549a23b8fe22441fe582126c41"
+        },
+        {
+          "path": "tests/test_errors.py",
+          "blob": "1323ed40ed0caf78c348ddc9dda1eb142dd7fad7"
+        },
+        {
+          "path": "tests/test_estimators.py",
+          "blob": "20714a33264be526d949463e0858e8fcd2115591"
+        },
+        {
+          "path": "tests/test_finetuning_classifier.py",
+          "blob": "f73e4d97377b434d0677cfbf2955767d29e5da63"
+        },
+        {
+          "path": "tests/test_finetuning_logging.py",
+          "blob": "f3d664a475f4d60aea8e595ea1100dee397fd5f8"
+        },
+        {
+          "path": "tests/test_finetuning_regressor.py",
+          "blob": "aca54a1fa14a3cdb214124b21d3f1e5e8cb7c2fd"
+        },
+        {
+          "path": "tests/test_ft_utils.py",
+          "blob": "1726f0bc2e4eba46c09f860e29b51f5342fada8e"
+        },
+        {
+          "path": "tests/test_inference.py",
+          "blob": "3f3ee155c58e0d3598f7c507ea7132c2faf922c9"
+        },
+        {
+          "path": "tests/test_inference_config.py",
+          "blob": "adde6598671bbe1a543003ca98a680f2d958dc52"
+        },
+        {
+          "path": "tests/test_inference_tuning.py",
+          "blob": "7ebaae20e4294b3cabc965cc3ce11b72ae1eb5ee"
+        },
+        {
+          "path": "tests/test_input_immutability.py",
+          "blob": "737b3173295171f1c2455a28eca3f740b60c8010"
+        },
+        {
+          "path": "tests/test_model_cache.py",
+          "blob": "cf9f5e180ba6a0d20745ed02f0a796c284ad9bec"
+        },
+        {
+          "path": "tests/test_model_loading.py",
+          "blob": "824a4ddaeaa8ad18409e4fbbf3b49f0870d3b188"
+        },
+        {
+          "path": "tests/test_model_specs.py",
+          "blob": "fe865c79f3be3d0294f19d2ddf2966cc681dc197"
+        },
+        {
+          "path": "tests/test_notebook_installs.py",
+          "blob": "7d4681c28e23f74832e02106f346d78c51e2fccb"
+        },
+        {
+          "path": "tests/test_parallel_execute.py",
+          "blob": "afd80d1d5a6ec0b6c76dc3454a6032547196fca4"
+        },
+        {
+          "path": "tests/test_preprocessing/__init__.py",
+          "blob": "10ab4888af1256accda36a1d8c3aa7dabf3cbe45"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_none_numeric.json",
+          "blob": "b9f9bb99748c7c7095dcde1a4bafe499fdd0e668"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_none_onehot.json",
+          "blob": "9d7520f779b00fdfee0f3117f17eec394e5334eb"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_none_ordinal.json",
+          "blob": "7fcabbb17a1fd66ceec8c686caca2ec419912297"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_none_ordinal_shuffled.json",
+          "blob": "b7825dbb4f27dd1a3f5edd68857407065bd999d2"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_none_ordinal_with_svd.json",
+          "blob": "7eadfc2945c302d1ecada26d57f2efe94b3a7672"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_none_with_svd.json",
+          "blob": "78e282139830383fddf64064c5b6272f01a340df"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_quantile_append_original.json",
+          "blob": "7f425cff8fec87924491aa1a0a394e9eb1fe3304"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_quantile_uni.json",
+          "blob": "0869826b70bd01dc69c0b3920bfc1b831855fa59"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_quantile_uni_coarse.json",
+          "blob": "72eab696b2d6b614374b6d4cf94eaf3b90b5e2b9"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_robust.json",
+          "blob": "c15724872b0889f6183dd3e6c1c7f13dbcbd3e4f"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_robust_onehot.json",
+          "blob": "1b89e0836a8014e544f7b842d602811d8d3724a8"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_safepower.json",
+          "blob": "763c9af95df0b27cf0cff925a99b802462b44277"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_safepower_box.json",
+          "blob": "4d02c664ffe6844d893825eefab1f59b18de8f7d"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_squashing_scaler.json",
+          "blob": "f3191094a2cdbf9099a46e347de1e26935f84e5e"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/basic_squashing_with_svd_quarter.json",
+          "blob": "9ebb954865c058cc5bb783c5e7aaaefaf4c2fe98"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/combined_all_options.json",
+          "blob": "24d41ffef13a8a0dc70a6070a01cd9122ce59dd7"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/fingerprint_none_numeric.json",
+          "blob": "389272ee720e451ce8bc7a01ad4e748357ea3386"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/fingerprint_quantile_uni_coarse.json",
+          "blob": "81faff8195d79af692b3a097a7f3675f355458cd"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/fingerprint_squashing_scaler.json",
+          "blob": "5b8ed9e6317382bd6f6d63098b531ad4d5ad2795"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/poly_3_none_numeric.json",
+          "blob": "d4798c536eb8d1f5e74534946b5f97df64c476e6"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/poly_3_quantile_uni_coarse.json",
+          "blob": "4b5abdfa7ba0b438658b3b64744615bfe6964175"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/poly_all_none_numeric.json",
+          "blob": "575a700241bce47c77735dee39bafd277a362502"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/poly_all_quantile_uni_coarse.json",
+          "blob": "e698eb8ffb5f90c2253ef13eb5122c577c51650d"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/rotate_none_numeric.json",
+          "blob": "775c7e409c464cc39e70f2af409b0e8d4aded53b"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/rotate_squashing_scaler.json",
+          "blob": "4af70bb1614881364d75b0e6222f3878d45deb25"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/shuffle_none_numeric.json",
+          "blob": "ce631a056e9379c97eabf8a52e190d73492470fd"
+        },
+        {
+          "path": "tests/test_preprocessing/reference_preprocessing/pipeline_consistency/darwin_arm64/shuffle_squashing_scaler.json",
+          "blob": "a3d3bfdf6ad57c575121e011ee463cee744856d1"
+        },
+        {
+          "path": "tests/test_preprocessing/test_adaptive_quantile_transformer.py",
+          "blob": "9c322bf4d110bedd96205edc58cd4cb4b3cc69cb"
+        },
+        {
+          "path": "tests/test_preprocessing/test_add_fingerprint_features_step.py",
+          "blob": "6dcf56aa0666c6d7a43a02fd33ee51ee1b7faf52"
+        },
+        {
+          "path": "tests/test_preprocessing/test_add_svd_features_step.py",
+          "blob": "1a1b59b9528e98626e2d7811e306837adf2626a8"
+        },
+        {
+          "path": "tests/test_preprocessing/test_data_cleaning.py",
+          "blob": "87ea30e59710e31fea0f42e8c79c9152e8f8e0d7"
+        },
+        {
+          "path": "tests/test_preprocessing/test_datamodel.py",
+          "blob": "6a4653ce748d743d80371b2a599729cd93475581"
+        },
+        {
+          "path": "tests/test_preprocessing/test_datetimes.py",
+          "blob": "c5baf85aaa0bf6aa0a9331eb2981cd8f5151545a"
+        },
+        {
+          "path": "tests/test_preprocessing/test_differentiable_znorm_step.py",
+          "blob": "497e00b98f9e87cec002681ac282e9bb707d1739"
+        },
+        {
+          "path": "tests/test_preprocessing/test_encode_categorical_features_step.py",
+          "blob": "feb6b31d3b9481b7482a36a2f6f0df91d73fed67"
+        },
+        {
+          "path": "tests/test_preprocessing/test_ensemble.py",
+          "blob": "aea9063751f663c615894a7fb5ca1c86f13ea2f1"
+        },
+        {
+          "path": "tests/test_preprocessing/test_feature_name_uniqueness.py",
+          "blob": "28a503657dd90490215c7680237d3913c360e816"
+        },
+        {
+          "path": "tests/test_preprocessing/test_inf_handling.py",
+          "blob": "416a1bca5892264216b4e9779c5324d8d3bdbb75"
+        },
+        {
+          "path": "tests/test_preprocessing/test_kdi_transformer.py",
+          "blob": "dcd437a8439b78065f1a7d0bd7f39a0c6933c1a6"
+        },
+        {
+          "path": "tests/test_preprocessing/test_label_encoder.py",
+          "blob": "ba389351f12ba8c59bebae42ba4bc9d07cee1b2c"
+        },
+        {
+          "path": "tests/test_preprocessing/test_modality_detection.py",
+          "blob": "d12c9354a98d2b31ec7482b15007a2536ce05c30"
+        },
+        {
+          "path": "tests/test_preprocessing/test_nan_handling_polynomial_features_step.py",
+          "blob": "c86c021532a9ee41a68c34cf46a72292b046245b"
+        },
+        {
+          "path": "tests/test_preprocessing/test_numeric_parsing_below_pandas_3.py",
+          "blob": "e08c66a22f67ef9a4a48233b2bd446500c0d7422"
+        },
+        {
+          "path": "tests/test_preprocessing/test_ops.py",
+          "blob": "c81f50edec1b38f19d4566e4bda0fa49b36d6152"
+        },
+        {
+          "path": "tests/test_preprocessing/test_pipeline_consistency.py",
+          "blob": "6c747608bd3bcd5490f8cefeeea12c2d0b377451"
+        },
+        {
+          "path": "tests/test_preprocessing/test_power_transformer.py",
+          "blob": "e8d4b188c82632a0a5dac9aed707f3df717b77dd"
+        },
+        {
+          "path": "tests/test_preprocessing/test_preprocessing_steps.py",
+          "blob": "e3fbb512bd9b0ad2f6c598208624f4ebee4ffa06"
+        },
+        {
+          "path": "tests/test_preprocessing/test_remove_constant_features_step.py",
+          "blob": "5f620f7743a4f7ad070b1998d47eadbbe4d5f0ee"
+        },
+        {
+          "path": "tests/test_preprocessing/test_reshape_feature_distribution_step.py",
+          "blob": "8c6542b05d6ce9532f1541b84f638efddcaea1d6"
+        },
+        {
+          "path": "tests/test_preprocessing/test_sklearn_estimator_checks.py",
+          "blob": "e57c75eb8c6408b7d09849e3cfc2beb8f2eeaabf"
+        },
+        {
+          "path": "tests/test_preprocessing/test_text.py",
+          "blob": "7cb0640743c12fee29fec27ddb62ce78dbf50dcf"
+        },
+        {
+          "path": "tests/test_regression_metrics.py",
+          "blob": "6ae0dc51400d56ca28f2af397eda4a3ed9649637"
+        },
+        {
+          "path": "tests/test_regressor_interface.py",
+          "blob": "fc4578f48f986844103df037234449e229c8bb36"
+        },
+        {
+          "path": "tests/test_save_load_fitted_model.py",
+          "blob": "e311bc4bd42e4a8dccc61af8ed0287090ad6e7b2"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "blob": "b9db725c408e4dd21bf5f172556b735527128006"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/__init__.py",
+          "blob": "10ab4888af1256accda36a1d8c3aa7dabf3cbe45"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_gpu_preprocessing_consistency.py",
+          "blob": "7396c7b2b74dbbbc3473da2db7c6e6b39c21d57d"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_pipeline_interface.py",
+          "blob": "d494281a71467286355c58bfb1852e95e7fdf610"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_torch_quantile_transformer.py",
+          "blob": "80fcf0a457cb3eff2959462f758f2ec3092bbf06"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_torch_shuffle_features_step.py",
+          "blob": "1a4a3fab9527b8fb7d1cb6de614bf397e59e5178"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_torch_soft_clip_outliers.py",
+          "blob": "d2153838e018bedc56fd5bd1e83104a725f29cb9"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_torch_squashing_scaler.py",
+          "blob": "c290ba8f0dd3495cd2b74bbd4883c2d72552a019"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_torch_standard_scaler.py",
+          "blob": "f9b2519dc543162ad15cc6f565992da1a87ce29a"
+        },
+        {
+          "path": "tests/test_torch_preprocessing/test_torch_svd.py",
+          "blob": "413c2d58401fe7425644d5353979afa21920c5c1"
+        },
+        {
+          "path": "tests/test_utils.py",
+          "blob": "4e69e213814639b387cbc6990e86dbdd62390d0d"
+        },
+        {
+          "path": "tests/test_validation.py",
+          "blob": "9b93be206df72ac18416cd75280c7890f1b5185e"
+        },
+        {
+          "path": "tests/test_visualisation.py",
+          "blob": "93867a2cc69c41d63cee3dae04e2fc3c95b0b615"
+        },
+        {
+          "path": "tests/utils.py",
+          "blob": "2b2aa3a5b7a7064388ab4784f25fb7c2cb3c1e68"
+        }
+      ]
+    },
+    {
+      "repository": "NVIDIA/structured-data-models",
+      "revision": "b982fbf4188ea8db17249fe81338723106100b63",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".agents/skills/docstring/SKILL.md",
+          "blob": "44d525030af337fd495f79aa2b81cf107dd4adeb"
+        },
+        {
+          "path": ".agents/skills/processor-development/SKILL.md",
+          "blob": "5cc2bbd26aeca60c7733d70e4d094f9c737e31f7"
+        },
+        {
+          "path": ".agents/skills/recipe-development/SKILL.md",
+          "blob": "5fd2dcfcc5601b60eec3ce21588317ac621914da"
+        },
+        {
+          "path": ".claude/skills",
+          "blob": "2b7a412b8fa0fb7e985b0793321bd4e698f2b6cd"
+        },
+        {
+          "path": ".coderabbit.yaml",
+          "blob": "a762cc9532981e8d799e92ee42f99b3304b1e42d"
+        },
+        {
+          "path": ".github/CODEOWNERS",
+          "blob": "6fec6fcaeb5d90f51248d5c7ba7dd02857e24688"
+        },
+        {
+          "path": ".github/copy-pr-bot.yaml",
+          "blob": "4cfbdc7f05f17ca41bf53589524bb0f9564d1891"
+        },
+        {
+          "path": ".github/workflows/doc.yml",
+          "blob": "60a2245173f802e5eefbdd951d36f09d07f8f471"
+        },
+        {
+          "path": ".github/workflows/lint.yml",
+          "blob": "fd0824f3c3aee73f42025d031768e94f13b3b659"
+        },
+        {
+          "path": ".github/workflows/publish.yml",
+          "blob": "f0c28b96f4ef26c561c6ae30cdbef00f7bea40cf"
+        },
+        {
+          "path": ".github/workflows/test-gpu.yml",
+          "blob": "56094f3c9e9d41fbf5127e8661440e5ddec50b4c"
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "blob": "6875e5483d972166201ce8fea9e6affb6e0292f3"
+        },
+        {
+          "path": ".gitignore",
+          "blob": "73fa2fdd2831166d288c5cd5fa125fe25e80edef"
+        },
+        {
+          "path": ".pre-commit-config.yaml",
+          "blob": "09c1f1d7a8448597a712ea2913134062f82ab594"
+        },
+        {
+          "path": "AGENTS.md",
+          "blob": "626cf7b0c8d3034388800837685d291e58774030"
+        },
+        {
+          "path": "CLAUDE.md",
+          "blob": "47dc3e3d863cfb5727b87d785d09abf9743c0a72"
+        },
+        {
+          "path": "CODE_OF_CONDUCT.md",
+          "blob": "ec87c621d7e20f90471126cfef8a4844fc55a161"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "blob": "0dc6759a03a370b86eddbe5e7a684b0ea40043a6"
+        },
+        {
+          "path": "LICENSE",
+          "blob": "001a3281169d6ade30cd1a44544029254ba490a8"
+        },
+        {
+          "path": "README.md",
+          "blob": "788755733fc01e53eb5470421783e38da641d7e3"
+        },
+        {
+          "path": "SECURITY.md",
+          "blob": "654bb7e1b06b67807f2f1d95cd20fb5527eedbd9"
+        },
+        {
+          "path": "THIRD_PARTY_LICENSES.md",
+          "blob": "83a9a5d6f06f88e5dd139735786e5b22c9f87c22"
+        },
+        {
+          "path": "benchmark/README.md",
+          "blob": "964c325f699148e373a5279d4959f633d30cf0ba"
+        },
+        {
+          "path": "benchmark/__init__.py",
+          "blob": "d51c4fe1e08967768e21c6c1a0b22bcfbaa9f832"
+        },
+        {
+          "path": "benchmark/relational/relarena/README.md",
+          "blob": "76bca7f60291c99f33ec02d976950233e6df042a"
+        },
+        {
+          "path": "benchmark/relational/relarena/kumo_relational.py",
+          "blob": "ca77b3fe4321462db0ac74c0c227c905d9aa63b1"
+        },
+        {
+          "path": "benchmark/tabular/README.md",
+          "blob": "fd1d6e1635a6f9e37216c28af84cc7dd2a2ac149"
+        },
+        {
+          "path": "benchmark/tabular/__init__.py",
+          "blob": "d51c4fe1e08967768e21c6c1a0b22bcfbaa9f832"
+        },
+        {
+          "path": "benchmark/tabular/beyondarena/__init__.py",
+          "blob": "d51c4fe1e08967768e21c6c1a0b22bcfbaa9f832"
+        },
+        {
+          "path": "benchmark/tabular/beyondarena/evaluate.py",
+          "blob": "93bc73dedd5ed33cf5cc20a2ad6ec1f6362da83f"
+        },
+        {
+          "path": "benchmark/tabular/beyondarena/main.py",
+          "blob": "f5e8ab3691cb49ebfce929f7b144942c67b56b35"
+        },
+        {
+          "path": "benchmark/tabular/model.py",
+          "blob": "f363ae972bd966d24648933fe85d750d2c5eeb75"
+        },
+        {
+          "path": "benchmark/tabular/scoringbench/README.md",
+          "blob": "d0a38c1d60e91f534993317eeb6081ddb9678305"
+        },
+        {
+          "path": "benchmark/tabular/scoringbench/__init__.py",
+          "blob": "d51c4fe1e08967768e21c6c1a0b22bcfbaa9f832"
+        },
+        {
+          "path": "benchmark/tabular/scoringbench/evaluate.py",
+          "blob": "0cd57e49cb20352f887055482b9f4ef998296123"
+        },
+        {
+          "path": "benchmark/tabular/scoringbench/main.py",
+          "blob": "52d92e8ca85f279b3e69e1d9de93d2cd6e9911f7"
+        },
+        {
+          "path": "benchmark/tabular/scoringbench/models.py",
+          "blob": "98c932191b0030c9767a8d9ecfabaa1d03105525"
+        },
+        {
+          "path": "benchmark/tabular/tabarena/__init__.py",
+          "blob": "d51c4fe1e08967768e21c6c1a0b22bcfbaa9f832"
+        },
+        {
+          "path": "benchmark/tabular/tabarena/evaluate.py",
+          "blob": "cba53f8869297cb15d3a8d49521883586a4fb179"
+        },
+        {
+          "path": "benchmark/tabular/tabarena/main.py",
+          "blob": "cb55873bc99fe593f282e3f49e78f908e55d73ed"
+        },
+        {
+          "path": "benchmark/tabular/talent/README.md",
+          "blob": "e09073962f5cb5adfa70717e6b0f8696e3680b13"
+        },
+        {
+          "path": "benchmark/tabular/talent/__init__.py",
+          "blob": "d51c4fe1e08967768e21c6c1a0b22bcfbaa9f832"
+        },
+        {
+          "path": "benchmark/tabular/talent/evaluate.py",
+          "blob": "b7fa2cb9b42ed7b9b0dae1a7a42137594352370e"
+        },
+        {
+          "path": "benchmark/tabular/talent/main.py",
+          "blob": "f53644c8f50be2d48813e7d0efb6cad72f4bdb14"
+        },
+        {
+          "path": "benchmark/tabular/talent/models.py",
+          "blob": "6262219fcd6953749ae68dd891b2735dbd240c86"
+        },
+        {
+          "path": "docs/Makefile",
+          "blob": "3ffb321d30948cbb64bca48e4bb15a12cfa5c7aa"
+        },
+        {
+          "path": "docs/source/_static/custom.css",
+          "blob": "dfd2611c0061fc2c3c6aa50f0f4aec488ef7f0dc"
+        },
+        {
+          "path": "docs/source/_templates/autosummary/class.rst",
+          "blob": "ff3d128e7a005b1a8e3722c809524cac63591032"
+        },
+        {
+          "path": "docs/source/_templates/autosummary/function.rst",
+          "blob": "7dea81379a9914cf15e8a124bbe3986be2405569"
+        },
+        {
+          "path": "docs/source/_templates/autosummary/model_class.rst",
+          "blob": "7196fdb81c8d8aaaa654584a2fe3c08e36042d43"
+        },
+        {
+          "path": "docs/source/_templates/autosummary/processor_class.rst",
+          "blob": "bcbeb8d36046dd6dd6bb7b0c7a2053c6abee833f"
+        },
+        {
+          "path": "docs/source/_templates/autosummary/tensor_class.rst",
+          "blob": "16dd3f1475cf1cab85a6106ddc23ffe80f772d25"
+        },
+        {
+          "path": "docs/source/_templates/partials/site-foot.html",
+          "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "path": "docs/source/api/evaluation.rst",
+          "blob": "67a9d8fb128470f647e24efbf144bcd3c51d4ff3"
+        },
+        {
+          "path": "docs/source/api/internal/cache.rst",
+          "blob": "cdea2b69e61825034624647a2f78f17a2b52c3dc"
+        },
+        {
+          "path": "docs/source/api/internal/device_mixin.rst",
+          "blob": "640f678f0db78b840bcd97c50eb8eb7f4e593bf2"
+        },
+        {
+          "path": "docs/source/api/internal/ensemble_table.rst",
+          "blob": "36af80b3b3973f60f6d2805eda6a31a3807b1854"
+        },
+        {
+          "path": "docs/source/api/internal/kv_cache_entry.rst",
+          "blob": "6119d048f71cca05068f3c5967a18e9acfdff91a"
+        },
+        {
+          "path": "docs/source/api/internal/related_tables_schema.rst",
+          "blob": "f679f2df0bfe0bec1c66b8871340f3929fd5d436"
+        },
+        {
+          "path": "docs/source/api/internal/relational_sampler_output.rst",
+          "blob": "cc5c0a0c7b58f788c18895d9f18aa181b65f7abb"
+        },
+        {
+          "path": "docs/source/api/internal/table_schema.rst",
+          "blob": "fcbd8c78191a73ee363ec47977d1098e9652a0f0"
+        },
+        {
+          "path": "docs/source/api/models.rst",
+          "blob": "445624982f3f7018b0f90a39be19837fec56e067"
+        },
+        {
+          "path": "docs/source/api/nn.rst",
+          "blob": "7473b0d7529314a64708ade08ee6ed0d5c83c926"
+        },
+        {
+          "path": "docs/source/api/processing.rst",
+          "blob": "0e17059a134a9faecf9abeb2f462332996989c8f"
+        },
+        {
+          "path": "docs/source/api/relational.rst",
+          "blob": "e0df64e125107da9c7294169523d1be489db6eab"
+        },
+        {
+          "path": "docs/source/api/sdm.rst",
+          "blob": "e074feeb7fdb8c13ee75010772ac3cb97803e914"
+        },
+        {
+          "path": "docs/source/api/tensor.rst",
+          "blob": "e01084d1b38597d34e388557b18308b186941544"
+        },
+        {
+          "path": "docs/source/conf.py",
+          "blob": "7c9a843b08a5641600ba1a62d5e3d1a5df4c75b5"
+        },
+        {
+          "path": "docs/source/icl.md",
+          "blob": "fbab8c151da1add915e980754fe42aaf9b5363ac"
+        },
+        {
+          "path": "docs/source/images/ensemble_dark.svg",
+          "blob": "b0cd2ae5376f2d5671c1c4b0ee05ce61f771cb64"
+        },
+        {
+          "path": "docs/source/images/ensemble_light.svg",
+          "blob": "990b01ebf7a93530b14a2aae67e861684dc5746c"
+        },
+        {
+          "path": "docs/source/images/graph_dark.svg",
+          "blob": "e90372ba16d45c937f044ac4d1766b3db9e2b786"
+        },
+        {
+          "path": "docs/source/images/graph_light.svg",
+          "blob": "2c8e50854f66bee847058fdfe55b1aafd94d2901"
+        },
+        {
+          "path": "docs/source/images/kumo_relational_dark.svg",
+          "blob": "b9739fc0c8e0b4bcd61a0de4859de4e96d1ed9f1"
+        },
+        {
+          "path": "docs/source/images/kumo_relational_light.svg",
+          "blob": "8650abcbcd4b2729f8c3557614b1b613636c12d0"
+        },
+        {
+          "path": "docs/source/images/kumo_tabular.svg",
+          "blob": "6557e32b4ada70527a29d7fed0e8fe0f6be8046f"
+        },
+        {
+          "path": "docs/source/images/logo_dark.svg",
+          "blob": "84708afd8c73bea011838bd3d4aa7f63486661ed"
+        },
+        {
+          "path": "docs/source/images/logo_light.svg",
+          "blob": "c731de739f189949782d0e40b1ec6ae849e542b3"
+        },
+        {
+          "path": "docs/source/images/nvidia.svg",
+          "blob": "7514d0ed39fb339000818cb7d91fafc9195aca23"
+        },
+        {
+          "path": "docs/source/images/pipeline_dark.svg",
+          "blob": "a4356ad9d5f29bb51124583a1f9fc6298acf3dd9"
+        },
+        {
+          "path": "docs/source/images/pipeline_light.svg",
+          "blob": "384793c369fac132d1583f4d52fca0d1be4a642b"
+        },
+        {
+          "path": "docs/source/images/tabfm_dark.png",
+          "blob": "ec74f7f68864276677edea6d935da7538cfaf339"
+        },
+        {
+          "path": "docs/source/images/tabfm_light.png",
+          "blob": "98a37650f6b518b1e4741e6e57a9e6c14e3e5043"
+        },
+        {
+          "path": "docs/source/images/tabicl_dark.svg",
+          "blob": "795ebf5bc971ea07cea22677af7a4b9742b97187"
+        },
+        {
+          "path": "docs/source/images/tabicl_light.svg",
+          "blob": "6ad8644cd9451cd2edfd5c05faa6dd47d9b2334b"
+        },
+        {
+          "path": "docs/source/images/table_dark.svg",
+          "blob": "fc1ff0b5aeb2db6d273ed260a08a587b52780dab"
+        },
+        {
+          "path": "docs/source/images/table_light.svg",
+          "blob": "27e5f8c91c5931ff6755c59109f4d5750764fa96"
+        },
+        {
+          "path": "docs/source/images/timesfm3_dark.png",
+          "blob": "8828003af09a579c463fa3109aef1aed3b1aaa15"
+        },
+        {
+          "path": "docs/source/images/timesfm3_light.png",
+          "blob": "a9b7d18e1832a767960e9e7a76b150a25ecf12b1"
+        },
+        {
+          "path": "docs/source/index.md",
+          "blob": "e1f07de20ed898c8e3fbec0eb07f435e7fd4e9a2"
+        },
+        {
+          "path": "docs/source/install.md",
+          "blob": "5d88936b58a42e60d8851d5fc71a40aaf966e82b"
+        },
+        {
+          "path": "docs/source/overview.md",
+          "blob": "b21f3822c9a9a2e2bb21c90dba69030693440011"
+        },
+        {
+          "path": "docs/source/processing.md",
+          "blob": "fd7299ce29d2f6b042d9da6e9b0cc1915cb9b41c"
+        },
+        {
+          "path": "docs/source/tensor.md",
+          "blob": "60f85932d9b412e8b3f48fff822eb84b34fe46fe"
+        },
+        {
+          "path": "examples/README.md",
+          "blob": "d506c3d54731394736350b04dd8b998b156ed021"
+        },
+        {
+          "path": "examples/relational/rel_bench.py",
+          "blob": "ed865402fee220cc8a247cbfe076a540b212579f"
+        },
+        {
+          "path": "examples/relational/salt/README.md",
+          "blob": "9a9d83656e4aa643c459583eaab74a058e048fd9"
+        },
+        {
+          "path": "examples/relational/salt/main.py",
+          "blob": "58a73ba57b26231ba0b7d6c1fd2667aed7e62abd"
+        },
+        {
+          "path": "examples/tabular/finetune.py",
+          "blob": "96032c65b3f5291c164a37bb1db726a9e8cc6b1a"
+        },
+        {
+          "path": "examples/tabular/quickstart.py",
+          "blob": "2e465be5155e707891ffefe90d45160649827a70"
+        },
+        {
+          "path": "examples/tabular/text.py",
+          "blob": "6486d0963907d5a87983987861e76055fe97eca6"
+        },
+        {
+          "path": "pyproject.toml",
+          "blob": "0b7b94e255c5cebe83742ed665004beb4c197526"
+        },
+        {
+          "path": "sdm/__init__.py",
+          "blob": "14fcc922ca9bf55da4ab6787fc921b07fc4e996e"
+        },
+        {
+          "path": "sdm/_constants.py",
+          "blob": "0bea52bb30225d68d273f9844eb79f4c54a5202b"
+        },
+        {
+          "path": "sdm/_inference.py",
+          "blob": "99843f11a2a4bb517db9f95737a2ba874e4ca953"
+        },
+        {
+          "path": "sdm/_kernels/__init__.py",
+          "blob": "863dc555ecd67d76794e08ebb2b06eef3c206629"
+        },
+        {
+          "path": "sdm/_kernels/rmsnorm_cast.py",
+          "blob": "5e140249f7e5592e5a9f3f8fa5c60ffe65fc854c"
+        },
+        {
+          "path": "sdm/_kernels/segment_multi_reduce.py",
+          "blob": "9ac21f1447223f43b763f9e7fce9c382b8b34b29"
+        },
+        {
+          "path": "sdm/_kernels/triton/__init__.py",
+          "blob": "e5447c527ba4895133315990c84e3a358390adb0"
+        },
+        {
+          "path": "sdm/_kernels/triton/rmsnorm_cast.py",
+          "blob": "85e3ddf6cf9acc531bd79167ed23e518fe0cc72d"
+        },
+        {
+          "path": "sdm/_kernels/triton/segment_multi_reduce.py",
+          "blob": "2bc862571d462bb901dcc51dd068f1963eaab77b"
+        },
+        {
+          "path": "sdm/_memory.py",
+          "blob": "af8828c475458d6b6681212d0c80d8df4466f966"
+        },
+        {
+          "path": "sdm/_warnings.py",
+          "blob": "fa85b52a721c6a01d29f0f5ad1f5ffabc51c1388"
+        },
+        {
+          "path": "sdm/cache.py",
+          "blob": "e8ee2bb63193cfe78052152d225cc72dde06f24d"
+        },
+        {
+          "path": "sdm/ensemble.py",
+          "blob": "3b4dc6962d400c5dd6c42d6da79d69aa11a5205e"
+        },
+        {
+          "path": "sdm/evaluation/__init__.py",
+          "blob": "7d3b78251ee8eca67165253b2ac04ee5b3c5356c"
+        },
+        {
+          "path": "sdm/evaluation/classification.py",
+          "blob": "4122b2dd22ba7f053042bd19cdf4913fc11772d5"
+        },
+        {
+          "path": "sdm/explain/__init__.py",
+          "blob": "c0621b2ab55972d2107b3ceb4aee3edb98f1e34d"
+        },
+        {
+          "path": "sdm/explain/base.py",
+          "blob": "33df386721c13f2a4be8ce84cdc9fe078961193c"
+        },
+        {
+          "path": "sdm/explain/gradient.py",
+          "blob": "8171b5b9651f587f887ca3155e3d168b62a7428d"
+        },
+        {
+          "path": "sdm/models/__init__.py",
+          "blob": "c94b46aa244f4adf60ef29d39b1379107801afa8"
+        },
+        {
+          "path": "sdm/models/_huggingface.py",
+          "blob": "58c62bb75152b9a4714dc6e7c4145ba9fe4f0e7f"
+        },
+        {
+          "path": "sdm/models/base.py",
+          "blob": "83d9bc3f5558a830218ac5db7e1b8f8994dc4a5c"
+        },
+        {
+          "path": "sdm/models/callback.py",
+          "blob": "08623068ca0e99aea6b871c008443d79961a2290"
+        },
+        {
+          "path": "sdm/models/ecoc.py",
+          "blob": "901b61835e25be220ba5a3777e094ae92379efcd"
+        },
+        {
+          "path": "sdm/models/kumo/__init__.py",
+          "blob": "6e9508d5220222f4daf747e90e84042d259d0b76"
+        },
+        {
+          "path": "sdm/models/kumo/relational/NOTICE",
+          "blob": "e3d52530f92a8b6f1ef410e37b24f8b312aba647"
+        },
+        {
+          "path": "sdm/models/kumo/relational/__init__.py",
+          "blob": "1107308bbf2b5a7a8511047267bd3aa5f4bec182"
+        },
+        {
+          "path": "sdm/models/kumo/relational/graph.py",
+          "blob": "618f991d6b407dc883a74e52e28ad0e2f4886776"
+        },
+        {
+          "path": "sdm/models/kumo/relational/invariant_gnn.py",
+          "blob": "5bfc16591a08de9de462a6a69c24bee711de0ab5"
+        },
+        {
+          "path": "sdm/models/kumo/relational/model.py",
+          "blob": "ddc163d2fa17b5b995b7e283665422841f66cbe6"
+        },
+        {
+          "path": "sdm/models/kumo/relational/recipe.py",
+          "blob": "bcc2d9e72fd6d0d1c7ab50e6e182db21d55e0272"
+        },
+        {
+          "path": "sdm/models/kumo/relational/task.py",
+          "blob": "7dd47cbb2b3d7bf6fcb0cb84da33c259bf97b27c"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/__init__.py",
+          "blob": "b379efc38a36529b013a52b9561287ecc28e997a"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/batching.py",
+          "blob": "a372eb03e691f420bbd6143400b3be2fe5fb8696"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/block.py",
+          "blob": "8fb65c13b95a8e53f8427748e1ee71962f37d4b0"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/cell_embedding.py",
+          "blob": "4613f0d80e965afd195d62e353403dfb31e64075"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/icl.py",
+          "blob": "067d5f619147f48e17202a22fbca023c46b5d118"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/model.py",
+          "blob": "3330ee754382e49848c7e062456438666562bba7"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/recipe.py",
+          "blob": "f20cad1f546769f04d3c42fdea8d342f11474a01"
+        },
+        {
+          "path": "sdm/models/kumo/tabular/row_embedding.py",
+          "blob": "f69ff3e0e0c7ecc3f3c6adb9377d4f6189d7e068"
+        },
+        {
+          "path": "sdm/models/kumo/timeseries/__init__.py",
+          "blob": "77c82df945f6121eb1d4f7dc2a99df25a57e21ff"
+        },
+        {
+          "path": "sdm/models/kumo/timeseries/anomaly/__init__.py",
+          "blob": "dd56fab6f08f52e00dc022fae3bc1abad6bd1a11"
+        },
+        {
+          "path": "sdm/models/kumo/timeseries/forecasting/__init__.py",
+          "blob": "8e7731acc6a7c515fe2a0e77f05e40554b8a0b2c"
+        },
+        {
+          "path": "sdm/models/tabfm/LICENSE",
+          "blob": "931856731d07dde4095582a579ff17c9a3384737"
+        },
+        {
+          "path": "sdm/models/tabfm/__init__.py",
+          "blob": "8a6fd6c206d4e510f88c036677c314f17f72eca8"
+        },
+        {
+          "path": "sdm/models/tabfm/block.py",
+          "blob": "c356c3b10e52e22e33e71a37a4de535577d6ba58"
+        },
+        {
+          "path": "sdm/models/tabfm/cell_embedding.py",
+          "blob": "f2c086408e92a305f5a32c63e2594c0707140f04"
+        },
+        {
+          "path": "sdm/models/tabfm/ckpt.py",
+          "blob": "808797404817ebcfecbbbe6d5c98154bdf28046f"
+        },
+        {
+          "path": "sdm/models/tabfm/icl.py",
+          "blob": "8efa1a7049c99e63eb73a04aea15c7eb25afe1c4"
+        },
+        {
+          "path": "sdm/models/tabfm/model.py",
+          "blob": "39af1437b3155d24aa585a8d2973cb6159dc2b9c"
+        },
+        {
+          "path": "sdm/models/tabfm/recipe.py",
+          "blob": "9ba8a3ccaed18715aafe0333f83469fbb27c7ce2"
+        },
+        {
+          "path": "sdm/models/tabfm/row_embedding.py",
+          "blob": "d49a7d22d40544cf716385016db85c06124d6303"
+        },
+        {
+          "path": "sdm/models/tabiclv2/LICENSE",
+          "blob": "f1a4adb8f63bfa79ef24b3a5773174841d0727ce"
+        },
+        {
+          "path": "sdm/models/tabiclv2/__init__.py",
+          "blob": "1617b2dce33bce5f43343d70123100338c760d56"
+        },
+        {
+          "path": "sdm/models/tabiclv2/block.py",
+          "blob": "ea61cd28e6c8fdd6b589b852f0acce7ed000499c"
+        },
+        {
+          "path": "sdm/models/tabiclv2/ckpt.py",
+          "blob": "f77c8e152d4fdcb0659976546f18df80072a034e"
+        },
+        {
+          "path": "sdm/models/tabiclv2/icl.py",
+          "blob": "19b0896a17f71153902574d81d98f2b27a132e34"
+        },
+        {
+          "path": "sdm/models/tabiclv2/model.py",
+          "blob": "9ec5d283883b15703a4a6b8bc215afbdc4722f60"
+        },
+        {
+          "path": "sdm/models/tabiclv2/recipe.py",
+          "blob": "95952efa532d35948266513d0ae4e82eb82a2e41"
+        },
+        {
+          "path": "sdm/models/tabiclv2/row_embedding.py",
+          "blob": "caf0ab3a4b51eb1870c278ae852c59dd97ff6685"
+        },
+        {
+          "path": "sdm/models/timesfm3/LICENSE",
+          "blob": "8e7ced78eedb86bcb8e70d0bf0b89cb3738bf452"
+        },
+        {
+          "path": "sdm/models/timesfm3/__init__.py",
+          "blob": "cbed6111ba11027f299e12b5916e00d24b887048"
+        },
+        {
+          "path": "sdm/models/timesfm3/model.py",
+          "blob": "604c2bc37de588c3e17e1f78192366dbd118adc8"
+        },
+        {
+          "path": "sdm/models/timesfm3/recipe.py",
+          "blob": "ef9508d4aa1c015f5be1a85646de37794cb52332"
+        },
+        {
+          "path": "sdm/nn/__init__.py",
+          "blob": "1be3d7235ddeb484537cb4ae8c471f56ccee1850"
+        },
+        {
+          "path": "sdm/nn/_buffer.py",
+          "blob": "38e07bc6c55a16148c13e46daf3a7662a61a66c1"
+        },
+        {
+          "path": "sdm/nn/attention.py",
+          "blob": "42190df1f8f3a1f2c749f80ec1c663def77100f6"
+        },
+        {
+          "path": "sdm/nn/glu.py",
+          "blob": "847fa83566628a392ecac801e170b786ae8f5c9a"
+        },
+        {
+          "path": "sdm/nn/linear.py",
+          "blob": "cce1e1a2d1c383c92941e458a86c33ece389c920"
+        },
+        {
+          "path": "sdm/nn/rms_norm.py",
+          "blob": "ee72bedccef940a93c0725b0dd52c2592e4033c3"
+        },
+        {
+          "path": "sdm/nn/rope.py",
+          "blob": "9db127ef69d678164fcdb75719827623bc1f52d4"
+        },
+        {
+          "path": "sdm/nn/scaling.py",
+          "blob": "4084b5a74f7319ad7bda3107aeb53490af519601"
+        },
+        {
+          "path": "sdm/nn/set_transformer.py",
+          "blob": "832533e9a6481a2a9c26b2ad03016a6c85a080bb"
+        },
+        {
+          "path": "sdm/nn/softplus.py",
+          "blob": "dfe399618c321b47376b5c1080b45486d0bd3a73"
+        },
+        {
+          "path": "sdm/processing/__init__.py",
+          "blob": "ad88657d61b28044dae33514a37d2375b86d2214"
+        },
+        {
+          "path": "sdm/processing/base.py",
+          "blob": "28d0740b1803044b28c7cbe9fc8f813ef89a9115"
+        },
+        {
+          "path": "sdm/processing/categorical/__init__.py",
+          "blob": "5aae2dd6c784ad82bbb14b26fea189681a88360e"
+        },
+        {
+          "path": "sdm/processing/categorical/_categorical.py",
+          "blob": "e4f869e2f62d4944a0b4209f621d83f8eac30fd7"
+        },
+        {
+          "path": "sdm/processing/categorical/align.py",
+          "blob": "6d146bca4913675592249390a98830a03f18bdf8"
+        },
+        {
+          "path": "sdm/processing/categorical/count.py",
+          "blob": "3a975c46007b79a89b8ad8f0df6d60941b6ee7de"
+        },
+        {
+          "path": "sdm/processing/categorical/impute.py",
+          "blob": "0b94fb7fd4fadbbce04d6d3d5730ca65043cb770"
+        },
+        {
+          "path": "sdm/processing/categorical/shuffle.py",
+          "blob": "8497d347fc988ea5165f67335df39b817d8b97f5"
+        },
+        {
+          "path": "sdm/processing/common/__init__.py",
+          "blob": "6944eacbb2c386c5f730f41081f75804a434aebd"
+        },
+        {
+          "path": "sdm/processing/common/callable.py",
+          "blob": "679a4eee0391e00d3cc2e13f1efd31ef4a5104d7"
+        },
+        {
+          "path": "sdm/processing/common/choice.py",
+          "blob": "25da3bac82d262e4a978a838ebfe84153fe26104"
+        },
+        {
+          "path": "sdm/processing/common/drop.py",
+          "blob": "340a0fd0395a24a689d88a63c224939d71818b35"
+        },
+        {
+          "path": "sdm/processing/common/ensemble.py",
+          "blob": "4f5a2cb5d35b275726b33df14015bc117b0a705b"
+        },
+        {
+          "path": "sdm/processing/common/identity.py",
+          "blob": "079e61bd82912a0fa14afb0e4dddc45f79e36264"
+        },
+        {
+          "path": "sdm/processing/common/select.py",
+          "blob": "aca6e9e73e4d61a555fc3955f2fd2b9dc271bdc9"
+        },
+        {
+          "path": "sdm/processing/common/sequential.py",
+          "blob": "b19fa74f32981cc10ba57e1476b7d62a17e3aad3"
+        },
+        {
+          "path": "sdm/processing/common/shuffle.py",
+          "blob": "d349e8253b6d98389ff9984214f162b3844176a1"
+        },
+        {
+          "path": "sdm/processing/common/stype.py",
+          "blob": "32a57bc6fa9ca35aa93afbe190ebf69f8007e012"
+        },
+        {
+          "path": "sdm/processing/common/table.py",
+          "blob": "c797a4b918f2d69912f9f95e8b41c0d1b988d741"
+        },
+        {
+          "path": "sdm/processing/common/task.py",
+          "blob": "f1639768559d841444009ae28dfcfe187bf30c74"
+        },
+        {
+          "path": "sdm/processing/common/to_numerical.py",
+          "blob": "064aeb74fb5e110d56a89a70ced9da455423b8b2"
+        },
+        {
+          "path": "sdm/processing/datetime/__init__.py",
+          "blob": "48c4e0f44ecd39b4706c8a85cc2dc8f54d1357c7"
+        },
+        {
+          "path": "sdm/processing/datetime/calendar.py",
+          "blob": "4a4a4e97f9f6c0a2f855ffaeba7fdc89ca06be57"
+        },
+        {
+          "path": "sdm/processing/ensemble.py",
+          "blob": "7fad1b43a10aa53f69056b781ced7778af7f01fd"
+        },
+        {
+          "path": "sdm/processing/execution.py",
+          "blob": "3f03f4c77e2cd0e8327d2c2ea660b7caee7288fe"
+        },
+        {
+          "path": "sdm/processing/numerical/__init__.py",
+          "blob": "fbbba0ec8b304fa26e4c4b62c7f8e1f4f64c7e22"
+        },
+        {
+          "path": "sdm/processing/numerical/_stats.py",
+          "blob": "26c83bf4c4376a080696d88ee6b19784a26be09b"
+        },
+        {
+          "path": "sdm/processing/numerical/cast.py",
+          "blob": "7ae8014648196c677cf2ecdf52a3e88b1b921d3d"
+        },
+        {
+          "path": "sdm/processing/numerical/clip.py",
+          "blob": "45f85bc5e9c94694d50fc680c1be03363a2e6f3b"
+        },
+        {
+          "path": "sdm/processing/numerical/clip_soft.py",
+          "blob": "ffd6cd84b1a0d286db91ac75776e330f476c0853"
+        },
+        {
+          "path": "sdm/processing/numerical/constant.py",
+          "blob": "4fe2873cf3abc62af307a8ecd164f093eba4a9b8"
+        },
+        {
+          "path": "sdm/processing/numerical/flip_sign.py",
+          "blob": "ee30516edadb8e3f39a6b18ff3501682a0114382"
+        },
+        {
+          "path": "sdm/processing/numerical/impute.py",
+          "blob": "8996abe801e2ab566e6c5824e4a89c47eac5bd6a"
+        },
+        {
+          "path": "sdm/processing/numerical/pca.py",
+          "blob": "900efecfc2095b18ddbe486707ddac0e08384a05"
+        },
+        {
+          "path": "sdm/processing/numerical/power.py",
+          "blob": "73f34a4b2e7716b18a3e7b062779f7a401a9d2a5"
+        },
+        {
+          "path": "sdm/processing/numerical/quantile.py",
+          "blob": "bc93ead525a35207794417bc62e281cebf304d96"
+        },
+        {
+          "path": "sdm/processing/numerical/quantile_clip.py",
+          "blob": "dc425f80fe178258c8d7baf39df71ddf6986c4b8"
+        },
+        {
+          "path": "sdm/processing/numerical/random_projection.py",
+          "blob": "7558d7151db638e8b28b3eb93fc218a99581400d"
+        },
+        {
+          "path": "sdm/processing/numerical/rank_gaussian.py",
+          "blob": "c8a0a531d4a59a12108be5f91bc64c3f8bbd118c"
+        },
+        {
+          "path": "sdm/processing/numerical/robust_scale.py",
+          "blob": "2525147db373b96ce7e3e7d32eb4b7bbc0240c80"
+        },
+        {
+          "path": "sdm/processing/numerical/sigma_clip.py",
+          "blob": "56d951a3782f0d5fd123bfbe56f41d2257238f83"
+        },
+        {
+          "path": "sdm/processing/numerical/standardize.py",
+          "blob": "492cff9471e3fc15e0f53be49e3c216acd77f758"
+        },
+        {
+          "path": "sdm/processing/output/__init__.py",
+          "blob": "4107e6eabd95aa6058ed5f1528113ac5f0f38e86"
+        },
+        {
+          "path": "sdm/processing/output/reduce.py",
+          "blob": "4ea8d4ae183cead6d24ebdc859f86421dd56a7e7"
+        },
+        {
+          "path": "sdm/processing/output/softmax.py",
+          "blob": "c29ef71756c342260767a19f356f937ddbdeaa7c"
+        },
+        {
+          "path": "sdm/processing/output/sort.py",
+          "blob": "c43b0ecc622769a066e9ca479f0e7f3a285af45e"
+        },
+        {
+          "path": "sdm/processing/recipe.py",
+          "blob": "48754d872cd3e92a310339a7feb141bd9dfef9ed"
+        },
+        {
+          "path": "sdm/processing/text/__init__.py",
+          "blob": "779842b00f31dbb1dc1b7c4db393c286a6686189"
+        },
+        {
+          "path": "sdm/processing/text/sentence_transformer.py",
+          "blob": "76ab91beea4a98cb0a8d61953a281db5c6798fb2"
+        },
+        {
+          "path": "sdm/processing/text/tfidf.py",
+          "blob": "8c14f7d8a6d6a8dc213ea232679f009c45b574ce"
+        },
+        {
+          "path": "sdm/relational/__init__.py",
+          "blob": "490058340f6eac5dcd06407dea1b206229302245"
+        },
+        {
+          "path": "sdm/relational/backend/__init__.py",
+          "blob": "34d6c8326e778ebe67908964518c33abb5309c0e"
+        },
+        {
+          "path": "sdm/relational/backend/_cugraph.py",
+          "blob": "4c05b7c4c9362a52dfe12833878dfdf6fb1da978"
+        },
+        {
+          "path": "sdm/relational/backend/_pyg_lib.py",
+          "blob": "17876ddc22313bf3bdd703bea4f61c20a651bf9d"
+        },
+        {
+          "path": "sdm/relational/data.py",
+          "blob": "30465c6a55edbef4657cb7eb353915a54ae3780c"
+        },
+        {
+          "path": "sdm/relational/join.py",
+          "blob": "9e3c1360878d9b96e9ab004cca651ea6e7edad96"
+        },
+        {
+          "path": "sdm/relational/sampler.py",
+          "blob": "c3b18391eaba34947c5b41f37470a8599a49b2e2"
+        },
+        {
+          "path": "sdm/relational/task.py",
+          "blob": "3568836c888031e4ab11769031497037f8350ca7"
+        },
+        {
+          "path": "sdm/stype.py",
+          "blob": "5f6e5130d3024dd8838de03e8cbe3d05a5bcda1b"
+        },
+        {
+          "path": "sdm/task.py",
+          "blob": "81236e2f82dc71d4ec4b522b411bc393daa99829"
+        },
+        {
+          "path": "sdm/tensor/__init__.py",
+          "blob": "37fc9410f950f2c872d4e2b0cf407b99de93072d"
+        },
+        {
+          "path": "sdm/tensor/categorical.py",
+          "blob": "99797b99e7771b7d5572cea5fcb56e9d2e69327a"
+        },
+        {
+          "path": "sdm/tensor/columnar.py",
+          "blob": "5597ef3c81cfcb690a0307a6e3a99da8b278e23e"
+        },
+        {
+          "path": "sdm/tensor/io/__init__.py",
+          "blob": "cf97389d328158824f72c225d9466afeb322fe35"
+        },
+        {
+          "path": "sdm/tensor/io/arrow.py",
+          "blob": "46ca4556ac458c076180023ba51700817669fae8"
+        },
+        {
+          "path": "sdm/tensor/io/cudf.py",
+          "blob": "a710fed348771631b5e505d440d374a1fad4c24b"
+        },
+        {
+          "path": "sdm/tensor/mixin.py",
+          "blob": "78f91cf6ec9009e51f04e06bbb08718a7d0434b0"
+        },
+        {
+          "path": "sdm/tensor/nullable.py",
+          "blob": "410cab6db316a18d39c665315e07b5c73cdf5712"
+        },
+        {
+          "path": "sdm/tensor/string.py",
+          "blob": "e27b284227d99a83d530a923edea9ec585dadb6a"
+        },
+        {
+          "path": "sdm/tensor/table.py",
+          "blob": "b044db9cec9ccf3067e562cba66a8b7fe7a89c63"
+        },
+        {
+          "path": "sdm/tensor/var_len.py",
+          "blob": "17f41e231f1e9130957e5c00fafe799aba2cf013"
+        },
+        {
+          "path": "sdm/testing/__init__.py",
+          "blob": "4ead8c76714eb5f3cf8b77f8ddc98f4e6bbe8859"
+        },
+        {
+          "path": "sdm/testing/decorators.py",
+          "blob": "ea4c983bb1cbc0e00f6e6ddd553349cb065bd7f9"
+        },
+        {
+          "path": "sdm/testing/memory.py",
+          "blob": "4aea0411f790d8aa2c9e444b90cd42ae4b1c2f33"
+        },
+        {
+          "path": "test/_kernels/test_rmsnorm_cast.py",
+          "blob": "976645bc9205b7e1bf1be9c5180cfa1ad8d9462c"
+        },
+        {
+          "path": "test/_kernels/test_segment_multi_reduce.py",
+          "blob": "38a1916bdb39f343ef5bd11edc6715ee93d67e46"
+        },
+        {
+          "path": "test/conftest.py",
+          "blob": "cb45dc215967a3eac04c89d5692a370d855ede3a"
+        },
+        {
+          "path": "test/evaluation/test_classification.py",
+          "blob": "68e93d008f0494a2ba209a2fea934caa5080333f"
+        },
+        {
+          "path": "test/explain/test_base.py",
+          "blob": "f6a9b555609d503ce6d8530909483e265b393f0b"
+        },
+        {
+          "path": "test/explain/test_gradient.py",
+          "blob": "2340284ba3648c2df4c3cc5bf37b77328a80f5f8"
+        },
+        {
+          "path": "test/models/kumo/relational/test_model.py",
+          "blob": "a39f698e60ed8867d4834369fe167dbe9c80fe6c"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_batching.py",
+          "blob": "0c966eb4c79181b094b6543b77c3207d66d4c4d1"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_block.py",
+          "blob": "b6367337e8e60c7e01a0274dbc1482bc5507ec55"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_cell_embedding.py",
+          "blob": "da1280f3a290e54d730273c682f4ddd8fc8e24c7"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_icl.py",
+          "blob": "6e47e85a1c7cdc7568ddde00add4700d74bf2d88"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_model.py",
+          "blob": "ca17449f03492e614db9f5611caecd2bf5bf51e0"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_recipe.py",
+          "blob": "a8a4557199e842b1d86e0139c4a841e8fd028d39"
+        },
+        {
+          "path": "test/models/kumo/tabular/test_row_embedding.py",
+          "blob": "29fa0380e3f0fe110bd2eead5944eea52c6f2416"
+        },
+        {
+          "path": "test/models/tabfm/test_cell_embedding.py",
+          "blob": "8ad2eb316d8148d611c9fb9621a2534a694a1091"
+        },
+        {
+          "path": "test/models/tabfm/test_model.py",
+          "blob": "850a686ea564f3139ebc4df0229ec9283274779a"
+        },
+        {
+          "path": "test/models/tabiclv2/test_icl.py",
+          "blob": "917630f0db570fac89de293115e850ca9be52f1f"
+        },
+        {
+          "path": "test/models/tabiclv2/test_model.py",
+          "blob": "43f98ddfe6536d9b8bf07f51d8b51b7e4b636ea6"
+        },
+        {
+          "path": "test/models/test_base.py",
+          "blob": "96c796730ad096d7480af8d8572f464236a5ac9f"
+        },
+        {
+          "path": "test/models/test_ecoc.py",
+          "blob": "e812c6cd9e03793478aa71b6c6116e9a4d4bff75"
+        },
+        {
+          "path": "test/models/timesfm3/test_model.py",
+          "blob": "94d2a6dd31073354df5f6a6cda9e89b02d08def2"
+        },
+        {
+          "path": "test/nn/test_attention.py",
+          "blob": "2dee342b415f925f297815c84cc42751df94b822"
+        },
+        {
+          "path": "test/nn/test_buffer.py",
+          "blob": "ba8f6093abd15c1ca2eada9c937f7998ebb34f1a"
+        },
+        {
+          "path": "test/nn/test_compile.py",
+          "blob": "64e5be34bb5baefbb66e508e3b9adbfa9f3e864d"
+        },
+        {
+          "path": "test/nn/test_glu.py",
+          "blob": "f56a415398ab9b3bd7dd0ecfc68d7ed7086742ac"
+        },
+        {
+          "path": "test/nn/test_linear.py",
+          "blob": "2e968597be5ab9df9de589095b09c8e4d49decc5"
+        },
+        {
+          "path": "test/nn/test_rms_norm.py",
+          "blob": "9cbad533dd49c0cefcd289964ae21f576075816a"
+        },
+        {
+          "path": "test/nn/test_rope.py",
+          "blob": "6485fcb43979739df61b0d55220061b5735754a7"
+        },
+        {
+          "path": "test/nn/test_scaling.py",
+          "blob": "eeb84fb76c95d792a9a3bfe98ff86bb90e344b7d"
+        },
+        {
+          "path": "test/nn/test_set_transformer.py",
+          "blob": "fee0217e8783b404b6946a98ba9162f16e193fa4"
+        },
+        {
+          "path": "test/processing/categorical/test_align.py",
+          "blob": "b40bf306e412e206547b3d9c5dc6b8c66814abf8"
+        },
+        {
+          "path": "test/processing/categorical/test_count.py",
+          "blob": "eef4c1a0e575e410b586fc216b09ba48ad092baf"
+        },
+        {
+          "path": "test/processing/categorical/test_impute.py",
+          "blob": "8e77dfe5de3f3aa50200d7d454aa2d304da34a46"
+        },
+        {
+          "path": "test/processing/categorical/test_shuffle.py",
+          "blob": "312b62b5b1aa5eb0a79286549a1e0aadbaf88989"
+        },
+        {
+          "path": "test/processing/common/test_choice.py",
+          "blob": "e2b75c5b73b2051290f8559c1595a9ab6d80b5eb"
+        },
+        {
+          "path": "test/processing/common/test_drop.py",
+          "blob": "0535fd7afdf8efacfdf7fb497dccfddbcb9373f0"
+        },
+        {
+          "path": "test/processing/common/test_identity.py",
+          "blob": "5dd5658d8d1d63c74d21f3d49a28926c93d7f20e"
+        },
+        {
+          "path": "test/processing/common/test_select.py",
+          "blob": "3192a43687d3ead77ea9c2d5d880f4cf9051ffa5"
+        },
+        {
+          "path": "test/processing/common/test_sequential.py",
+          "blob": "4bf58f0ac06d2845aae967d5e8295d818e651cbf"
+        },
+        {
+          "path": "test/processing/common/test_shuffle.py",
+          "blob": "39969b42e5252a13b0f5d479dd939d7d8a6bee72"
+        },
+        {
+          "path": "test/processing/common/test_stype.py",
+          "blob": "f57cbf8793bf514a23805ba3033a065b56f29902"
+        },
+        {
+          "path": "test/processing/common/test_table.py",
+          "blob": "a747374a4720d74c9ff291c014edbce1287cdd90"
+        },
+        {
+          "path": "test/processing/common/test_task.py",
+          "blob": "f81cf0a3d0b424996b511af846bf58627bbfdf5d"
+        },
+        {
+          "path": "test/processing/common/test_to_numerical.py",
+          "blob": "ad66e053f2899d46ec8e8d79220ed612896f3760"
+        },
+        {
+          "path": "test/processing/datetime/test_calendar.py",
+          "blob": "1102635529584432d24f481c36fa3964de79ffbb"
+        },
+        {
+          "path": "test/processing/numerical/test_cast.py",
+          "blob": "ea622849212b5814585bd5495af57148ee146bcc"
+        },
+        {
+          "path": "test/processing/numerical/test_clip.py",
+          "blob": "5b81315e4323c07221bb38aa1b78d9b48d5fabf9"
+        },
+        {
+          "path": "test/processing/numerical/test_clip_soft.py",
+          "blob": "7c82d7b71433a6865d08ab0ea3cdaa1d1ff32e8a"
+        },
+        {
+          "path": "test/processing/numerical/test_constant.py",
+          "blob": "2849d952d9ef3d586dd1e2ce4934359d57ba0c00"
+        },
+        {
+          "path": "test/processing/numerical/test_flip_sign.py",
+          "blob": "c932fc2c8f3bee00003fd6cb4959728d2209c858"
+        },
+        {
+          "path": "test/processing/numerical/test_impute.py",
+          "blob": "3435b8ede6201c6b5ddd4b8a6cc4ac2e5fa54900"
+        },
+        {
+          "path": "test/processing/numerical/test_pca.py",
+          "blob": "f3ba83639b5fcf1cedd9774d1473904e37251df1"
+        },
+        {
+          "path": "test/processing/numerical/test_power.py",
+          "blob": "a5b03cd5a007f2a3beac7831db7a533a964c4c45"
+        },
+        {
+          "path": "test/processing/numerical/test_quantile.py",
+          "blob": "853535da25324dfe9b914285c716d3c227f3b52d"
+        },
+        {
+          "path": "test/processing/numerical/test_quantile_clip.py",
+          "blob": "60f33ce1363548340e0271f6265dd61700922cbf"
+        },
+        {
+          "path": "test/processing/numerical/test_random_projection.py",
+          "blob": "52a358f44d6fb575e3d32b504cc5bdbdd1b1c8ad"
+        },
+        {
+          "path": "test/processing/numerical/test_rank_gaussian.py",
+          "blob": "2eedb2cb421d838c0bf79bf48c21897d47a3470f"
+        },
+        {
+          "path": "test/processing/numerical/test_robust_scale.py",
+          "blob": "191dfd8d6f717dcc910d81a852089bd3e95140fd"
+        },
+        {
+          "path": "test/processing/numerical/test_sigma_clip.py",
+          "blob": "d48b1df785338641acf9429c8341551c381242ae"
+        },
+        {
+          "path": "test/processing/numerical/test_standardize.py",
+          "blob": "f36e053e9a4e003835a275c4c34c6fc4e215a726"
+        },
+        {
+          "path": "test/processing/output/test_reduce.py",
+          "blob": "09adfe169dcb7edaffa692651fb95d57e4dd3402"
+        },
+        {
+          "path": "test/processing/output/test_softmax.py",
+          "blob": "f9e91e025a9e0c631ca99f007052f26ee806dea4"
+        },
+        {
+          "path": "test/processing/output/test_sort.py",
+          "blob": "86f13167fa4006b27694aa70079c0b9377528018"
+        },
+        {
+          "path": "test/processing/test_contract.py",
+          "blob": "642a3d69a02213c7f91b87ddca5297cabf547e55"
+        },
+        {
+          "path": "test/processing/test_ensemble.py",
+          "blob": "177f480e88e4439a3212069033afbe1a535cce57"
+        },
+        {
+          "path": "test/processing/test_execution.py",
+          "blob": "ef8b55b8a10ec5855cc5baa3374020adbef293ce"
+        },
+        {
+          "path": "test/processing/test_fitted_guard.py",
+          "blob": "762d233f0e8f37722e2641d04c5be5f1aa55ef7c"
+        },
+        {
+          "path": "test/processing/test_recipe.py",
+          "blob": "86fcfcc1d445f0a02dd6ee020e114757aa75ad51"
+        },
+        {
+          "path": "test/processing/text/test_sentence_transformer.py",
+          "blob": "f52dc856e5e24e6843ffd6a1fb584cc440f5b593"
+        },
+        {
+          "path": "test/processing/text/test_tfidf.py",
+          "blob": "991f9777d050ff2eb9f8519507e09e11b9aea377"
+        },
+        {
+          "path": "test/relational/backend/test_cugraph.py",
+          "blob": "162f71715e1470aa5fb0d3b67958dfebc6afd78b"
+        },
+        {
+          "path": "test/relational/backend/test_sampler_parity.py",
+          "blob": "323d3460433e4948129913bfe9207f4c304ad342"
+        },
+        {
+          "path": "test/relational/test_data.py",
+          "blob": "aa012c50ee8920fda8e98bf7e8af3be498b00c10"
+        },
+        {
+          "path": "test/relational/test_join.py",
+          "blob": "39d843bda4175fb7f6fe2731de46bec3495ed0a6"
+        },
+        {
+          "path": "test/relational/test_sampler.py",
+          "blob": "39b9258fd720951167fb53ea881cf2eb13c64de8"
+        },
+        {
+          "path": "test/tensor/test_categorical.py",
+          "blob": "2329c182a08a7676eedc70f3b1f40c32542c9b97"
+        },
+        {
+          "path": "test/tensor/test_columnar.py",
+          "blob": "0b302353a8d81be96bc94a9bdc4481d4ff67b8a8"
+        },
+        {
+          "path": "test/tensor/test_io.py",
+          "blob": "d782b540cd0b1c5108f0b47d7d2e0314e7fde39f"
+        },
+        {
+          "path": "test/tensor/test_nullable.py",
+          "blob": "2c2c7ac4c023e2451d6b2ca0c98f601e272e5b27"
+        },
+        {
+          "path": "test/tensor/test_record_stream.py",
+          "blob": "4f93eeaaaea24a1972b5c13096e17e7b2598c754"
+        },
+        {
+          "path": "test/tensor/test_string.py",
+          "blob": "d70c6a388270dfc1a351aefb145086fc2d93bc61"
+        },
+        {
+          "path": "test/tensor/test_table.py",
+          "blob": "44adcc5b5f73f1bdf1013357bb22911d3e1ac209"
+        },
+        {
+          "path": "test/tensor/test_var_len.py",
+          "blob": "a5f868433c1240eb0cbbb953de75c347a214f5b5"
+        },
+        {
+          "path": "test/test_cache.py",
+          "blob": "36865b1376b0d64cee7a06803a1412cfc251475b"
+        },
+        {
+          "path": "test/test_ensemble.py",
+          "blob": "7aa720844ed04c490d99735b1231c85cb3b16c0c"
+        },
+        {
+          "path": "test/test_stype.py",
+          "blob": "f38f8ac25cdb2c198109c242c271c9deba926e1f"
+        },
+        {
+          "path": "third_party/contributor-covenant/LICENSE",
+          "blob": "b6ce9a074667ec3c4493c68539bd13aa0cfbe3c4"
+        },
+        {
+          "path": "third_party/pytorch/LICENSE",
+          "blob": "c23172f7aff0254e4f0f163fb2e6e355cbaec5f4"
+        },
+        {
+          "path": "third_party/tabpfn-extensions/LICENSE",
+          "blob": "582ab0b9313c2774a9128f76b4ae4a2e1867b3a0"
+        },
+        {
+          "path": "uv.lock",
+          "blob": "068c1b964e58e7c7765e4452ab4d3805951f7267"
+        }
+      ]
+    },
+    {
+      "repository": "xiaomi-research/xiaomi-tabldm",
+      "revision": "c87efddedb244d1a21ac07b40b1453466329e5c5",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".gitignore",
+          "blob": "15efc197d7309c0b978af51c5dc486670dc35b15"
+        },
+        {
+          "path": ".vscode/settings.json",
+          "blob": "3c3f5936994197e88d9bcd4202128e874acc94d8"
+        },
+        {
+          "path": "LICENSE",
+          "blob": "0d982dc1ea8ec44e5dbb16ff4180164a9458d68c"
+        },
+        {
+          "path": "README.md",
+          "blob": "50056d284cccea2865324113e43415f6162ee1a4"
+        },
+        {
+          "path": "README_CN.md",
+          "blob": "a51cec051bb009fad6174007a0f55ea039ab3c5a"
+        },
+        {
+          "path": "assets/Xiaomi-TabLDM_BCCO.png",
+          "blob": "efbe927c58acd03ef531dd7789d6562e7b631343"
+        },
+        {
+          "path": "assets/Xiaomi-TabLDM_Framework.png",
+          "blob": "3168643bc9ecb2840da6964e24a9b005c2afa753"
+        },
+        {
+          "path": "assets/Xiaomi-TabLDM_OpenML-CTR23.png",
+          "blob": "18a7989ac98ece0a7827bed2149bb234ad1e4f7f"
+        },
+        {
+          "path": "assets/Xiaomi-TabLDM_TALENT.png",
+          "blob": "1a68e93b532a804c39d84087d39f71060dbf299e"
+        },
+        {
+          "path": "assets/Xiaomi-TabLDM_TabArena.png",
+          "blob": "36574a6994001f1a3926fb7b4dec9c04275ddd88"
+        },
+        {
+          "path": "pyproject.toml",
+          "blob": "be60ab2c5faf54dd0209905bf35fdb72203e536a"
+        },
+        {
+          "path": "tabldm/__about__.py",
+          "blob": "e8f211a93145a1ed20c8e42d9edce0c2cb6c78c4"
+        },
+        {
+          "path": "tabldm/__init__.py",
+          "blob": "99e4a91ffd484c58532c8938ddab10e5d2d5d8dd"
+        },
+        {
+          "path": "tabldm/_model/__init__.py",
+          "blob": "32c401796cbbd405acb5aba564a92d36c3dcdc62"
+        },
+        {
+          "path": "tabldm/_model/attention.py",
+          "blob": "d18454aa49d51cc256d74082529b33b4dfd9947c"
+        },
+        {
+          "path": "tabldm/_model/attnres_light_rmsnorm.py",
+          "blob": "5ab8f9e653f0d10c1a197060789c2bf5ec5ac054"
+        },
+        {
+          "path": "tabldm/_model/attnres_light_rmsnorm_moe.py",
+          "blob": "75072bba80775c093ddf2244beb9d6d6680b1612"
+        },
+        {
+          "path": "tabldm/_model/embedding.py",
+          "blob": "ec59c149d1249e5a1faadbd7ba513cb31102134a"
+        },
+        {
+          "path": "tabldm/_model/embedding_dual_stream.py",
+          "blob": "4e5cbe4380675f01c39747ac134671dc93922cfe"
+        },
+        {
+          "path": "tabldm/_model/encoders.py",
+          "blob": "66e7ef1360c419c96cc3c6c5fe3d8d26a1c28f81"
+        },
+        {
+          "path": "tabldm/_model/inference.py",
+          "blob": "497a5bc04874479ae11e3136fe0036d030b8a41e"
+        },
+        {
+          "path": "tabldm/_model/inference_config.py",
+          "blob": "51584e0e0de654231eea45160bbc1d5ca835605b"
+        },
+        {
+          "path": "tabldm/_model/interaction.py",
+          "blob": "532dc5ee429d244c4a26ce3789d9aae2c3371350"
+        },
+        {
+          "path": "tabldm/_model/kv_cache.py",
+          "blob": "1d2d9f24b06f7d2a03834f640de002ff01aaa3ac"
+        },
+        {
+          "path": "tabldm/_model/kv_cache_attnres.py",
+          "blob": "d3dcf927a8dcf1f72e13545ac627590e3d80084a"
+        },
+        {
+          "path": "tabldm/_model/layers.py",
+          "blob": "1635259979a517d5fa35bbf4fe26f940d5dae861"
+        },
+        {
+          "path": "tabldm/_model/learning.py",
+          "blob": "c3ba3a3232a8b5a527913ad3720e47c2888eb41d"
+        },
+        {
+          "path": "tabldm/_model/moe.py",
+          "blob": "0f10ae26aa165b6a8f850b0fe9dd4ea88bcd2648"
+        },
+        {
+          "path": "tabldm/_model/quantile_dist.py",
+          "blob": "2ca6b7ced7105f51a6385fded3f893c850ce1f64"
+        },
+        {
+          "path": "tabldm/_model/rope.py",
+          "blob": "5241ba7a5a106a7936ed814d50526cc5f7086074"
+        },
+        {
+          "path": "tabldm/_model/ssmax.py",
+          "blob": "8eaa5d331bd974f8ff5e7f0ea951586f1ab3ea91"
+        },
+        {
+          "path": "tabldm/_model/tabldm.py",
+          "blob": "c21964794ad3b051bf143ef68748023ce63ea98f"
+        },
+        {
+          "path": "tabldm/_sklearn/__init__.py",
+          "blob": "dc2ceb8f37cb551198e6d336d854d267f9b6c8f9"
+        },
+        {
+          "path": "tabldm/_sklearn/base.py",
+          "blob": "6abf40648429a028ce2112d3c29b87debb5fbbab"
+        },
+        {
+          "path": "tabldm/_sklearn/classifier.py",
+          "blob": "2e3ba3f841ed7fbe183eb472a30afca91b900da4"
+        },
+        {
+          "path": "tabldm/_sklearn/preprocessing.py",
+          "blob": "e561799fedc13bfe8fe2afc41e530f485cd2e9c8"
+        },
+        {
+          "path": "tabldm/_sklearn/regressor.py",
+          "blob": "c1cacf254735947452f293530cf1ff6a51f80eba"
+        },
+        {
+          "path": "tabldm/_sklearn/sklearn_utils.py",
+          "blob": "743719926e7e33891f9b3a467fc5753d8d05ed90"
+        },
+        {
+          "path": "tests/infer_talent_cls.py",
+          "blob": "08a2d414546b704571c81021ed59f6137f5c00b0"
+        },
+        {
+          "path": "tests/infer_talent_reg.py",
+          "blob": "cf762f8fc891ae6da23e660ac1c363ac1ef8cf93"
+        },
+        {
+          "path": "tests/test_infer_package.py",
+          "blob": "0d5f2e9e37342e6ee49d57a26f1cb1ce605387fe"
+        },
+        {
+          "path": "tutorials/README.rst",
+          "blob": "da1bfc224ab44ad3689fcefc4de36c5bae610105"
+        },
+        {
+          "path": "tutorials/classification_metrics.py",
+          "blob": "62ecfa49296e7b86100a929fb65808fb1b30576b"
+        },
+        {
+          "path": "tutorials/getting_started.py",
+          "blob": "08af707d78661b5be63933e58ff7361b91ad9b4d"
+        },
+        {
+          "path": "tutorials/kv_cache.py",
+          "blob": "bb4faa69225d7e102ddae86cd146717188058801"
+        },
+        {
+          "path": "tutorials/local_checkpoint.py",
+          "blob": "eeac2701ebea6fe6f5434a3192e28bbac6b7552b"
+        },
+        {
+          "path": "tutorials/mixed_data_types.py",
+          "blob": "9421da5f86b188883deb9a5ad0af52aeabf7d5cd"
+        },
+        {
+          "path": "tutorials/regression_quantiles.py",
+          "blob": "b11c19c07f198185b7c3e79ff28dc4afec0a9fb6"
+        }
+      ]
+    },
+    {
+      "repository": "autogluon/autogluon",
+      "revision": "88d33ba6d97ec07ef232e5b28213a61f272a8125",
+      "truncated": false,
+      "files": [
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/__init__.py",
+          "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/__init__.py",
+          "blob": "a21d08ff194636b817cf552d66c95e616314df89"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/config/__init__.py",
+          "blob": "4776ae2e40db1b94d5a0d4d1528b1cea7e682f38"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/config/config_pretrain.py",
+          "blob": "7af435de00617e36dedee7c6d7a7325179888ed8"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/config/config_run.py",
+          "blob": "d88963d1f9cb0711c5080aa6c2eb77ae157cc9f4"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/config/enums.py",
+          "blob": "49381c8b79eb5e2348caa556aff391f75de4da46"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/config/tab2d.yaml",
+          "blob": "fc8bf27be2441dd80f1d1e2b10a0010b7df44caf"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/__init__.py",
+          "blob": "9c0c8f485f3d13340537e5829e0705f7ac544c26"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/callbacks.py",
+          "blob": "1eb059b92e8fecc41a72518e0014f39184e66c92"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/get_loss.py",
+          "blob": "78f0ac172f731af4dd1a69c0d1d265047d477dbe"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/get_optimizer.py",
+          "blob": "b91b06c879a8c539778db5899e6fd71a0f95b053"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/get_scheduler.py",
+          "blob": "93a01ce85de2795e9c51c50479bb05d6b63b8335"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/prediction_metrics.py",
+          "blob": "13580154bd1da1c3e440eb5091085179e4337867"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/core/trainer_finetune.py",
+          "blob": "8e279ac0f439e44a3bb3024d4b9d59ea8efee7f6"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/data/__init__.py",
+          "blob": "a9205f9070718e68dfacd21337a124da18b5fec4"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/data/collator.py",
+          "blob": "6bc657ef0b6cf4f2960156344f5b07ce7bd11012"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/data/dataset_finetune.py",
+          "blob": "63ec3ad8d78c14a6968ebcf1525c33ec92a6af32"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/data/dataset_split.py",
+          "blob": "1a1baba6221e26ff88c4fbd3bdec23ec8555cd23"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/data/preprocessor.py",
+          "blob": "80e4d8a0014340fc355af5c0775de72e6a0a2161"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/models/__init__.py",
+          "blob": "cf1250efefe605ab30577588e1cca58769ebe5d6"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/models/base.py",
+          "blob": "bc3587165c597586a1d00481d32bbcfa23e2eb29"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/models/embedding.py",
+          "blob": "048e78795a08007050bbd5a9f2f1443ff4b394e5"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/models/tab2d.py",
+          "blob": "f3df1fdc92ea2f70cedb07584bed51d46b19a464"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/utils/__init__.py",
+          "blob": "84c1be989d77142d61d427b26bcb85482155a03d"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/_internal/utils/set_seed.py",
+          "blob": "ab48481d02e415d4244d64bfe61ff25a039a7c92"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/mitra_model.py",
+          "blob": "bf29c4595daaee391d1ed6064e3ccbd89cb1a9a2"
+        },
+        {
+          "path": "tabular/src/autogluon/tabular/models/mitra/sklearn_interface.py",
+          "blob": "150de02f638b4c3eb5d24f3cd5cc997fa9e16707"
+        }
+      ]
+    }
+  ],
+  "huggingface": {
+    "repository": "autogluon/mitra-finetune",
+    "revision": "b4701e8148dc33b00ed15d7086ff59816957cde4",
+    "files": [
+      ".gitattributes",
+      ".gitignore",
+      "LICENSE",
+      "Mitra_v2_Technical_Report.pdf",
+      "README.md",
+      "pyproject.toml",
+      "results/README.md",
+      "results/mitra-v2-tabarena-classification.parquet",
+      "results/mitra-v2-tabarena-regression.parquet",
+      "src/mitra_finetune/__init__.py",
+      "src/mitra_finetune/api.py",
+      "src/mitra_finetune/checkpoint.py",
+      "src/mitra_finetune/distribution.py",
+      "src/mitra_finetune/feature_selection.py",
+      "src/mitra_finetune/guard.py",
+      "src/mitra_finetune/hierarchy.py",
+      "src/mitra_finetune/hooks.py",
+      "src/mitra_finetune/modes.py",
+      "src/mitra_finetune/patches.py",
+      "src/mitra_finetune/runner.py",
+      "src/mitra_finetune/speed.py",
+      "tests/test_distribution.py",
+      "tests/test_modes.py",
+      "tests/test_speed.py"
+    ],
+    "source_reads": [
+      {
+        "path": "src/mitra_finetune/__init__.py",
+        "sha256": "fc6ac3bbfd3554ceffdb0154de54e8ab94374d5057d90367647b9b03bae8bce7"
+      },
+      {
+        "path": "src/mitra_finetune/api.py",
+        "sha256": "c92c4fb0029329383a336168d3ce2c8be45186eed3f650dc59100d7cd2d3128c"
+      },
+      {
+        "path": "src/mitra_finetune/checkpoint.py",
+        "sha256": "cc24fa650a08e7e549c50b6b74602f122fbed1f9f8262e29e8916ba349afa9de"
+      },
+      {
+        "path": "src/mitra_finetune/distribution.py",
+        "sha256": "95824cdd6c0af8e969f0e2ff51eece648cc0606f3de16daedeb52e05418d7ea6"
+      },
+      {
+        "path": "src/mitra_finetune/feature_selection.py",
+        "sha256": "b4d0adb5a9c4741cb0b24a41bb9a46c84353256a676b470a5c237a2dd56fb390"
+      },
+      {
+        "path": "src/mitra_finetune/guard.py",
+        "sha256": "9c41d8a55e0b6736a3a1bfda372cb8300785e7bfb8be31df20e0ca18913f1c38"
+      },
+      {
+        "path": "src/mitra_finetune/hierarchy.py",
+        "sha256": "41fd18b8933c1c5871c0c1c93696d50ea311da1844f8f52f2d6b3213675f6f89"
+      },
+      {
+        "path": "src/mitra_finetune/hooks.py",
+        "sha256": "c957740ee9c758f981cc5796ad454b77715a8a4a14ca296e0fc9cb51c4ed2653"
+      },
+      {
+        "path": "src/mitra_finetune/modes.py",
+        "sha256": "3c0d0dc4e814cbd64049399627344be7f2069e92a3686251fcd307b8a5de6661"
+      },
+      {
+        "path": "src/mitra_finetune/patches.py",
+        "sha256": "863d41d1a8f5b93a57b219303b0ca54ef3ff698be15bb7f85dccb47fcbeeedfb"
+      },
+      {
+        "path": "src/mitra_finetune/runner.py",
+        "sha256": "fbf912da747348a549ad33a2f33fd75d5d0a1982eccc863bc616345d1d0d761e"
+      },
+      {
+        "path": "src/mitra_finetune/speed.py",
+        "sha256": "54f3b9cab7095da73324d15625ee45e5245f2eb95125299d189e819413896239"
+      },
+      {
+        "path": "tests/test_distribution.py",
+        "sha256": "629e51bb72d4aa9761dd63e765d3d0e5c1543e4caa9ab822dce789fe2522d4c4"
+      },
+      {
+        "path": "tests/test_modes.py",
+        "sha256": "955841d952a27b8e493f0b1a0a81f65cb209be6194ef7b4d5f83c6e445496d8c"
+      },
+      {
+        "path": "tests/test_speed.py",
+        "sha256": "5a544f3592b2272612a7c764778219f4babaddd3e713381ca53a666ba24a504e"
+      }
+    ]
+  },
+  "source_reads": [
+    {
+      "temporary_path": "NVIDIA-structured-data-models/sdm/models/kumo/tabular/cell_embedding.py",
+      "sha256": "b8f21e1feebf40767f2be839f1bf85f52a785b1e2713182e285591061083620b"
+    },
+    {
+      "temporary_path": "NVIDIA-structured-data-models/sdm/models/kumo/tabular/icl.py",
+      "sha256": "89a3b69f4d41dec3416775adba3ae71fc503986061a78e699b92bef0e138b7c5"
+    },
+    {
+      "temporary_path": "NVIDIA-structured-data-models/sdm/models/kumo/tabular/model.py",
+      "sha256": "da1ad76dbc9798cde7b7ab8c444b0ce7b8b2c1232eff13a26b465171cf33a51a"
+    },
+    {
+      "temporary_path": "NVIDIA-structured-data-models/sdm/models/kumo/tabular/recipe.py",
+      "sha256": "63180dae73e535b4e9c2bce9841538b2a270a39c2e0b36d67bf569be2bd35015"
+    },
+    {
+      "temporary_path": "PriorLabs-TabPFN/src/tabpfn/architectures/tabpfn_v3_5.py",
+      "sha256": "64bb67a98431fae9feae154ca06423783ab168246d6be53793dfa69c4296f86d"
+    },
+    {
+      "temporary_path": "autogluon-autogluon/tabular/src/autogluon/tabular/models/mitra/_internal/config/config_pretrain.py",
+      "sha256": "5f184fbbc445202b590f74c5c193a4e1a8ddbd3007bbcf14d1a1ae432dd9cda6"
+    },
+    {
+      "temporary_path": "autogluon-autogluon/tabular/src/autogluon/tabular/models/mitra/_internal/core/trainer_finetune.py",
+      "sha256": "e5acb5292b3f9148324e730bd2681345b02fa0a7b534a0eb0e15a462c408bd6f"
+    },
+    {
+      "temporary_path": "autogluon-autogluon/tabular/src/autogluon/tabular/models/mitra/_internal/models/tab2d.py",
+      "sha256": "56320ffb85f1ef1291a796484b5fd402dcd74d55b85d65780fab8aad127a3581"
+    },
+    {
+      "temporary_path": "autogluon-autogluon/tabular/src/autogluon/tabular/models/mitra/mitra_model.py",
+      "sha256": "c3733e911e03ad6b2bc3dc40ae66f0d9c5e4707e8dfd463e7c3bd3dcf4fdaf5b"
+    },
+    {
+      "temporary_path": "autogluon-autogluon/tabular/src/autogluon/tabular/models/mitra/sklearn_interface.py",
+      "sha256": "8a105f042b1128ccf4fce405a311e27493f9576bcda525459832173afcee18ee"
+    },
+    {
+      "temporary_path": "xiaomi-research-xiaomi-tabldm/tabldm/_model/learning.py",
+      "sha256": "86e5f13d83aba19fff9c3d249eb9b79bb4b4135b28065ffc5f47718b9b91d6f3"
+    },
+    {
+      "temporary_path": "xiaomi-research-xiaomi-tabldm/tabldm/_model/moe.py",
+      "sha256": "7c1ea580e26f4c51496e7e172a4158b4a5ef17ba57df150b97fff377b136cbd9"
+    },
+    {
+      "temporary_path": "xiaomi-research-xiaomi-tabldm/tabldm/_model/tabldm.py",
+      "sha256": "8a08d6f03c313cab0cc1714d09cff13aee7c47d31f09f6b64a2fc4793d57785e"
+    }
+  ]
+}

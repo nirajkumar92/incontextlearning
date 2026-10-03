@@ -1,0 +1,411 @@
+{
+  "recipe_version": "static-icl-315-v3.1",
+  "status": "Authored315M baseline; affineprecision repaired; histogramresolution/categoryaliasing/architecturefamily unresolved; final selection gated",
+  "scope": [
+    "binary_classification",
+    "multiclass_classification",
+    "regression"
+  ],
+  "prior_family_probabilities": {
+    "P0": 0.85,
+    "P1": 0.1,
+    "P4": 0.05
+  },
+  "input": {
+    "layout": "B,N,F; N=ns+nq",
+    "task_vocabulary_source": [
+      "predeclared_vocabulary",
+      "otherwise_support_only"
+    ],
+    "native_class_capacity": 256,
+    "query_targets_in_forward": false,
+    "metadata_permitted": [
+      "task_type",
+      "feature_type",
+      "declared_label_vocabulary"
+    ],
+    "categorical_semantics": false,
+    "text_encoder": false
+  },
+  "preprocess": {
+    "fit_rows": "support_only",
+    "finite_only": true,
+    "median_ties": "average_middle_two",
+    "scale": "1.4826*MAD; if MAD <= 1e-12 use population_std; if population_std <= 1e-12 use 1; finally max(scale,1e-3)",
+    "empty_column_center": 0.0,
+    "empty_column_scale": 1.0,
+    "numeric_z_clip": 100.0,
+    "signed_log_z_clip": 1000000.0,
+    "rank": "(count_support_less + 0.5*count_support_equal + 0.5)/(n_finite_support+1)",
+    "empty_or_nonfinite_rank": 0.5,
+    "nonfinite_numeric_payload": 0.0,
+    "numeric_base_channels": [
+      "z_clipped",
+      "signed_log1p_z",
+      "support_midrank",
+      "missing",
+      "positive_infinity",
+      "negative_infinity",
+      "below_z_clip",
+      "above_z_clip"
+    ],
+    "numeric_learned_fourier_pairs": 32,
+    "rank_fixed_fourier_pairs": 8,
+    "numeric_projection_input_dim": 88,
+    "category_hash": "SHA256(episode_encoding_seed, stable_column_identity, canonical_type_tagged_value); first 53 bits -> [-1,1); never process hash",
+    "categorical_base_channels": [
+      "hash_code",
+      "support_relative_frequency",
+      "unseen_in_support",
+      "missing"
+    ],
+    "categorical_learned_fourier_pairs": 32,
+    "categorical_projection_input_dim": 68,
+    "missing_categorical_payload": "hash=0, frequency=0, unseen=0, missing=1; Fourier features all zero",
+    "categorical_hash_collision_policy": "audit actual 53-bit codes on support keys only; redraw encoding seed up to 8 attempts then hard error; query-code collisions are diagnostic only and never alter seed/codes/acceptance",
+    "support_target_preprocess": "same median/MAD/fallback as numeric features",
+    "categorical_hash": "SHA256(length-prefixed episode_encoding_seed, stable_column_identity, canonical_type_tagged_value); first 53 bits -> [-1,1); never process hash",
+    "feature_evaluation_dtype": "hash-to-code, normalization/ranks and Fourier phase/trigonometry float64 in reference implementation; cast finished feature vectors to float32, then BF16 matmul; validate float32 feature-evaluation fast path independently",
+    "encoded_collision_diagnostics": "report actual numeric/feature collisions after casts on fixed audit inputs; never change support encodings or task acceptance based on query collisions"
+  },
+  "cell_encoder": {
+    "width": 128,
+    "group_offsets": [
+      0,
+      1,
+      3
+    ],
+    "group_wrap": "modulo_actual_F",
+    "projection_bank": "independent by offset and numeric/categorical; summed; no biases",
+    "numeric_fourier_argument": "2*pi*exp(log_frequency)*clip(z,-100,100)",
+    "categorical_fourier_argument": "2*pi*exp(log_frequency)*hash_code",
+    "rank_fourier_argument": "2*pi*k*u, k=1..8",
+    "frequency_banks": 6,
+    "frequency_count_per_bank": 32,
+    "log_frequency_init": "log(geomspace(0.01,10,32))",
+    "log_frequency_forward_clip": [
+      0.0001,
+      100.0
+    ],
+    "learned_type_vectors": 2,
+    "input_layer_norm": {
+      "eps": 1e-05,
+      "affine": true,
+      "bias": true
+    },
+    "early_task_embedding_shape": [
+      2,
+      128
+    ],
+    "early_role_embedding_shape": [
+      2,
+      128
+    ],
+    "early_class_embedding_shape": [
+      256,
+      128
+    ],
+    "early_regression_projection_shape": [
+      128,
+      3
+    ],
+    "regression_label_channels": [
+      "clip(y_standardized,-20,20)",
+      "sign(y_standardized)*log1p(min(abs(y_standardized),1e6))",
+      "abs(y_standardized)>20"
+    ],
+    "query_label_contribution": "literal zeros; do not gather query label storage"
+  },
+  "front_end": {
+    "stages": 2,
+    "column_isab_per_stage": 3,
+    "row_mab_per_stage": 3,
+    "width": 128,
+    "heads": 8,
+    "head_dim": 16,
+    "swiglu_hidden": 512,
+    "inducing_per_isab": 128,
+    "cls_tokens": 8,
+    "column_attention": "H=MAB(I,Z_support); Z_all=MAB(Z_all,H), independently per feature",
+    "row_attention": "self-attention over F real feature cells plus 8 CLS, independently per row",
+    "cls_append": "before first row stage, retained across second column stage without entering column attention",
+    "rope": "row-attention Q/K only, feature positions 0..F-1 and CLS positions F..F+7; base10000; dimension16; reset per row",
+    "row_compression": "concatenate final 8 CLS in learned-slot order, 8*128=1024"
+  },
+  "mab": {
+    "attention_matrices": [
+      "q",
+      "k",
+      "v",
+      "out"
+    ],
+    "attention_bias": false,
+    "ffn_matrices": [
+      "gate",
+      "value",
+      "down"
+    ],
+    "ffn_bias": false,
+    "activation": "SiLU",
+    "ffn": "FFN(Z)=down(SiLU(gate(Z))*value(Z))",
+    "equations": [
+      "U=Q+RMS2(attn(RMS1(Q),RMS1(KV)))",
+      "out=U+RMS4(ffn(RMS3(U)))"
+    ],
+    "rms_norm_vectors": 4,
+    "rms_eps": 1e-06,
+    "qk_norm": "head-wise RMS normalization with one learned head_dim gain vector for Q and one for K, shared across heads",
+    "attention_logits": "tau_h(n_keys)*dot(Q_norm,K_norm)/sqrt(head_dim)",
+    "length_scale": "exp(tanh(a_h)*clip(log(max(n_keys,1)/1024),-log(4),log(4)))",
+    "length_parameters_per_block": "one per head, initialized 0",
+    "dropout": 0.0,
+    "no_key_behavior": "The standard sampler emits nonempty support. The generic model also defines empty support: attention with no legal keys contributes zero through the attention branch, preserving the residual path and default codec statistics. The finance sampler can exercise this boundary without fabricating labels.",
+    "qk_operation_order": "linear projection, reshape heads, per-head RMS and learned gain, row RoPE if active, scaled dot product"
+  },
+  "icl": {
+    "blocks": 24,
+    "width": 1024,
+    "heads": 16,
+    "head_dim": 64,
+    "swiglu_hidden": 2816,
+    "attention": "full multi-head, separate Q/K/V/O; no GQA",
+    "support_keys": "support only including own support row",
+    "query_keys": "support only; no query key/value enters any row",
+    "row_position_encoding": false,
+    "late_task_embedding_shape": [
+      2,
+      1024
+    ],
+    "late_role_embedding_shape": [
+      2,
+      1024
+    ],
+    "late_class_embedding_shape": [
+      256,
+      1024
+    ],
+    "late_regression_projection_shape": [
+      1024,
+      3
+    ],
+    "padding_mask": "padded support rows never keys; padded output rows excluded from loss",
+    "episode_mask": "no attention across episode ID"
+  },
+  "head": {
+    "pre_rms_width": 1024,
+    "shared_hidden": 1024,
+    "shared_activation": "GELU_exact",
+    "bias": false,
+    "classification_outputs": 256,
+    "classification_loss": "cross entropy over legal classes only",
+    "regression_outputs": 132,
+    "regression_finite_bins": 128,
+    "regression_interval": [
+      -5.0,
+      5.0
+    ],
+    "regression_tail_bins": 2,
+    "regression_tail_shape": 3.0,
+    "regression_tail_scale": "0.05+softplus(raw)",
+    "regression_loss": "proper continuous NLL in standardized support-target units",
+    "regression_point_prediction": "analytic mean including Lomax tail means; inverse support affine transformation",
+    "head_loss_multipliers": {
+      "binary": 1.0,
+      "multiclass": 1.0,
+      "regression": 1.0
+    },
+    "regression_boundary_convention": "left tail z<-5; finite bin k=floor((z+5)/(10/128)) for -5<=z<5; right tail z>=5",
+    "density_original_units": "p_y(y)=p_z((y-m)/s)/s; standardized training NLL omits task-constant log(s)",
+    "regression_tail_log_scales_aux": "compute log(0.05+softplus(raw)) in float32",
+    "class_id_injection": "sample an ordered K-element subset without replacement from 0..255 independently of outcomes; map declared task labels to those slots, mask all other slots; sample fresh injection per augmented view and align predictions by semantic class",
+    "deployment_class_id_mapping": "map legal external labels deterministically to 0..K-1; encode label mapping as metadata; never fit mapping from query labels",
+    "affine_precision": "Original-unit targets/center/scale remainFP64 through standardization; standardized values cast to neural probability dtype; original-unit mean/quantile inversion and serving preserveFP64."
+  },
+  "initialization": {
+    "linear": "normal(0,1/sqrt(fan_in)) except output head normal(0,0.02/sqrt(fan_in))",
+    "embedding": "normal(0,0.02)",
+    "input_layernorm_gain": 1.0,
+    "input_layernorm_bias": 0.0,
+    "rms_gain": 1.0,
+    "residual_post_rms_gain_front": "1/sqrt(36)",
+    "residual_post_rms_gain_icl": "1/sqrt(48)",
+    "qk_rms_gain": 1.0,
+    "length_scale_parameters": 0.0
+  },
+  "parameter_counts": {
+    "cell_projections": 59904,
+    "fourier_frequencies": 192,
+    "type_embeddings": 256,
+    "task_embeddings": 2304,
+    "role_embeddings": 2304,
+    "class_embeddings": 294912,
+    "regression_label_projections": 3456,
+    "input_layernorm": 256,
+    "inducing_vectors": 98304,
+    "cls_tokens": 1024,
+    "front_mabs": 4728528,
+    "icl_blocks": 308383104,
+    "head_matrices": 1445888,
+    "head_rms": 1024,
+    "total": 315021456,
+    "all_parameters_trainable": true
+  },
+  "optimizer": {
+    "main_candidate": "Muon_hidden_plus_AdamW_other",
+    "global_logical_batch_episodes": 256,
+    "global_gradient_clip_l2": 10.0,
+    "loss_reduction": "mean valid queries within episode then sum episode losses / global episode count; never average unequal local means",
+    "muon": {
+      "parameters": "only registered hidden attention Q/K/V/O and SwiGLU gate/value/down matrices; each separately, no fused QKV orthogonalization",
+      "lr_peak": 0.0008,
+      "momentum": 0.95,
+      "nesterov": true,
+      "weight_decay": 0.01,
+      "ns_steps": 5,
+      "ns_coefficients": [
+        3.4445,
+        -4.775,
+        2.0315
+      ],
+      "eps": 1e-07,
+      "lr_adjustment": "match_rms_adamw: 0.2*lr*sqrt(max(matrix.shape))",
+      "weight_decay_lr": "base lr, before shape scaling",
+      "momentum_update": "B=0.95*B+g; G=g+0.95*B",
+      "ns": "transpose if rows>cols; X=G/(FrobeniusNorm(G)+eps); five X=a*X+(b*A+c*A@A)@X, A=X@X.T; transpose back",
+      "ns_accumulation_dtype": "float32"
+    },
+    "adamw": {
+      "parameters": "all remaining parameters including encoders, label projections, head matrices, embeddings, inducing vectors, CLS, norms, frequencies and scalars",
+      "lr_peak": 0.0003,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "weight_decay_matrix": 0.01,
+      "weight_decay_embedding_norm_frequency_scalar": 0.0,
+      "bias_correction": true
+    },
+    "adamw_control": {
+      "all_hidden_and_encoder_head_matrices_lr_peak": 0.0003,
+      "lr_screen": [
+        0.0001,
+        0.0003,
+        0.0008
+      ],
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "eps": 1e-08,
+      "weight_decay_matrix": 0.01,
+      "weight_decay_embedding_norm_frequency_scalar": 0.0
+    },
+    "schedule": {
+      "warmup_fraction": 0.02,
+      "cosine_final_peak_ratio": 0.1,
+      "definition": "linear update1..ceil(.02*T); cosine thereafter to .1 peak at T; T fixed in run manifest before training",
+      "T_source": "For a final run, sum the stage update counts estimated from their GPU-hour allocations and measured update costs; freeze stage boundaries and totalT before training. One warmup/cosine schedule spans the final run. Standalone screen endpoints own separate horizons. Actual chargedGPU-hour cap overrides extrapolated step count."
+    },
+    "precision": {
+      "matmul": "bfloat16",
+      "master_parameters": "float32",
+      "optimizer_states": "float32",
+      "loss": "float32",
+      "softmax_norm": "float32",
+      "gradient_reduction": "float32"
+    },
+    "distributed": "Replicated model and optimizer state on each worker, targeting 64 GPU workers when memory permits. The implemented trainer explicitly reduces FP32 gradients after all local macroepisodes in the logical batch; global activity flags distinguish globally unused parameters from locally inactive branches. Unequal local macroepisode counts use world_size/global_batch loss scaling before the averaged reduction. Full original matrices receive Muon updates after synchronization; no per-shard reinterpretation. This is manual replicated gradient reduction, not the torch DDP wrapper.",
+    "ema": {
+      "enabled": false
+    },
+    "nonfinite_gradient": "skip whole optimizer update, log and checkpoint; abort after 3 consecutive skips; do not advance optimizer schedule",
+    "globally_unused_parameter": "if a parameter has no global gradient in this update, do not advance its optimizer state or apply decay; mixed-task global gradients use zeros from locally inactive branches"
+  },
+  "auxiliary": {
+    "default_enabled": false,
+    "selection": "independent crossed ablation after reference and base authored model are working",
+    "second_view_probability": 0.25,
+    "second_view_transforms": [
+      "column permutation before grouping and RoPE",
+      "independent random injection of declared K labels into K distinct slots among all 256, aligned back by semantic class",
+      "categorical hash encoding seed redraw with support/query consistency"
+    ],
+    "supervised_view_loss": "average NLL of both views on selected episodes, one-view NLL otherwise",
+    "consistency_weight_final": 0.05,
+    "consistency_ramp": "zero to .2T, linear .2T to .4T, then .05",
+    "classification_consistency": "0.5*(KL(stopgrad(pA)||pB)+KL(stopgrad(pB)||pA)); align class IDs first",
+    "regression_consistency": "symmetric stop-gradient KL over 130 bin masses plus 0.1*mean squared difference of two log tail scales; identical target transform across views",
+    "feature_mask_consistency": false,
+    "info_nce": false,
+    "masked_conditional_retarget": {
+      "enabled": false,
+      "episode_fraction_if_enabled": 0.1,
+      "target_choice": "uniform among support-eligible finite numeric original X columns or categorical original X columns with independently declared complete vocabulary of size<=256; no query-based eligibility",
+      "original_y": "discard for this auxiliary task",
+      "selected_target_feature": "removed from support/query feature tensors before preprocessing",
+      "weight": 0.1,
+      "categorical_alphabet": "requires independently declared full target vocabulary before auxiliary task selection; support-only vocabulary is insufficient; no query-based skip",
+      "selection_failure": "skip auxiliary copy, retain main task"
+    }
+  },
+  "optional_feedback_branch": {
+    "enabled": false,
+    "insert_after_icl_layers": [
+      8,
+      16
+    ],
+    "weights": "untied between two sites",
+    "algorithm": [
+      "reshape current row vector to eight 128-wide slots and add to saved CLS",
+      "one row MAB over cells and CLS",
+      "one support-only column ISAB over feature cells, not CLS",
+      "one row MAB over cells and CLS",
+      "r=r+tanh(g)*concat(CLS), independent scalar g initialized0 at each site"
+    ],
+    "saved_features": "retain stage-two feature cells, update between sites",
+    "width": 128,
+    "heads": 8,
+    "swiglu_hidden": 512,
+    "inducing_per_site": 128,
+    "extra_mab_count": 8,
+    "extra_parameters": 2134338,
+    "total_parameters_if_enabled": 317155794,
+    "post_rms_gain": "1/sqrt(16)",
+    "claim": "authored hypothesis for recovering feature detail, not established novelty or superior performance",
+    "comparison": "both fixed-backbone and fixed-GPU-hour comparison; no prior changes"
+  },
+  "invariances": {
+    "support_row_permutation": "exact mathematical equivariance/invariance under masks, to numerical tolerance",
+    "query_batch_composition": "exact independence under masks",
+    "column_permutation": "not exact due grouped offsets and RoPE; augmentation/consistency only",
+    "category_recoding": "not exact due numeric hash Fourier code; seed augmentation only",
+    "class_label_permutation": "not exact with learned lookup/head; permutation augmentation only",
+    "numeric_affine": "positive-affine invariance approximate due finite scale floor and floating point; negative affine not architectural guarantee"
+  },
+  "sources": {
+    "TabICLv2": "supplied PDF Appendix A pp18-19; optimizer section p6 and Appendix C",
+    "TabPFN3.5": "supplied PDF section3.1 pp8-9",
+    "TabFM": "supplied PDF Table1 p4 and section3 masks p5",
+    "LimiX2": "https://arxiv.org/abs/2609.17488",
+    "Muon": "https://github.com/KellerJordan/Muon",
+    "Muon_scaling": "https://arxiv.org/abs/2502.16982",
+    "Muon_API": "https://docs.pytorch.org/docs/2.14/generated/torch.optim.Muon.html"
+  },
+  "optional_moe_challenger": {
+    "enabled": false,
+    "specification": "latency_recipe_v3.json",
+    "name": "ICL-MoE-419",
+    "total_parameters": 418863248,
+    "nominal_active_proxy": 315054224
+  },
+  "implementation": "src/tabular_foundation/model.py; dense candidate and size grid implemented; optional research branches require separate work",
+  "finance_extension": {
+    "metadata_dimensions": 14,
+    "metadata_adapter_parameters": 152704,
+    "zero_atom_readout_parameters": 1024,
+    "total_parameters": 315175184,
+    "reference_sample_size": "metadata[13]=log1p(N_reference)",
+    "hurdle_initialization": "zero learned projection plus negative event-reference log odds when available"
+  }
+}

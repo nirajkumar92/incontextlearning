@@ -1,0 +1,224 @@
+{
+  "status": "provisional_planning_target; budget ceilings override volume",
+  "not_a_training_launch_config": true,
+  "project_gpu_hour_ceiling": 50000,
+  "project_phase_gpu_hour_ceilings": {
+    "systems_reference": 5000,
+    "controlled_screens": 15000,
+    "size_bridges": 10000,
+    "conditional_final": 12000,
+    "evaluation": 5000,
+    "reserve": 3000
+  },
+  "combined_conditional_final_gpu_hour_ceiling": 12000,
+  "stage_accepted_episode_fractions": [
+    0.9,
+    0.09,
+    0.01
+  ],
+  "stage_policy_note": "90/9/1 is an accepted-episode allocation for this provisional plan; it is separate from plan_training.py's 60/25/15 GPU-hour allocation.",
+  "measurement_id": null,
+  "standard": {
+    "provisional_target_accepted_macroepisodes": 64000000,
+    "target_updates": 250000,
+    "target_stage_updates": [
+      225000,
+      22500,
+      2500
+    ],
+    "target_stage_accepted_macroepisodes": [
+      57600000,
+      5760000,
+      640000
+    ],
+    "global_batch": 256,
+    "allocated_gpus": 64,
+    "gpu_hour_ceiling": 9000.0,
+    "overhead_gpu_hours_reserved": 0.0,
+    "training_gpu_hours_available": 9000.0,
+    "available_training_wall_hours_on_all_gpus": 140.625,
+    "required_aggregate_macroepisodes_per_second": 126.41975308641975,
+    "required_macroepisodes_per_gpu_second": 1.9753086419753085,
+    "maximum_weighted_mean_seconds_per_update": 2.025,
+    "horizon_quantum_updates": 100,
+    "horizon_quantum_macroepisodes": 25600,
+    "measured_seconds_per_update": null,
+    "target_required_gpu_hours": null,
+    "target_fits_measured_budget": null,
+    "budget_feasible_horizon": null,
+    "hard_cap_takes_precedence_over_episode_target": true,
+    "target_source_task_envelope_counts": {
+      "arm": "R_P1_05",
+      "stages": [
+        {
+          "stage": 1,
+          "accepted_macroepisodes_target": 57600000,
+          "source_branch_expectation_before_eligibility": {
+            "R": 54720000,
+            "P1": 2880000,
+            "P4": 0
+          },
+          "eligible_slots_observed_or_assumed": null,
+          "accepted_source_conditional_expectation": null,
+          "requested_width_eligibility_probability": 0.9343434343434344,
+          "eligibility_adjusted_source_expectation": {
+            "P1": 2690909.090909091,
+            "R": 54909090.90909091,
+            "P4": 0
+          },
+          "task_expectation_with_planned_envelope": {
+            "classification": 28800000,
+            "binary_class_budget": 3200000,
+            "multiclass_class_budget": 25600000,
+            "regression": 28800000
+          },
+          "envelope_extension_expectation": 0,
+          "extension_probability": 0,
+          "extension_max_classes": 10,
+          "extension_max_features": 100,
+          "envelope_and_P1_branch_overlap_expectation_before_eligibility": 0
+        },
+        {
+          "stage": 2,
+          "accepted_macroepisodes_target": 5760000,
+          "source_branch_expectation_before_eligibility": {
+            "R": 5472000,
+            "P1": 288000,
+            "P4": 0
+          },
+          "eligible_slots_observed_or_assumed": null,
+          "accepted_source_conditional_expectation": null,
+          "requested_width_eligibility_probability": 0.9423767082590613,
+          "eligibility_adjusted_source_expectation": {
+            "P1": 271404.49197860964,
+            "R": 5488595.50802139,
+            "P4": 0
+          },
+          "task_expectation_with_planned_envelope": {
+            "classification": 2880000,
+            "binary_class_budget": 274580.6451612903,
+            "multiclass_class_budget": 2605419.35483871,
+            "regression": 2880000
+          },
+          "envelope_extension_expectation": 1152000,
+          "extension_probability": 0.2,
+          "extension_max_classes": 32,
+          "extension_max_features": 256,
+          "envelope_and_P1_branch_overlap_expectation_before_eligibility": 57600
+        },
+        {
+          "stage": 3,
+          "accepted_macroepisodes_target": 640000,
+          "source_branch_expectation_before_eligibility": {
+            "R": 608000,
+            "P1": 32000,
+            "P4": 0
+          },
+          "eligible_slots_observed_or_assumed": null,
+          "accepted_source_conditional_expectation": null,
+          "requested_width_eligibility_probability": 0.9124577594868732,
+          "eligibility_adjusted_source_expectation": {
+            "P1": 29198.648303579947,
+            "R": 610801.35169642,
+            "P4": 0
+          },
+          "task_expectation_with_planned_envelope": {
+            "classification": 320000,
+            "binary_class_budget": 28695.42483660131,
+            "multiclass_class_budget": 291304.5751633987,
+            "regression": 320000
+          },
+          "envelope_extension_expectation": 128000,
+          "extension_probability": 0.2,
+          "extension_max_classes": 256,
+          "extension_max_features": 512,
+          "envelope_and_P1_branch_overlap_expectation_before_eligibility": 6400
+        }
+      ],
+      "accepted_macroepisodes_target": 64000000,
+      "source_branch_expectation_before_eligibility": {
+        "R": 60800000,
+        "P1": 3200000,
+        "P4": 0
+      },
+      "accepted_source_conditional_expectation": null,
+      "accepted_source_rule": "E[P1 | eligible slots] = 0.05 * sum(eligible slots); E[R | eligible slots] = N - E[P1]. Realized counts are random integers and must be logged.",
+      "eligibility_adjusted_source_expectation": {
+        "R": 61008487.76880872,
+        "P1": 2991512.2311912803,
+        "P4": 0
+      },
+      "marginal_expectation_assumptions": "Analytic requested-width law for the stated native stages and 20% envelope extensions; no diagnostic shape overrides, failed/skipped/replayed updates or source substitution. Random realized counts are not quotas.",
+      "task_expectation_with_planned_envelope": {
+        "classification": 32000000,
+        "binary_class_budget": 3503276.0699978913,
+        "multiclass_class_budget": 28496723.93000211,
+        "regression": 32000000
+      },
+      "strict_native_without_envelope_task_expectation": {
+        "classification": 32000000,
+        "binary_class_budget": 3555555.5555555555,
+        "multiclass_class_budget": 28444444.444444444,
+        "regression": 32000000
+      },
+      "envelope_extension_expectation": 1280000,
+      "envelope_and_P1_branch_overlap_expectation_before_eligibility": 64000,
+      "envelope_is_additional_episode_mass": false,
+      "raw_reference_attempt_count": null,
+      "raw_attempt_note": "Rejected reference tables/graphs are generator work, not additional trained macroepisodes; measure retry counts and cost.",
+      "observed_class_note": "Task names refer to the ex ante class budget. Accepted tables can contain fewer observed classes."
+    }
+  },
+  "finance": {
+    "provisional_target_accepted_macroepisodes": 1024000,
+    "target_updates": 4000,
+    "target_stage_updates": [
+      3600,
+      360,
+      40
+    ],
+    "target_stage_accepted_macroepisodes": [
+      921600,
+      92160,
+      10240
+    ],
+    "global_batch": 256,
+    "allocated_gpus": 64,
+    "gpu_hour_ceiling": 3000.0,
+    "overhead_gpu_hours_reserved": 0.0,
+    "training_gpu_hours_available": 3000.0,
+    "available_training_wall_hours_on_all_gpus": 46.875,
+    "required_aggregate_macroepisodes_per_second": 6.068148148148148,
+    "required_macroepisodes_per_gpu_second": 0.09481481481481481,
+    "maximum_weighted_mean_seconds_per_update": 42.1875,
+    "horizon_quantum_updates": 400,
+    "horizon_quantum_macroepisodes": 102400,
+    "measured_seconds_per_update": null,
+    "target_required_gpu_hours": null,
+    "target_fits_measured_budget": null,
+    "budget_feasible_horizon": null,
+    "hard_cap_takes_precedence_over_episode_target": true,
+    "task": "binary_fraud",
+    "natural_prevalence": 0.0001,
+    "world_reuse_updates": 4,
+    "target_distinct_worlds_by_stage": [
+      230400,
+      23040,
+      2560
+    ],
+    "target_distinct_worlds": 256000,
+    "world_count_condition": "Every four-attempt reuse group completes, no optimizer attempts are skipped or replayed, and stage boundaries align; independent stage-specific populations are counted separately.",
+    "stage_policy_status": "Provisional 90/9/1 finance staging for planning, to be frozen after timing/coverage gates.",
+    "population_note": "Each world can represent a few million natural-prevalence historical rows lazily; these are not all materialized context/training rows.",
+    "query_note": "Balanced query proposals retain population importance weights; they do not change the natural fraud prevalence. Routed context reuse does not add independent macroepisodes."
+  },
+  "volume_rationale": {
+    "interpretation": "Same order of table exposures as published open tabular models, not a scaling law, compute-equivalent comparison, or accuracy guarantee.",
+    "tabicl_v2": "64 * (500000 + 40000 + 10000) = 35.2 million table exposures per separate classifier or regressor; 70.4 million for the pair.",
+    "tabicl_source": "https://github.com/soda-inria/tabicl/blob/0dbff3ec8fc68c123c87af77b0ea8b25cd2d23f3/scripts/train_v2_clf_stage1.sh",
+    "kumo": "Release reports about 35/71/137 million tables for Small/Medium/Large. Architecture, shapes and exact task accounting differ; do not assume equal compute or independent unique worlds.",
+    "kumo_source": "https://huggingface.co/blog/nvidia/kumo-tabular"
+  },
+  "measurement_requirements": "Use complete distributed optimizer updates on 64 GPUs at global batch 256, including generator/rejection, codec, transfer, forward/backward, optimizer, synchronization and rank skew. Finance timings must cover cold and warm uses across complete four-update reuse groups, all selectors and routed prefills. Reserve setup/checkpoint/other charged overhead explicitly and use conservative timing summaries. Freeze the feasible horizon and LR schedule before launch; do not run the requested horizon through its cap. Actual accepted, rejected, failed and skipped-update counts still govern reported exposure.",
+  "generation_and_validation_policy": "Generate training tasks on demand; the volume target does not require pre-generating or storing a full table bank. Keep fixed validation-world seeds disjoint from training namespaces and reuse them only for validation. R's eight mechanism functions compose within graphs; they are not eight exclusive table families with equal sample quotas."
+}

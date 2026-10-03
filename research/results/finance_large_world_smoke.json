@@ -1,0 +1,30 @@
+{
+  "history_rows": 3000000,
+  "future_rows": 1000000,
+  "target_prevalence": 0.0001,
+  "expected_history_frauds": 300,
+  "strata": 715,
+  "latent_history_positive_count": 296,
+  "revealed_eligible_count": 6154,
+  "revealed_positive_count": 143,
+  "future_positive_count": 14,
+  "complete_adjudication": false,
+  "searched_candidate_count": 256,
+  "route_groups": 4,
+  "context_rows_total": 160,
+  "finite_query_unique_ids": 80,
+  "finance_metadata_dimension": 14,
+  "wall_seconds": 0.055307124999999985,
+  "explicit_test_overrides": {
+    "history_size": 3000000,
+    "future_size": 1000000,
+    "width": 16,
+    "prevalence": 0.0001,
+    "reservoir_cap": 16,
+    "positive_cap": 8,
+    "local_cap": 16,
+    "max_centers": 4,
+    "candidate_cap": 256
+  },
+  "claim": "Finite-count/lazy-materialization smoke at the user-corrected one-in-10000 target; no training or default full-index throughput result"
+}

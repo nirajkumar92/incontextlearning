@@ -1,0 +1,115 @@
+{
+  "arm": "R_P1_05",
+  "seed": 20,
+  "reference_revision": "0dbff3ec8fc68c123c87af77b0ea8b25cd2d23f3",
+  "stage": 1,
+  "package_task": "classification",
+  "native_filters_preserved": true,
+  "shape_override": {
+    "n_support": 32,
+    "n_query": 16,
+    "n_features": 8,
+    "n_classes": 7
+  },
+  "envelope_override": null,
+  "reference_distribution_modified": true,
+  "resolved_prior_kwargs": {
+    "regression": false,
+    "batch_size": 1,
+    "batch_size_per_gp": 4,
+    "batch_size_per_subgp": 4,
+    "min_features": 8,
+    "max_features": 8,
+    "max_classes": 10,
+    "min_seq_len": null,
+    "max_seq_len": 48,
+    "log_seq_len": false,
+    "log_n_features": false,
+    "min_train_size": 32,
+    "max_train_size": 33,
+    "seq_len_per_gp": false,
+    "replay_small": false,
+    "n_jobs": 1,
+    "device": "cpu"
+  },
+  "python_hash_seed": "0",
+  "events": [
+    {
+      "index": 0,
+      "task": "multiclass",
+      "n_classes": 7,
+      "n_support": 32,
+      "n_query": 16,
+      "requested_features": 8,
+      "raw_dataset_attempts": 1,
+      "graph_proposals": 0,
+      "graph_rejections": 0,
+      "predictability_rejections": 0,
+      "empty_feature_rejections": 0,
+      "class_split_rejections": 0,
+      "accepted": true,
+      "branch_draw": "P1",
+      "selected_source": "P1",
+      "eligible": true,
+      "requested_addition_probability": 0.05,
+      "conditional_addition_probability": 0.05,
+      "ineligible_mass_returned": false,
+      "accepted_features": 8,
+      "observed_classes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "array_sha256": {
+        "x_support": "cd76b9f2632efa63493f00af20c65d79b65a75ef2863b1d231c9dd79b9db2afd",
+        "x_query": "260f7eb9197edb3832249af03a9940fcf2c4aa6a73be8e30687a79f3ca28a23b",
+        "y_support": "c94ecc5576e54d6c20c114acdd5fd3cdf3216d4e083264bff94ee51d72d98e1c",
+        "y_query": "541a6e61653c773823304d7bee486e2947f272b73b2f3de5e6a13a8c5bf187c5",
+        "categorical": "a1f6f65bbba7e3092a19f54b992166ee6eaea297710a0ccfc3dd78506ae6d5e0"
+      }
+    }
+  ],
+  "semantics": "Native reference generation; authored additions unfiltered; diagnostic Episode codec is separate",
+  "branch_counts": {
+    "R": 0,
+    "P1": 1,
+    "P4": 0
+  },
+  "selected_counts": {
+    "R": 0,
+    "P1": 1,
+    "P4": 0
+  },
+  "accepted_counts": {
+    "R": 0,
+    "P1": 1,
+    "P4": 0
+  },
+  "raw_attempt_counts": {
+    "R": 0,
+    "P1": 1,
+    "P4": 0
+  },
+  "accepted_source_mass": {
+    "R": 0.0,
+    "P1": 1.0,
+    "P4": 0.0
+  },
+  "ineligible_returns": 0,
+  "elapsed_seconds": 1.2617542080000002,
+  "evidence_scope": "CPU source equivalence/contracts and generation; no model training or GPU throughput claim",
+  "runtime": {
+    "python": "3.9.6",
+    "numpy": "1.26.4",
+    "torch": "2.8.0",
+    "scipy": "1.13.1",
+    "scikit-learn": "1.6.1",
+    "psutil": "7.2.2",
+    "xgboost": "2.1.4",
+    "threadpoolctl": "3.7.0"
+  }
+}

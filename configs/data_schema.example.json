@@ -1,0 +1,8 @@
+{
+  "features": ["amount", "merchant_category", "account_age", "transactions_last_7d"],
+  "categorical": ["merchant_category"],
+  "target": "fraud",
+  "classes": ["0", "1"],
+  "metadata": {"ids": "transaction_id", "event_time": "event_timestamp", "label_available_time": "label_timestamp"},
+  "missing_values": ["", "NA", "NaN", "null", "None"]
+}

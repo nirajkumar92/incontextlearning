@@ -1,0 +1,2401 @@
+=== PDF PAGE 1 ===
+TabICL: A Tabular Foundation Model for In-Context Learning on Large Data
+Jingang Qu 1 David Holzm¨uller 2 3 Ga¨el Varoquaux1 Marine Le Morvan 1
+Abstract
+The long-standing dominance of gradient-boosted
+decision trees on tabular data is currently chal-
+lenged by tabular foundation models using In-
+Context Learning (ICL): setting the training data
+as context for the test data and predicting in a
+single forward pass without parameter updates.
+While TabPFNv2 foundation model excels on
+tables with up to 10K samples, its alternating
+column- and row-wise attentions make handling
+large training sets computationally prohibitive.
+So, can ICL be effectively scaled and deliver a
+benefit for larger tables? We introduce TabICL, a
+tabular foundation model for classification, pre-
+trained on synthetic datasets with up to 60K sam-
+ples and capable of handling 500K samples on
+affordable resources. This is enabled by a novel
+two-stage architecture: a column-then-row atten-
+tion mechanism to build fixed-dimensional em-
+beddings of rows, followed by a transformer for
+efficient ICL. Across 200 classification datasets
+from the TALENT benchmark, TabICL is on
+par with TabPFNv2 while being systematically
+faster (up to 10 times), and significantly out-
+performs all other approaches. On 53 datasets
+with over 10K samples, TabICL surpasses both
+TabPFNv2 and CatBoost, demonstrating the po-
+tential of ICL for large data. Pretraining code,
+inference code, and pre-trained models are avail-
+able at https://github.com/soda-inria/tabicl.
+1. Introduction
+Tabular data, structured in rows and columns, is widely
+used in industries like healthcare (Cartella et al., 2021)
+and finance (Johnson et al., 2016), where tabular classifica-
+tion problems underpin numerous real-world applications.
+1SODA team, INRIA Saclay, France 2Sierra team, INRIA
+Paris, France 3Ecole Normale Sup ´erieure, PSL Research Uni-
+versity, Paris, France. Correspondence to: Jingang Qu <jin-
+gang.qu@inria.fr>.
+Proceedings of the 42 nd International Conference on Machine
+Learning, Vancouver, Canada. PMLR 267, 2025. Copyright 2025
+by the author(s).
+In other data modalities, foundation models – particularly
+Large Language Models (LLMs) (Zhou et al., 2024) – have
+significantly advanced the ability to tackle new tasks and
+few-shot learning. This is largely due to their remarkable
+in-context learning (ICL) capabilities (Brown et al., 2020),
+which enable them to capture patterns in prompts without
+requiring parameter updates. This success combined with
+the pervasiveness of tables have spurred interest in tabular
+foundation models (van Breugel & van der Schaar, 2024).
+While LLMs are primarily designed to model natural lan-
+guage, attempts to fine-tune them for tabular data have
+emerged (Hegselmann et al., 2023; Fang et al., 2024, and
+references therein). These efforts rely on table serialization,
+which is the process of converting table rows into text or sen-
+tences which can then be tokenized. Gardner et al. (2024)
+fine-tuned Llama 3-8B on a corpus of serialized tables and
+demonstrated the effectiveness of this approach compared
+to tree-based models in the few-shot setting. However, such
+language models-based approaches are limited by the size
+of their context window to fit large serialized tables (e.g.
+up to 32 or 64 shots in Gardner et al. 2024). Moreover, it
+is unclear whether LLMs can effectively handle numerical
+values (Thawani et al., 2021). Finally, as evidence shows
+that LLMs are pretrained on many popular datasets (Bordt
+et al., 2024), their evaluation on tabular prediction tasks
+should also be conducted with care.
+Taking a markedly different approach, Hollmann et al.
+(2022) introduced TabPFN, a transformer-based tabular
+foundation model for classification tasks, pretrained on syn-
+thetic tabular datasets only. A key feature of TabPFN is
+ICL with tables, which eliminates the need for tokenization
+and enables efficient handling of small tables with up to 1K
+samples and 100 features. The same authors then introduced
+TabPFNv2 (Hollmann et al., 2025), an improved version
+that significantly outperforms tree-based and neural network
+competitors on small-to-medium datasets with up to 10K
+samples and 500 features. The great promise of tabular ICL
+has spurred a new line of research (see Section 2.3), yet the
+quadratic cost of self-attention is a threat to the scalability of
+all of these. TabPFNv2 uses a two-way attention mechanism
+alternating between column-wise and row-wise attentions,
+which limits its scalability for large datasets. In real-world
+scenarios, where industrial datasets can contain millions of
+samples (Rubachev et al., 2024), the high computational
+1
+arXiv:2502.05564v2  [cs.LG]  24 May 2025
+
+=== PDF PAGE 2 ===
+TabICL: A Tabular Foundation Model for Large Data
+and memory demands of TabPFNv2 hinder its practicality.
+In this paper, we introduce TabICL, a scalable and efficient
+tabular foundation model based on PFNs (M ¨uller et al.,
+2024) and designed for classification tasks. Pretrained on
+synthetic datasets up to 60K samples, TabICL can effec-
+tively handle datasets up to 500K samples and 500 features,
+significantly expanding the scalability of ICL for tables.
+To accommodate tables of arbitrary sizes, TabICL treats
+individual cells as fundamental units: each column is re-
+garded as a set of cell values that capture feature-specific
+distributions and semantics, while each row comprises in-
+terdependent feature values. TabICL employs a two-stage
+architecture to achieve efficient ICL for tabular data. First,
+it encodes rows (excluding target labels) into dense vector
+embeddings. Each embedding is designed to capture the
+entire table information. This stage effectively collapses the
+column dimension to substantially reduce computational
+complexity and memory footprint for subsequent ICL. Sec-
+ond, it combines these compact yet informative embeddings
+with corresponding labels and then performs ICL. There-
+fore, the core of TabICL lies in its embedding strategy of
+the first stage, which is supposed to transform rows into
+semantically rich embeddings.
+In natural language, words often carry clear semantics and
+are thus naturally associated to informative embeddings
+(Mikolov et al., 2013). However, tabular data lacks such an
+inherent structure: cell values can be ambiguous without
+metadata such as column names or data types. To address
+this challenge, TabICL adopts a well-constrained embed-
+ding strategy combining (1) distribution-aware column-wise
+embedding to capture statistical regularities within each col-
+umn and (2) attention-based row-wise interaction to model
+dependencies across columns, thereby constructing seman-
+tically grounded representations for tabular data.
+Feature embedding involves mapping scalar cell values into
+high-dimensional vectors for each feature, serving as a crit-
+ical factor in model performance (Gorishniy et al., 2022).
+Since features often exhibit vastly different distributions,
+previous approaches typically use feature-specific embed-
+ding modules without parameter sharing, which, however,
+limits cross-table transferability. In this work, we refor-
+mulate feature embedding as a set-input problem, where a
+permutation-invariant set of cell values acts as input, and
+the output comprises corresponding one-to-one embeddings.
+To achieve this, we leverage the Set Transformer (Lee et al.,
+2019), a model specifically designed to process sets through
+efficient induced self-attention. It excels in tasks such as
+identifying extrema and counting unique elements, enabling
+the discovery of distribution-related metadata within each
+column and enhancing the ability to distinguish between
+features of different data types.
+The feature embeddings are then processed per-row by an-
+other transformer, and aggregated into a single vector using
+learnable [CLS] tokens. This effectively captures complex
+feature interactions and accommodates a varying number of
+features. Overall, this column-then-row attention-based em-
+bedding achieves efficient sparse attention across all cells by
+leveraging the column/row inherent structure of tabular data
+as a strong inductive bias. Finally, the resulting row-wise
+embeddings are handled by a final transformer for ICL.
+In addition to the above innovations, we introduce further
+improvements: (1) We refine TabPFN’s pretraining synthetic
+datasets by adding a new tree-based data-generating model
+to incorporate the inductive biases of tree-based models
+(Grinsztajn et al., 2022; den Breejen et al., 2024; Grinsz-
+tajn, 2024); (2) We adopt curriculum learning by scaling
+the pretraining dataset size from 1K to 60K; (3) To address
+classification problems with over 10 classes (the pretraining
+limit), we use hierarchical classification (Silla & Freitas,
+2011), breaking them into a hierarchical structure of sub-
+problems with ≤ 10 classes. The increase in the number of
+tasks is largely offset by the fast predictions of TabICL.
+To summarize our contributions: (1) We present TabICL,
+a novel scalable tabular foundation model for classifica-
+tion tasks that can accommodate any number of samples,
+features, and classes. In practice, TabICL handles up to
+500K samples and 500 features with around 20GB of GPU
+memory; (2) We introduce a distribution-aware feature em-
+bedding approach that handles features with diverse prop-
+erties in a unified manner, unlocking new possibilities for
+cross-table transferability; (3) TabICL performs tasks in a
+single forward pass and is orders of magnitude faster than
+tabular methods requiring hyperparameter tuning while still
+providing better performance in most cases. TabICL is also
+consistently faster than TabPFNv2 (up to 10 times), with
+efficiency gains increasing as dataset size grows; (4) We
+evaluate TabICL on the TALENT benchmark (Ye et al.,
+2025), comprising 200 classification datasets across various
+domains and sizes (up to 150K samples). TabICL performs
+comparably to TabPFNv2 on medium-sized datasets and
+significantly outperforms all other methods. On the 53 large
+datasets with over 10K samples, TabICL surpasses both
+TabPFNv2 and CatBoost (Dorogush et al., 2018). These
+results demonstrate the potential of ICL for large data.
+2. Related Work
+2.1. Foundation Models and In-Context Learning
+In recent years, deep learning has been transformed by the
+emergence of foundation models, which are pretrained on
+massive, diverse datasets and serve as versatile backbones
+for downstream tasks. These transformer-based models en-
+able In-Context Learning (ICL): performing tasks by analyz-
+2
+
+=== PDF PAGE 3 ===
+TabICL: A Tabular Foundation Model for Large Data
+Dataset-wise
+In-Context Learning
+  Transformer
++
+Lookup
+table
++
+Lookup
+table
++
+Lookup
+table
+Row-wise
+inter-feature
+Interaction
+Row 1 2 3 4 5
+4
++
+Transformer   
+Rotary positional embedding
+Columns (Features)Rows (Samples)
+Training samples Test samples
+Column-wise
+inter-sample 
+Embedding
+ Transformer  
+ 
+Figure 1. Architecture Overview of TabICL.First, column-wise embedding transforms each cell of the input table into an embedding
+vector using a transformer TFcol (Section 3.2), producing E. Next, row-wise interaction prepends four trainable [CLS] tokens to E,
+applies rotary positional encoding, and processes E row-by-row with a transformer TFrow. Concatenating the outputs of [CLS] tokens
+yields the final row-wise embeddings H. Finally, dataset-wise ICL operates on H and uses a Transformer TFicl to predict the target labels
+for the test set in a single forward pass. Overall, TabICL consists of three transformers.
+ing prompts containing input-output pairs, without explicit
+training or parameter updates. ICL operates as a form of on-
+the-fly reasoning. The mechanism underlying ICL remains
+elusive, with prevailing explanations framing it as implicit
+Bayesian inference (Xie et al., 2022; M ¨uller et al., 2024),
+gradient descent optimization (von Oswald et al., 2023), and
+algorithmic learning (Garg et al., 2023).
+2.2. Tabular Deep Learning Models
+Gradient-boosted decision trees (GBDTs), such as CatBoost
+and XGBoost (Chen & Guestrin, 2016), have long dom-
+inated the tabular domain. However, growing efforts are
+focused on developing deep learning models for tabular data.
+Recent studies indicate a narrowing performance gap be-
+tween GBDTs and tabular deep learning models (Ye et al.,
+2024; Gorishniy et al., 2024).
+As tabular deep learning improves, cross-table transferabil-
+ity emerges as an important topic. Notable efforts in this
+direction include XTab (Zhu et al., 2023) and CARTE (Kim
+et al., 2024), which incorporate transferable components
+that are typically shareable backbone networks and dataset-
+specific components that require fine-tuning for each new
+task. The advent of tabular foundation models can bring
+new possibilities to cross-table learning, paving the way for
+large-scale pretraining and transfer learning across tables.
+2.3. Tabular Foundation Models
+TabPFN, short for Tabular Prior-Data Fitted Network, is
+a tabular foundation model. It is a transformer pretrained
+on extensive synthetic datasets to perform tabular classifi-
+cation tasks through ICL. TabPFN interprets ICL from a
+Bayesian perspective as an approximate posterior predic-
+tive distribution over synthetic datasets. Several variants
+aim to enhance its scalability, including distilling training
+data into a compact learned context via prompt tuning (Ma
+et al., 2024b; Feuer et al., 2024), selecting the most rele-
+vant subset of training data for each test sample (Xu et al.,
+2024; Thomas et al., 2024; Koshil et al., 2024), replacing
+quadratic with linear attention (Zeng et al., 2024), and gener-
+ating small task-specific neural networks via an ICL-based
+hypernetwork (M ¨uller et al., 2023). However, most vari-
+ants do not structurally improve TabPFN but instead act as
+prompt engineering to reduce in-context samples.
+Several TabPFN variants try to improve the quality of pre-
+training data, such as TabForestPFN (den Breejen et al.,
+2024) incorporating tree-based synthetic datasets and Tab-
+DPT (Ma et al., 2024a) using real-world datasets.
+TabPFNv2 largely improves TabPFN in terms of both predic-
+tion performance and scalability. Our new model, TabICL,
+achieves comparable performance to TabPFNv2 while being
+3
+
+=== PDF PAGE 4 ===
+TabICL: A Tabular Foundation Model for Large Data
+more scalable and computationally efficient. Appendix A
+provides a systematic comparison between TabPFNv2 and
+TabICL across architecture, pretraining, and scalability.
+3. The TabICL Architecture
+We consider a tabular classification task with an input space
+X ∈ Rm and a target space Y ∈ [1, · · · , C]. Given a train-
+ing dataset of input-output pairs Dtrain = {(x(i)
+train, y(i)
+train)}ntr
+i=1
+and test sample xtest, our goal is to predict the class proba-
+bilities p(·|xtest, Dtrain).
+3.1. High-level Structure: Embedding then ICL
+TabICL comprises two key modules: a tabular embedding
+module followed by an ICL module, with labels utilized
+exclusively in the ICL module. The tabular embedding mod-
+ule encodes table rows into dense vector representations
+while taking the inherent column-row structure into account.
+This module consists of two components: distribution-aware
+column-wise embedding, which captures statistical charac-
+teristics of individual columns, and context-aware row-wise
+interaction, which models dependencies between features.
+The ICL module subsequently processes both training and
+test embeddings through a transformer, enabling the predic-
+tion of the entire test set in a single forward pass through
+ICL. The overall architecture is depicted in Figure 1.
+3.2. Distribution-aware Column-wise Embedding
+The column-wise embedding (or feature embedding) maps
+each scalar cell in a column cj ∈ Rn into a d-dimensional
+embedding. Unlike typical approaches that assign a separate
+embedding module to each column (Gorishniy et al., 2022),
+we embed all columns through a shareable Set Transformer
+TFcol, as illustrated in Figure 2b and formulated as follows:
+W, B = TFcol(cj) ∈ Rn×d (1)
+ej = W ⊙ cj + B ∈ Rn×d (2)
+Note that each cell in a column is assigned its own weight
+and bias. Essentially, feature embedding can be framed as
+a set-input problem, where TFcol serves as a hypernetwork
+taking as input a permutation-invariant set of cell values and
+generating distribution-aware weights and biases W and B.
+The operations within TFcol unfold as follows:
+U = Lin(c) ∈ Rn×d (3)
+M = MAB1(VI , Utrain, Utrain) ∈ Rk×d (4)
+V = MAB2(U, M, M) ∈ Rn×d (5)
+W, B = Lin(V ) ∈ Rn×d (6)
+ISAB
+where Lin represents a linear layer, MAB denotes a multi-
+head attention block, and IASB stands for induced self-
+attention block (Figure 2a), introduced by (Lee et al., 2019).
+A column c (omitting the subscript j for simplicity) is pro-
+jected into a d-dimensional space ( d = 128 ) via a linear
+layer, processed by ISAB consisting of MAB1 and MAB2,
+and passed through linear layers to generate W and B.
+ISAB reduces self-attention complexity to O(n) while pre-
+serving the ability to capture global information through a
+two-stage attention mechanism. In MAB1, inducing vectors
+VI act as queries and attend to training samples Utrain to
+generate induced representations M. In MAB2, inputs U
+(including both training and test samples) serve as queries
+and attend back to M, enabling global information to prop-
+agate across all training samples. We use k = 128 inducing
+vectors, 4 attention heads in the MABs, and 3 ISAB blocks
+(only one ISAB block is shown in Equations (4) and (5) for
+clarity). Crucially, only train samples serve as keys and val-
+ues in MAB1. This ensures that the outputs of ISAB depend
+solely on training data, thereby preventing data leakage.
+To get insights into the information captured in the learned
+feature embeddings, we visualize M ∈ Rk×d (Equation (4))
+the output of the final ISAB block of TFcol. We summarize
+M by summing along the first dimension (i.e., aggregating
+the induced representations of all inducing vectors) to obtain
+a single vector per column, and then apply Principal Com-
+ponent Analysis. Figure 3 reveals that columns with similar
+skewness (resp. kurtosis) tend to cluster together, i.e., non-
+symmetric distributions are differentiated from symmetrical
+ones (Figure 3 left), and heavy-tailed distributions are dif-
+ferentiated from light-tailed ones. This suggests that TFcol
+encodes distributional properties in a structured manner,
+and cells in a column are probably embedded to reflect their
+statistical role (e.g., min, max, mean, mode). Therefore,
+the learned feature embeddings should distinguish features
+based on their unique distributional properties, effectively
+serving as feature identifiers. This contrasts with methods
+that rely on semantic column names (Kim et al., 2024) or
+learn feature identifier vectors (Kossen et al., 2021).
+3.3. Context-aware Row-wise Interaction
+After obtaining all feature embeddings E = [e1, · · · , em] ∈
+Rn×m×d, a 3-layer transformer with 8 attention heads, de-
+noted by TFrow, processes E for inter-feature interactions.
+To aggregate the embeddings into a single vector, four learn-
+able [CLS] tokens are prepended to each row ofE, and their
+final outputs are concatenated together. We use four tokens
+to provide richer representations with a total embedding
+size of 4 × d = 512 for subsequent ICL, while maintaining
+a lower embedding size ( d = 128 ) for TFcol and TFrow to
+reduce memory consumption.
+We experimentally observed that TFrow can suffer from a
+representation collapse issue. As mentioned earlier, features
+are identified by their distributional properties after column-
+wise embedding. Consequently, features originating from
+4
+
+=== PDF PAGE 5 ===
+TabICL: A Tabular Foundation Model for Large Data
+Inducingvectors
+Induced self-attention block (ISAB)
+Multi
+head
+attn
+Feed
+Forward
+block
+Multi-head attention block (MAB)
+Key
+Value
+Query
+(a) Efficient induced self-attention
+Column 
+ISAB
+Set Transformer  
+Lin
+Lin
+Lin (b) Column-wise inter-sample embedding
+Figure 2. The distribution-aware column-wise embedding block in TabICL.The overall structure (right) relies on the induced self-
+attention block (middle) that employs two multi-head attention blocks (left) to process incoming embeddings.
+−1 0 1
+skewness
+0 5
+kurtosis
+Figure 3. Learned column-wise embeddings encode statistical
+properties of feature distributions. Visualization of these em-
+beddings projected onto their first two principal components for
+40,000 features from synthetic datasets.
+similar distributions thus become less distinguishable. In
+the extreme case where all features are drawn from the same
+distribution, TFrow using the vanilla permutation-invariant
+self-attention cannot differentiate a sample from any of its
+column-permuted versions, leading to nearly identical repre-
+sentations for originally distinct samples, i.e., representation
+collapse. This phenomenon is exemplified by thebalance
+scale dataset (Siegler, 1976), as shown in Figure 4. In
+this dataset, all features follow the same discrete distribution
+with only 5 possible values, making collapse highly prob-
+able. After processing with TFrow, we observe that many
+samples collapse to the same representation (rightmost plot),
+despite being originally distinct (leftmost plot).
+A similar issue of representation collapse was reported in
+TabPFNv2. To mitigate this, Hollmann et al. (2025) in-
+troduced random feature identifier vectors for each feature
+and encoded groups of features collectively rather than in-
+dividually. In contrast, we employ a different strategy by
+incorporating rotary positional embedding (RoPE, Su et al.,
+2023) into TFrow to break the symmetry between identically
+distributed features. RoPE is widely adopted in recent LLMs
+(Dubey et al., 2024) and directly encodes relative positional
+information into the attention mechanism by rotating the
+query and key vectors. The rotation angle is determined
+by the position p in the sequence and the dimension index
+i, defined as θi = p/(base2i/d), where d is the embedding
+dimension and base is the frequency scaling factor. More
+1 2 3 4 5
+Feature 0
+1 2 3 4 5
+Feature 1
+1 2 3 4 5
+Feature 2
+1 2 3 4 5
+Feature 3
+X
+ RoPE
+ No RoPE
+Figure 4. An example of learning collapse without RoPE for the
+balance scale dataset. (Upper) The histograms show that
+the four features follow the same discrete distribution. ( Lower)
+The t-SNE visualization of the input features and learned row-
+wise embeddings H with and without RoPE demonstrates that
+RoPE can effectively alleviate representation collapse. The colors
+represent 3 classes.
+details can be found in Appendix D.
+While the use of RoPE breaks permutation invariance with
+respect to column order, it can effectively mitigate the rep-
+resentation collapse. For instance, on the balance scale
+dataset, RoPE preserves distinct representations across dif-
+ferent samples (Figure 4 middle). Following Xiong et al.
+(2023), we use a large scaling factor of 100,000 for RoPE to
+enhance generalization to a greater number of features than
+seen during training (up to 100). To approximately restore
+permutation invariance, TabICL adopts the same strategy as
+other TabPFN-like models by ensembling predictions over
+multiple column permutations.
+3.4. Dataset-wise In-Context Learning
+After converting all samples into embeddings H ∈ Rn×4d,
+training labels are mapped to the same space as H using
+one-hot encoding. The embeddings of X and y for the
+training set are added to create the final training embeddings
+Htrain. We then process Htrain and Htest using a 12-layer
+Transformer with 4 attention heads, denoted by TFicl. The
+5
+
+=== PDF PAGE 6 ===
+TabICL: A Tabular Foundation Model for Large Data
+embeddings in Htrain can attend to one another while those
+in Htest can only attend to Htrain. Finally, a two-layer MLP
+converts the outputs of Htest into class probabilities for the
+test samples.
+3.5. Computational Complexity Analysis
+To characterize the computational efficiency and scalability
+of TabICL, we analyze the time complexity of its three
+components for a table with n rows and m features:
+1. TF col processes each column independently using
+ISAB, resulting in complexity O(nkm), where k is
+the fixed number of inducing vectors.
+2. TF row applies self-attention over features and 4 [CLS]
+tokens per row, yielding complexity O(m2n). TFrow
+is efficient since m ≪ n in most tabular settings.
+3. TF icl operates on the compressed row embeddings via
+self-attention with complexity O(n2). While quadratic
+in n, its cost is incurred once since the feature dimen-
+sion is collapsed, ensuring practical efficiency.
+The overall complexity of TabICL is O(m2n + n2). In
+contrast, TabPFNv2 alternates column-wise and row-wise
+attentions without collapsing dimensions, resulting in com-
+plexity O(m2n+n2m). As a result, TabPFNv2 can become
+computationally expensive for large n and moderate m.
+4. Pretraining and Inference
+4.1. Improved Pretraining Synthetic Datasets
+TabICL is pre-trained exclusively on synthetic datasets. To
+ensure realistic dependencies among variables, we gener-
+ate these datasets using structural causal models (SCMs),
+following the approach proposed in TabPFN (v1). We first
+sample a directed acyclic graph (DAG) to define depen-
+dencies, following the structure of a fully connected MLP,
+where each neuron corresponds to a variable. Each feature
+c is then modeled as a function f of its parent variables
+Pa(c) in the graph, with added independent noise ϵ, i.e.,
+c = f (Pa(c)) + ϵ. Compared to previous work, we enrich
+the dataset generation in two ways: (i) we introduce tree-
+based SCMs to benefit from their inductive biases, and (ii)
+increase the diversity of modeling functions f.
+Tree-based generation Inspired by Grinsztajn (2024), we
+introduce tree-based SCMs to leverage their ability to model
+complex interactions and hierarchical dependencies between
+variables. We define f using an XGBoost regression model,
+as it is widely favored by practitioners and supports multi-
+output regression. At each layer of the graph, an XGBoost
+model is trained on fake targets drawn from Gaussian noise,
+taking the values of the parent variables as input. The ob-
+tained predictions then become the values of the child vari-
+ables. To balance data generation, we combine SCMs (70%)
+with tree-based SCMs (30%). Appendix C gives details and
+examples of generated data.
+Diversifying activation functions In TabPFN (v1),
+f is defined as a random affine mapping (a lin-
+ear layer) with an activation function chosen from
+[Identity, Tanh, Leaky ReLU, ELU]. We enrich this set
+with 15 additional activation functions to enhance the diver-
+sity of non-linear dependencies, introducing for example
+non-monotone or discontinuous functions. We also include
+random activation functions sampled from Gaussian pro-
+cesses with random kernels. Gaussian Process functions
+have been used for synthetic data generation for time series
+foundation models (Ansari et al., 2024), but not as activa-
+tion functions and with different types of kernels. Finally,
+we added an option to use different activation functions
+across layers and applied standardization followed by ran-
+dom rescaling before each activation function. Figure C.1
+visualizes the employed activation functions.
+4.2. Curriculum Learning for Large-scale Pretraining
+Similar to pretraining LLMs on shorter sentences before
+moving to longer ones, we gradually increase the size of
+synthetic datasets (i.e., the number of samples) while adjust-
+ing the micro batch size NB used for gradient accumulation
+to accommodate memory constraints. We employed a three-
+stage procedure:
+1. NB = 4 with a fixed size of 1,024 for 160K steps;
+2. NB = 1 with the size randomly drawn from a log-
+uniform distribution between 1K and 40K over 2K
+steps. Activation checkpointing is enabled for datasets
+exceeding 10K samples, and we accordingly reduce
+the number of features to avoid out-of-memory issues;
+3. NB = 1 with the size uniformly sampled between 40K
+and 60K for 50 steps, training onlyTFicl while freezing
+all other components.
+Each step consists of 512 datasets with the number of
+features ( ≤ 100) and classes ( ≤ 10) randomly sampled.
+FlashAttention and automatic mixed precision are applied
+globally. The pretraining took 20 days on three A100 GPUs
+with 40GB memory using PyTorch (16, 3, and 1 days for
+stage 1, 2, and 3, respectively). Appendix E.1 gives more
+pretraining details.
+4.3. Hierarchical Class-extension Strategy
+We tackle many-class classification problems (> 10 classes)
+through hierarchical classification (Silla & Freitas, 2011).
+Specifically, we recursively and evenly partition classes into
+subgroups of up to 10 classes, forming a multi-level classifi-
+cation tree. A classification problem with k classes requires
+6
+
+=== PDF PAGE 7 ===
+TabICL: A Tabular Foundation Model for Large Data
+a hierarchy with depth r = ⌈log10 k⌉. Each internal node
+in the tree predicts the probability of its child groups, and
+each leaf predicts the probability of the classes it contains.
+During inference, the final probability for a given class is
+obtained by multiplying the probabilities across all nodes
+situated on the unique root-to-leaf path leading to this class.
+See Appendix E.3 for more details.
+As noted earlier, labels are used exclusively in the final ICL
+block. Consequently, the hierarchical tree is constructed
+during dataset-wise ICL, with all sub-tasks sharing the same
+learned row embeddings H and the same TFicl for ICL pre-
+dictions. This kind of sharing greatly enhances the efficiency
+of TabICL in hierarchical classification scenarios.
+4.4. Memory-efficient Inference
+Using FlashAttention, which offers linear memory complex-
+ity with respect to sequence length, we observed that the
+peak activation memory can be effectively modeled by a
+polynomial regression during inference: α1 × batch size +
+α2 ×seq len+α3 ×batch size×seq len+α4. This enabled
+us to dynamically adjust the batch size based on sequence
+length and available GPU memory. The batch dimension
+serves different roles depending on the context: it repre-
+sents the number of columns for column-wise embedding,
+the sample size for row-wise interaction, and the number
+of datasets for dataset-wise ICL. Inspired by Rajbhandari
+et al. (2021), intermediate activations can be offloaded to
+CPU and disk as needed to further reduce memory consump-
+tion. These optimizations enable TabICL to handle datasets
+with 100K samples and 500 features using only 5 GB of
+GPU memory and 32 GB of RAM. This suffices for many
+real-world applications. See Appendix E.2 for details.
+5. Experiments
+5.1. Benchmark
+We evaluate TabICL on the TALENT benchmark introduced
+by Ye et al. (2025). It comprises 200 classification datasets
+(120 binary and 80 multiclass datasets) and comes with re-
+sults for over 30 baseline methods. To ensure a fair compari-
+son, we exclude 15 datasets that were used by TabPFNv2 for
+hyperparameter tuning and model selection (see Appendix F
+for more details). In what follows, we mainly focus on the
+171 datasets with at most 10 classes, since these can be
+handled natively by TabICL and TabPFNv2.
+Datasets are split into 64% training, 16% validation, and
+20% test data. While most models rely on the validation set
+for early stopping and hyperparameter tuning, TabICL and
+TabPFNv2 do not. Nonetheless, we opted to train TabICL
+and TabPFNv2 using the training data only, which places
+them at a disadvantage. On the flip side, both TabICL and
+TabPFNv2 leverage ensembles, unlike the other deep learn-
+ing models. In Appendix H, we show that increasing en-
+semble size improves performance for both TabPFNv2 and
+TabICL, with TabPFNv2 benefiting more from ensembling.
+A fair comparison would require training the other models
+as an ensemble as well. However, this is computationally
+expensive, was not part of the original benchmark, and is
+not implemented in these experiments.
+Both TabICL and TabPFNv2 average over 32 predictions ob-
+tained by randomly shuffling columns and classes and using
+different pre-processors. TabICL applies z-normalization
+with or without power transformation to all input features.
+See Hollmann et al. (2025) for details on TabPFNv2. To
+avoid out-of-memory issues, we subsample training sets to
+30K samples for TabPFNv2, while TabICL could predict on
+all datasets without subsampling. In addition, we disable au-
+tomatic mixed precision across all methods during inference
+to ensure reproducibility and consistent time measurements.
+5.2. Results
+TabICL obtains state-of-the-art accuracy. Figure 5
+shows accuracies relative to the tuned MLP for all models.
+TabICL obtains the best median relative accuracy across all
+datasets while being much faster than traditional state-of-
+the-art models: the geometric mean training+inference time
+per 1K samples for TabICL is 1.1 seconds, while tuning
+CatBoost on a CPU takes around 3 minutes, and RealMLP
+and ModernNCA on a GPU take around 7 minutes. Looking
+at the ranks of each method based on the obtained accura-
+cies, the critical difference diagram in Figure I.1 shows that
+TabICL and TabPFNv2 outperform competitors by a wide
+margin, while the difference between the two of them is not
+statistically significant.
+Speedup over TabPFNv2. Figure 6 shows that TabICL
+is 1.5× faster than TabPFNv2 on small datasets and 3-10×
+faster on large datasets. This is facilitated by the hybrid ar-
+chitecture of TabICL, using fewer of the expensive row-wise
+and column-wise attention layers with smaller embedding
+dimension before ICL on tokenized rows. On a dataset with
+10,000 samples and 100 features, TabICL takes roughly 20
+seconds versus 1 minute 40 seconds for TabPFNv2, while
+for a dataset of 1000 samples and 10 features, TabICL takes
+1 second compared to 2 seconds for TabPFNv2. The empir-
+ical speedup of TabICL over TabPFNv2 also corroborates
+the complexity analysis in Section 3.5. In Figure B.1, we
+fit simple scaling laws to predict the runtime of TabICL and
+TabPFNv2 based on the number of samples and features.
+These scaling laws show that the average speedup of TabICL
+remains around five-fold for large datasets.
+TabICL enables ICL for large datasets. While
+TabPFNv2 achieves excellent performance on datasets up to
+10K samples, it has only been pre-trained with up to 2048
+7
+
+=== PDF PAGE 8 ===
+TabICL: A Tabular Foundation Model for Large Data
+-10% -5% 0% 5% 10%
+Relative accuracy improvement over MLP (↑)
+TabICL
+TabPFNv2
+ModernNCA
+RealMLP
+LoCalPFN
+CatBoost
+TabR
+TabM
+LightGBM
+XGBoost
+FT-T
+ResNet
+TabPFN
+MLP-PLR
+TuneTables
+DCNv2
+AutoInt
+RForest
+ExcelF
+SNN
+TANGOS
+TabCaps
+PTaRL
+DANets
+NODE
+TabT
+LogReg
+GrowNet
+KNN
+SwitchT
+TabNet
+101 102 103
+Geom. mean train time [s] per 1K samples
+Figure 5. Accuracy and training/inference times on the TAL-
+ENT benchmark up to 10 classes. The red bar indicates the me-
+dian relative accuracy improvements over MLP across all datasets
+for each method. For TabICL and TabPFNv2, the time reported
+corresponds to training+inference on an A100 GPU. For the other
+models, it includes both training and hyperparameter tuning. Since
+Ye et al. (2025) track only the training time using the best hyper-
+parameters found after 100 tuning steps, we approximate the total
+training time by multiplying this value by 100. For TabPFN (v1),
+LoCalPFN, and TuneTables, we do not report the time since the
+original time measurement does not include the inference time.
+training samples and can fail on datasets above 30K sam-
+ples due to its memory usage. Figure 7 shows that unlike
+TabPFNv2, the performance of TabICL remains strong for
+larger datasets. While ICL is often used in few-shot settings,
+this demonstrates that foundation models can compete with
+the best deep learning or tree-based models, even in large-
+sample regimes where the latter have the most potential.
+Additional results in Appendix B demonstrate that TabICL
+also performs well for many classes, features, and high ra-
+tios of categorical features. To enhance the performance of
+TabPFNv2 on large datasets, Hollmann et al. (2025) pro-
+posed a random forest extension: during training, the data
+is partitioned using decision trees, and TabPFNv2 is fit-
+ted at each leaf to enable localized predictions at inference
+time. We found that this extension can significantly improve
+the performance of both TabPFNv2 and TabICL on large
+datasets (refer to Appendix G for more details).
+104 105 106
+Number of cells
+1×
+2×
+5×
+10×
+Speedup
+Figure 6. Speedup of TabICL vs. TabPFNv2 on datasets with
+less than 30K samples and at most 10 classes.
+103 104 105
+n samples
+0
+5
+10
+15
+20
+25
+30
+Rank
+ModernNCA
+CatBoost
+TabPFNv2
+TabICL
+Figure 7. Model rankings as a function of sample size. Each
+point is the rank of one method on one dataset. Lower rank is better.
+The lines show the bootstrap median and 10% / 90% bootstrap
+confidence intervals of a piecewise linear fit.
+TabICL produces reliable probabilities. In many prac-
+tical situations, the quality of the estimated probabilities
+is crucial for decision-making. Therefore, we also report
+the log loss (a.k.a. cross-entropy loss), which is a proper
+scoring rule and therefore rewards accurate prediction of
+probabilities (Gneiting & Raftery, 2007). Since TabICL
+does not leverage hyperparameter tuning, its predictions are
+not specifically optimized towards accuracy. The critical
+difference diagrams in Appendix I show that TabICL and
+TabPFNv2 significantly outperform accuracy-tuned com-
+petitors on the log loss, though the difference between the
+two is not significant, indicating that both produce more
+reliable probability estimates than the other models.
+TabICL remains effective with more than 10 classes.
+On datasets with more than 10 classes, we apply the hier-
+archical classification strategy from Section 4.3 to TabICL.
+Thanks to its use of label-independent row embeddings that
+can be shared between all sub-classifiers, TabICL scales
+efficiently to a large number of classes. Figure 8 shows that
+TabICL still achieves the second best result on these datasets
+in terms of mean normalized accuracy, while TabPFNv2
+cannot natively handle more than 10 classes.
+8
+
+=== PDF PAGE 9 ===
+TabICL: A Tabular Foundation Model for Large Data
+0.70
+0.75
+0.80
+0.85
+0.90
+0.95
+Normalized Accuracy
+RealMLP
+TabICL
+TabR
+ResNet
+ModernNCA
+MLP-PLR
+FT-T
+MLP
+XGBoost
+CatBoost
+Figure 8. Normalized accuracy across the 12 datasets with more
+than 10 classes. Colors identify tree-based models (green), deep
+learning models (pink), retrieval models (gray), transformers (or-
+ange), and in-context models (blue).
+Accuracy
+-2%
+-1%
+0%
+1%
+2%
+3%
+Rel. Improvements over No Tree
+AUC
+-1%
+0%
+1%
+2%
+Log Loss
+-4%
+-2%
+0%
+2%
+4%
+6%
+8%
+10%
+Figure 9. Relative improvements of TabICL pretrained on
+prior datasets with versus without tree-based SCMs across
+200 datasets. Green triangles denote the mean relative improve-
+ments. To mitigate computational overhead, we pretrained TabICL
+for 20K steps following the stage 1 setup of curriculum learning.
+5.3. Ablation Studies
+Tree-based SCMs prove beneficial. Incorporating the
+inductive biases of tree-based models during pretraining
+improve the performance of TabICL, as shown in Figure 9.
+Curriculum learning effectively improves the perfor-
+mance of TabICL on large datasets. Across the three
+stages of curriculum learning, the average rank of TabICL
+improves from 11.4 (ninth place), to 7.46 (second), and fi-
+nally to 6.95 (first), as shown in Figure E.2. These results
+show the effectiveness of curriculum learning. However,
+we also observe a slight performance drop on some small
+datasets during curriculum learning, as shown in Figure 10.
+6. Conclusion
+We introduce TabICL, a novel tabular foundation model
+that extends the scalability of existing tabular foundation
+models by an order of magnitude. Evaluated on datasets
+with up to 100K training samples, it delivers excellent per-
+formance without hyperparameter tuning, making it nearly
+Stage 1
+-2%
+0%
+2%
+4%
+6%
+8%
+10%
+Rel. Improvements over Stage 1
+Stage 2
+ Stage 3
+103
+104
+105
+# of samples
+Figure 10. Relative accuracy improvements over Stage 1 across
+200 classification datasets. Green triangles denote the mean
+relative improvements.
+two orders of magnitude faster than other tabular methods
+requiring hyper-parameter tuning. TabICL achieves this
+through a hybrid architecture and memory-saving optimiza-
+tions. Compared to the newly released and leading tabular
+foundation model TabPFNv2, TabICL achieves comparable
+performance while being more scalable and faster.
+Limitations (1) Like other foundation models, TabICL
+suffers from slow inference speed, though TabPFNv2 has
+shown caching can alleviate this. Currently, TabICL is lim-
+ited to classification, but regression can be treated with
+similar methodology, as Hollmann et al. (2025) showed. (2)
+A defining characteristic of tabular data is that columns do
+not have a natural ordering. Ideally, tabular methods should
+be invariant to column permutations. However, TabICL
+violates this invariance due to the use of RoPE. (3) Our
+evaluation inherits the strengths and weaknesses of the TAL-
+ENT benchmark. Notably, TALENT trains single models
+tuned using the holdout method, while ensembling models
+evaluated using cross-validation can improve performance.
+Bagging increases computational cost, whereas TabICL can
+simply be trained on the full data without needing a val-
+idation set. (4) TALENT employs mean imputation for
+handling missing values. However, it might be better to
+allow TabPFNv2 to handle missing values internally despite
+the low proportion of missing values in TALENT. (5) We did
+not provide categorical information to TabPFNv2. Though
+TabPFNv2 infers categorical features internally, providing
+this information explicitly could enhance its performance.
+Outlook In-context learning for tabular data was origi-
+nally introduced as a speedup for small tables (Hollmann
+et al., 2022). As the expressive power of a forward pass in
+a transformer may seem limited, one might wonder if in-
+context learning loses its edge given sufficient data. We find
+that even with large data, pre-training induces implicit priors
+that give in-context transformers a competitive advantage.
+9
+
+=== PDF PAGE 10 ===
+TabICL: A Tabular Foundation Model for Large Data
+Acknowledgements
+We thank Lennart Purucker and Samuel M¨uller for interest-
+ing discussions. We are also grateful to Si-Yang Liu and
+Han-Jia Ye, the authors of the TALENT benchmark, for
+providing information and clarifying our questions. Finally,
+we thank the anonymous ICML reviewers for their valuable
+feedback and suggestions.
+Impact Statement
+This paper presents work whose goal is to advance the field
+of Machine Learning. There are many potential societal
+consequences of our work, none which we feel must be
+specifically highlighted here.
+References
+Ansari, A. F., Stella, L., Turkmen, C., Zhang, X., Mercado,
+P., Shen, H., Shchur, O., Rangapuram, S. S., Arango, S. P.,
+Kapoor, S., et al. Chronos: Learning the language of time
+series. arXiv preprint arXiv:2403.07815, 2024.
+Barbero, F., Vitvitskyi, A., Perivolaropoulos, C., Pascanu,
+R., and Veliˇckovi´c, P. Round and Round We Go! What
+makes Rotary Positional Encodings useful?, October
+2024.
+Bordt, S., Nori, H., and Caruana, R. Elephants never forget:
+Testing language models for memorization of tabular data.
+arXiv preprint arXiv:2403.06644, 2024.
+Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan,
+J., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G.,
+Askell, A., Agarwal, S., Herbert-V oss, A., Krueger, G.,
+Henighan, T., Child, R., Ramesh, A., Ziegler, D. M., Wu,
+J., Winter, C., Hesse, C., Chen, M., Sigler, E., Litwin, M.,
+Gray, S., Chess, B., Clark, J., Berner, C., McCandlish,
+S., Radford, A., Sutskever, I., and Amodei, D. Language
+Models are Few-Shot Learners, July 2020.
+Cartella, F., Anunciacao, O., Funabiki, Y ., Yamaguchi, D.,
+Akishita, T., and Elshocht, O. Adversarial Attacks for
+Tabular Data: Application to Fraud Detection and Imbal-
+anced Data, January 2021.
+Chen, T. and Guestrin, C. XGBoost: A Scalable Tree
+Boosting System. In Proceedings of the 22nd ACM
+SIGKDD International Conference on Knowledge Dis-
+covery and Data Mining, pp. 785–794, August 2016. doi:
+10.1145/2939672.2939785.
+Da Costa, N., Pf ¨ortner, M., Da Costa, L., and Hennig, P.
+Sample path regularity of gaussian processes from the co-
+variance kernel. arXiv preprint arXiv:2312.14886, 2023.
+den Breejen, F., Bae, S., Cha, S., and Yun, S.-Y . Why
+In-Context Learning Transformers are Tabular Data Clas-
+sifiers, May 2024.
+Dorogush, A. V ., Ershov, V ., and Gulin, A. CatBoost: Gra-
+dient boosting with categorical features support, October
+2018.
+Dubey, A., Jauhri, A., Pandey, A., Kadian, A., Al-Dahle,
+A., Letman, A., Mathur, A., Schelten, A., Yang, A., Fan,
+A., et al. The llama 3 herd of models. arXiv preprint
+arXiv:2407.21783, 2024.
+Fang, X., Xu, W., Tan, F. A., Zhang, J., Hu, Z., Qi, Y ., Nick-
+leach, S., Socolinsky, D., Sengamedu, S., and Faloutsos,
+C. Large language models(llms) on tabular data: Predic-
+tion, generation, and understanding – a survey, 2024.
+Feuer, B., Schirrmeister, R. T., Cherepanova, V ., Hegde,
+C., Hutter, F., Goldblum, M., Cohen, N., and White, C.
+TuneTables: Context Optimization for Scalable Prior-
+Data Fitted Networks. arXiv preprint arXiv:2402.11137,
+2024.
+Gardner, J., Perdomo, J. C., and Schmidt, L. Large Scale
+Transfer Learning for Tabular Data via Language Model-
+ing, June 2024.
+Garg, S., Tsipras, D., Liang, P., and Valiant, G. What Can
+Transformers Learn In-Context? A Case Study of Simple
+Function Classes, August 2023.
+Gneiting, T. and Raftery, A. E. Strictly proper scoring
+rules, prediction, and estimation. Journal of the American
+Statistical Association, 102(477):359–378, 2007.
+Gorishniy, Y ., Rubachev, I., and Babenko, A. On embed-
+dings for numerical features in tabular deep learning. Ad-
+vances in Neural Information Processing Systems , 35:
+24991–25004, 2022.
+Gorishniy, Y ., Kotelnikov, A., and Babenko, A. TabM: Ad-
+vancing Tabular Deep Learning with Parameter-Efficient
+Ensembling, November 2024.
+Grinsztajn, L. R´econcilier l’apprentissage profond avec les
+donn´ees tabulaires. PhD thesis, Universit´e Paris-Saclay,
+2024.
+Grinsztajn, L., Oyallon, E., and Varoquaux, G. Why do tree-
+based models still outperform deep learning on tabular
+data?, July 2022.
+Hegselmann, S., Buendia, A., Lang, H., Agrawal, M., Jiang,
+X., and Sontag, D. Tabllm: Few-shot classification of
+tabular data with large language models. In International
+Conference on Artificial Intelligence and Statistics , pp.
+5549–5581. PMLR, 2023.
+10
+
+=== PDF PAGE 11 ===
+TabICL: A Tabular Foundation Model for Large Data
+Hendrycks, D. and Gimpel, K. Gaussian error linear units
+(gelus). arXiv preprint arXiv:1606.08415, 2016.
+Hollmann, N., M ¨uller, S., Eggensperger, K., and Hut-
+ter, F. Tabpfn: A transformer that solves small tabu-
+lar classification problems in a second. arXiv preprint
+arXiv:2207.01848, 2022.
+Hollmann, N., M¨uller, S., Purucker, L., Krishnakumar, A.,
+K¨orfer, M., Hoo, S. B., Schirrmeister, R. T., and Hutter,
+F. Accurate predictions on small data with a tabular foun-
+dation model. Nature, 637(8045):319–326, January 2025.
+ISSN 1476-4687. doi: 10.1038/s41586-024-08328-6.
+Johnson, A. E. W., Pollard, T. J., Shen, L., Lehman, L.-
+w. H., Feng, M., Ghassemi, M., Moody, B., Szolovits, P.,
+Anthony Celi, L., and Mark, R. G. MIMIC-III, a freely
+accessible critical care database. Scientific Data, 3(1):
+160035, May 2016. ISSN 2052-4463. doi: 10.1038/sdata.
+2016.35.
+Kim, M. J., Grinsztajn, L., and Varoquaux, G. CARTE:
+Pretraining and Transfer for Tabular Learning, May 2024.
+Kingma, D. P. and Ba, J. Adam: A method for stochastic
+optimization. arXiv preprint arXiv:1412.6980, 2014.
+Klambauer, G., Unterthiner, T., Mayr, A., and Hochreiter,
+S. Self-normalizing neural networks. Neural Information
+Processing Systems, 30, 2017.
+Koshil, M., Nagler, T., Feurer, M., and Eggensperger, K.
+Towards Localization via Data Embedding for TabPFN.
+2024.
+Kossen, J., Band, N., Lyle, C., Gomez, A. N., Rainforth,
+T., and Gal, Y . Self-attention between datapoints: Going
+beyond individual input-output pairs in deep learning.
+Advances in Neural Information Processing Systems, 34:
+28742–28756, 2021.
+Krizhevsky, A. Convolutional deep belief networks on cifar-
+10.
+Lee, J., Lee, Y ., Kim, J., Kosiorek, A. R., Choi, S., and Teh,
+Y . W. Set Transformer: A Framework for Attention-based
+Permutation-Invariant Neural Networks, May 2019.
+Ma, J., Thomas, V ., Hosseinzadeh, R., Kamkari, H., Labach,
+A., Cresswell, J. C., Golestan, K., Yu, G., V olkovs, M.,
+and Caterini, A. L. TabDPT: Scaling Tabular Foundation
+Models, October 2024a.
+Ma, J., Thomas, V ., Yu, G., and Caterini, A. In-
+Context Data Distillation with TabPFN. arXiv preprint
+arXiv:2402.06971, 2024b.
+Mikolov, T., Chen, K., Corrado, G., and Dean, J. Efficient
+Estimation of Word Representations in Vector Space,
+September 2013.
+M¨uller, A., Curino, C., and Ramakrishnan, R. MotherNet:
+A Foundational Hypernetwork for Tabular Classification,
+December 2023.
+M¨uller, S., Hollmann, N., Arango, S. P., Grabocka, J., and
+Hutter, F. Transformers Can Do Bayesian Inference,
+August 2024.
+Rahimi, A. and Recht, B. Random features for large-scale
+kernel machines. Neural Information Processing Systems,
+20, 2007.
+Rajbhandari, S., Ruwase, O., Rasley, J., Smith, S., and He,
+Y . ZeRO-Infinity: Breaking the GPU Memory Wall for
+Extreme Scale Deep Learning, April 2021.
+Rubachev, I., Kartashev, N., Gorishniy, Y ., and Babenko,
+A. Tabred: Analyzing pitfalls and filling the gaps
+in tabular deep learning benchmarks. arXiv preprint
+arXiv:2406.19380, 2024.
+Siegler, R. Balance Scale. UCI Machine Learning Reposi-
+tory, 1976. DOI: https://doi.org/10.24432/C5488X.
+Silla, C. N. and Freitas, A. A. A survey of hierarchi-
+cal classification across different application domains.
+Data Mining and Knowledge Discovery , 22(1):31–72,
+January 2011. ISSN 1573-756X. doi: 10.1007/
+s10618-010-0175-9.
+Su, J., Lu, Y ., Pan, S., Murtadha, A., Wen, B., and Liu, Y .
+RoFormer: Enhanced Transformer with Rotary Position
+Embedding, November 2023.
+Thawani, A., Pujara, J., Szekely, P. A., and Ilievski, F. Repre-
+senting Numbers in NLP: A Survey and a Vision, March
+2021.
+Thomas, V ., Ma, J., Hosseinzadeh, R., Golestan, K., Yu, G.,
+V olkovs, M., and Caterini, A. Retrieval & Fine-Tuning
+for In-Context Tabular Models, June 2024.
+van Breugel, B. and van der Schaar, M. Why Tabular Foun-
+dation Models Should Be a Research Priority, June 2024.
+von Oswald, J., Niklasson, E., Randazzo, E., Sacramento,
+J., Mordvintsev, A., Zhmoginov, A., and Vladymyrov, M.
+Transformers learn in-context by gradient descent, May
+2023.
+Xie, S. M., Raghunathan, A., Liang, P., and Ma, T. An
+Explanation of In-context Learning as Implicit Bayesian
+Inference, July 2022.
+11
+
+=== PDF PAGE 12 ===
+TabICL: A Tabular Foundation Model for Large Data
+Xiong, W., Liu, J., Molybog, I., Zhang, H., Bhargava, P.,
+Hou, R., Martin, L., Rungta, R., Sankararaman, K. A.,
+Oguz, B., Khabsa, M., Fang, H., Mehdad, Y ., Narang, S.,
+Malik, K., Fan, A., Bhosale, S., Edunov, S., Lewis, M.,
+Wang, S., and Ma, H. Effective Long-Context Scaling of
+Foundation Models, November 2023.
+Xu, D., Cirit, O., Asadi, R., Sun, Y ., and Wang, W. Mixture
+of In-Context Prompters for Tabular PFNs, May 2024.
+Ye, H.-J., Yin, H.-H., and Zhan, D.-C. Modern Neighbor-
+hood Components Analysis: A Deep Tabular Baseline
+Two Decades Later, July 2024.
+Ye, H.-J., Liu, S.-Y ., Cai, H.-R., Zhou, Q.-L., and Zhan, D.-
+C. A Closer Look at Deep Learning Methods on Tabular
+Datasets, January 2025.
+Zeng, Y ., Kang, W., and Mueller, A. C. Tabflex: Scaling tab-
+ular learning to millions with linear attention. In NeurIPS
+2024 Third Table Representation Learning Workshop ,
+2024.
+Zhou, C., Li, Q., Li, C., Yu, J., Liu, Y ., Wang, G., Zhang,
+K., Ji, C., Yan, Q., He, L., Peng, H., Li, J., Wu, J., Liu,
+Z., Xie, P., Xiong, C., Pei, J., Yu, P. S., and Sun, L. A
+comprehensive survey on pretrained foundation models:
+A history from BERT to ChatGPT. International Journal
+of Machine Learning and Cybernetics, November 2024.
+ISSN 1868-808X. doi: 10.1007/s13042-024-02443-6.
+Zhu, B., Shi, X., Erickson, N., Li, M., Karypis, G., and
+Shoaran, M. XTab: Cross-table Pretraining for Tabular
+Transformers, May 2023.
+12
+
+=== PDF PAGE 13 ===
+TabICL: A Tabular Foundation Model for Large Data
+A. Systematic Comparison between TabICL and TabPFNv2
+This appendix provides a systematic comparison between TabICL and TabPFNv2, two tabular foundation models that
+leverage In-Context Learning (ICL) to make predictions. Both models are pretrained on synthetic datasets and aim to deliver
+strong performance on unseen real-world tabular datasets.
+A.1. Architecture
+Core mechanism. (1) TabICL employs a two-stage architecture, where the first stage uses a column-then-row attention
+mechanism to build fixed-dimensional embeddings and effectively collapses the column dimension to reduce computational
+complexity for the subsequent ICL stage. (2) TabPFNv2 utilizes a two-way attention mechanism that alternates between
+column-wise and row-wise attentions. These attentions operate on the input table across original dimensions without any
+intermediate collapse.
+Representation collapse. When features have similar distributions, both TabICL and TabPFNv2 may suffer from the
+representation collapse issue. (1) To alleviate this problem, TabICL incorporates Rotary Positional Embedding (RoPE) into
+the transformer used in row-wise interaction. RoPE helps break the symmetry between identically distributed features by
+encoding relative positional information. (2) TabPFNv2 addresses this by introducing random feature identifier vectors for
+each feature. It also encodes groups of features collectively rather than individually.
+Label fusion. TabICL and TabPFNv2 differ significantly in when they incorporate label information. (1) TabICL employs
+a late fusion strategy. TabICL processes input features independently of their labels during row-wise embedding and
+column-wise interaction. Labels are utilized exclusively in the final ICL stage. (2) TabPFNv2 employs an early fusion
+strategy for label information. TabPFNv2 directly concatenates the input features with the labels of the training samples,
+processing them together from the very beginning and throughout its layers.
+A.2. Pretraining
+Prior generation. Both TabICL and TabPFNv2 are pretrained exclusively on synthetic prior datasets. (1) TabICL builds
+on the previous prior generation of TabPFN (v1), which relies on Structural Causal Models (SCMs). TabICL introduces two
+more extensions: broader nonlinear modeling capabilities of SCMs and the integration of tree-based SCMs to incorporate
+the inductive biases of tree-based models. (2) TabPFNv2 constructs diverse Directed Acyclic Graphs (DAGs) through a
+sophisticated procedure (i.e., growing networks with redirection sampling method) and incorporates various computational
+mappings at graph edges, including small neural networks, categorical feature discretization, and decision trees. However,
+the code for its prior generation is not open-source.
+Dataset size. (1) TabICL was pretrained using curriculum learning that progressively scales the number of samples from
+1,024 to 60K. The number of features was sampled uniformly up to 100, and the number of classes was sampled uniformly
+up to 10. (2) TabPFNv2 was pretrained on synthetic datasets containing up to 2,048 training samples (uniformly sampled).
+The number of features was drawn from a beta distribution and then linearly scaled to the range from 1 to 160, while the
+number of classes was also uniformly sampled up to 10.
+Pretraining scale. (1) TabICL was pretrained over approximately 82 million synthetic datasets. (2) TabPFNv2 was trained
+on a larger corpus, comprising approximately 130 million synthetic datasets.
+A.3. Scalability and Efficiency
+Dataset size handling. (1) At inference, TabICL is capable of handling tables with 100K samples and 500 features within
+5GB of GPU memory, and can deal with any number of classes using hierarchical class-extension strategy. (2) TabPFNv2
+excels on tables with up to 10K samples and 500 features, and can only deal with up to 10 classes.
+Computational complexity. Given a table with n rows and m columns, the time complexity of TabICL is O(m2n + n2),
+while the time complexity of TabPFNv2 is O(m2n + n2m). Our extensive experiments demonstrate that TabICL is
+systematically faster than TabPFNv2.
+13
+
+=== PDF PAGE 14 ===
+TabICL: A Tabular Foundation Model for Large Data
+B. Further Experiments
+Predicting the runtime of TabICL and TabPFNv2. To obtain rough predictions of the time for a forward pass (training
+and inference) in TabICL and TabPFNv2, we leverage the runtime complexity of the column- and row-wise attention
+modules. As discussed in Section 3.5, for a table with n rows and m columns, the runtime complexity is O(n2m + nm2) =
+O(nm(n + m)) for TabPFNv2, while it is O(n2 + nm2) for TabICL. For simplicity, we use the term nm(n + m) from the
+complexity of TabPFNv2, plot this quantity on the x-axis of Figure B.1, and fit models of the form
+time = α + β(nm(n + m))γ
+with MSLE loss, that is, a MSE loss between the log-transformed time and the log-transformed prediction. To facilitate
+a simpler comparison, we fix γ := 0 .8 for both models since it yields a good fit. We suspect that γ = 1 should be used
+asymptotically for TabPFNv2, but then more additional terms would be needed to obtain a good fit. In this model, the
+speedup of TabICL over TabPFNv2 for large datasets approaches5, while it is 1.4 for small datasets.
+107 108 109 1010 1011
+#cells · (#rows + #columns)
+101
+102
+103
+Fit+predict time [s]
+1.5x
+5.0x
+TabPFNv2: y = 2 .65 + 10 −7 · 10.76x0.8
+TabICL: y = 1 .87 + 10 −7 · 2.12x0.8
+Figure B.1. Training+inference times of TabICL and TabPFNv2.Each point represents the time on one dataset on an A100 GPU. We
+only use datasets with less than 30,000 samples because TabPFNv2 is applied with subsampling on larger datasets to avoid RAM overflow.
+Metafeatures. We analyze the dependence of the ranks of TabICL, TabPFNv2, CatBoost, and ModernNCA based on
+different dataset metafeatures. To this end, we fit piecewise linear regression models with pre-defined nodes to predict the
+ranks of these models depending on a single metafeature.
+Figure B.2 shows the scaling with the number of classes. The performance of TabICL deteriorates on datasets with three
+classes but not on datasets with more classes. It is unclear if this is really due to the number of classes or caused by a
+different characteristic present in the three-class datasets on the benchmark.
+Figure B.3 shows the scaling with the number of features. These plots show that TabICL behaves well for large numbers of
+features even though it tokenizes entire rows in the middle of the network before seeing any labels.
+Figure B.4 shows the dependence on the ratio of categorical to numerical variables. In general, the performance of TabICL
+and TabPFNv2 deteriorates somewhat in the presence of many categorical variables. However, it is notable that TabICL
+performs slightly better than TabPFNv2 on such datasets even though TabPFNv2 has a more sophisticated categorical feature
+generation in its prior.
+C. Synthetic Datasets for Pretraining
+C.1. SCM prior with more activation functions
+In the TabPFN prior, we replace the activation layers by the following sequence of layers:
+• A standardization layer that standardizes each feature across the batch (samples) dimension
+• A random rescaling layer that, for each neuron i, computes xi ← exp(2a)(xi + b), with a, b ∼ N (0, 1) sampled once
+per layer.
+14
+
+=== PDF PAGE 15 ===
+TabICL: A Tabular Foundation Model for Large Data
+2 3 4 5 6 7 8 9 10
+n classes
+0
+5
+10
+15
+20
+25
+30
+Rank
+ModernNCA
+CatBoost
+TabPFNv2
+TabICL
+Figure B.2. Dependency of the benchmark rank on the number of classes. Each point is the rank of one method on one dataset. Lower
+rank is better. The lines show the bootstrap median and 10% / 90% bootstrap confidence intervals of a piecewise linear fit.
+101 102
+n features
+0
+5
+10
+15
+20
+25
+30
+Rank
+ModernNCA
+CatBoost
+TabPFNv2
+TabICL
+Figure B.3. Dependency of the benchmark rank on the number of features. Each point is the rank of one method on one dataset.
+Lower rank is better. The lines show the bootstrap median and 10% / 90% bootstrap confidence intervals of a piecewise linear fit.
+• A random activation function. With probability 1/2, each layer uses the same type of activation function, otherwise
+each layer samples the type of activation function independently.
+On top of the original activation functions {Identity, tanh, LeakyReLU, ELU}, we add the following activation functions:
+• ReLU
+• ReLU6 (Krizhevsky)
+• SELU (Klambauer et al., 2017)
+• SiLU (Hendrycks & Gimpel, 2016)
+• Softplus
+• Hardtanh(x) = max( −1, min(1, x))
+• Signum function
+• Sine
+• RBF(x) = exp( −x2)
+• Exponential function
+15
+
+=== PDF PAGE 16 ===
+TabICL: A Tabular Foundation Model for Large Data
+0.0 0.2 0.4 0.6 0.8 1.0
+cat ratio
+0
+5
+10
+15
+20
+25
+30
+Rank
+ModernNCA
+CatBoost
+TabPFNv2
+TabICL
+Figure B.4. Dependency of the benchmark rank on the ratio of categorical to overall features. Each point is the rank of one method
+on one dataset. Lower rank is better. The lines show the bootstrap median and 10% / 90% bootstrap confidence intervals of a piecewise
+linear fit.
+• f (x) =
+p
+|x|
+• f (x) = 1 |x|≤1
+• f (x) = x2
+• f (x) = |x|
+• A random function f (x) = ϕ(x)⊤z, where z ∼ N (0, 1) and the feature map ϕ is defined randomly as
+ϕ(x) := w
+∥w∥2
+⊙ sin(ax + b) ∈ RN ,
+N := 256,
+bi ∼ U [0, 2π],
+ai ∼ U [0, N],
+wi := a− exp(u)
+i ,
+u ∼ U [0.7, 3.0] .
+Here, all random parameters are drawn once per layer, and ⊙ is an element-wise product. This is motivated by the
+fact that for fixed feature map ϕ, the random function f (x) = ϕ(x)⊤z is a Gaussian process with covariance kernel
+k(x, x′) = ϕ(x)⊤ϕ(x′). The design of ϕ is inspired by random Fourier features (Rahimi & Recht, 2007). The randomly
+drawn exponent − exp(u) leads to different decays of coefficients with increasing frequency, which produces different
+levels of smoothness for the sampled function as shown in Figure C.1 (right) (Da Costa et al., 2023). This activation
+function applies standardization directly before the random function, such that the random rescaling has no effect.
+Here, the random function is sampled with a probability ten times higher than the other activation functions to account for
+the fact that it can represent many different functions.
+Figure C.1 visualizes the used activation functions. Figure C.2 shows datasets from the resulting prior.
+C.2. Tree-based SCM prior
+The tree-based SCM prior replaces the linear and activation layers in the SCM prior by XGBoost models fitted on random
+data. More specifically, these models are generated as follows:
+• Sample n estimators and max depth independently as min{4, 1 + Exponential( λ = 0 .5)} and min{4, 2 +
+Exponential(λ = 0.5)}, respectively.
+16
+
+=== PDF PAGE 17 ===
+TabICL: A Tabular Foundation Model for Large Data
+□3 □2 □1 0 1 2 3
+□1.00
+□0.75
+□0.50
+□0.25
+0.00
+0.25
+0.50
+0.75
+1.00
+□3 □2 □1 0 1 2 3
+□1.00
+□0.75
+□0.50
+□0.25
+0.00
+0.25
+0.50
+0.75
+1.00
+Figure C.1. Activation functions from the SCM prior. Left: Non-random activation functions from the SCM prior without standard-
+ization and random rescaling. Activation functions are randomly flipped along the x- and/or y-axis to fully utilize the space in the plot.
+Right: Random instantiations of the random activation function from the SCM prior, including the automatic standardization of the inputs.
+Figure C.2. Randomly generated 2D datasets from the SCM prior. The color corresponds to the class label.
+17
+
+=== PDF PAGE 18 ===
+TabICL: A Tabular Foundation Model for Large Data
+Figure C.3. Randomly generated 2D datasets from the tree-based SCM prior. The color corresponds to the class label.
+• For each layer with n input and m output neurons, fit an XGBoost multi-output regressor with the parameters above on
+the layer inputs xi with standard normal targets yi ∈ Rm, then use the fitted model to predict on the given inputs.
+Figure C.3 shows datasets from the tree SCM prior.
+D. Rotary Positional Embedding
+Rotary Positional Encoding (RoPE) is a technique used in Transformer models to represent positional information in the
+input data. RoPE encodes positional information directly into the attention mechanism through a rotation matrix applied to
+the query and key vectors in self-attention. Given a position p, a frequency ω, and a vector x (query or key vector):
+xp = RoPE(x, p) = R(p)x
+where R(p) is a rotation matrix applied to the vector x, encoding positional information using sinusoidal functions. The
+rotation matrix R(p) is based on a sinusoidal function and applies rotations independently to 2-dimensional subspaces of x.
+18
+
+=== PDF PAGE 19 ===
+TabICL: A Tabular Foundation Model for Large Data
+For each 2D pair of vector components (x2i, x2i+1), the rotation is defined as:
+R(p)
+ x2i
+x2i+1
+
+:=
+cos(θi) − sin(θi)
+sin(θi) cos( θi)
+ x2i
+x2i+1
+
+,
+θi := p
+1000002i/d
+where d is the dimensionality of the embedding and ωi = 10000 2i/d determines the frequency for each dimension. The
+above equation indicates that for each dimension pair (2i, 2i + 1), the vector is rotated by an angle proportional to the
+position p and the frequency ωi. RoPE directly modifies the query Q and key K vectors in the self-attention mechanism:
+Attention(Q, K, V ) = softmax
+ (R(pQ)Q) · (R(pK)K)T
+√
+d
+
+V .
+Because relative positional information is preserved in the inner product, the attention scores naturally encode the relative
+distance between positions pQ and pK.
+Barbero et al. (2024) provides an alternative perspective on RoPE that aligns well with its use in our work. At lower indices
+i, the rotation angle changes more rapidly with increasing p, resulting in high-frequency oscillations that resemble random
+noise and encode positional information. Conversely, at higher indices i, the rotation angle changes more slowly with
+increasing p, producing stable values that carry semantic information. In our case, RoPE effectively introduces noise to each
+feature as its identifier in a controlled, predictable, and generalizable manner.
+RoPE is also claimed to exhibit long-term decay, where tokens become less correlated as their relative distance increases.
+However, this claim is questioned by Barbero et al. (2024), as it relies on an unrealistic oversimplification that queries and
+keys are equal.
+E. Setup of TabICL
+E.1. Pretraining details
+As outlined in the main paper, we employ curriculum learning to progressively increase the size of synthetic datasets (i.e.,
+the number of samples) during pretraining. This process unfolds in three stages by adjusting the micro-batch size used for
+gradient accumulation:
+1. NB = 4 with a fixed size of 1,024 the first 160K steps.
+2. NB = 1 with the size randomly drawn from a log-uniform distribution between 1K and 40K over 2K steps. Activation
+checkpointing is enabled for datasets exceeding 10K samples, and we accordingly reduce the number of features to
+avoid out-of-memory issues.
+3. NB = 1 with the size uniformly sampled between 40K and 60K for 50 steps, training only TFicl while all other
+components remain frozen.
+Each step comprises 512 datasets. In the first stage, all datasets contain an equal number of samples. In the second and
+third stages, datasets in each micro-batch have the same number of samples, but the number of samples varies between
+different micro-batches. We use Adam (Kingma & Ba, 2014) and clip the gradient norm to 1. The learning rate schedules
+for pretraining are shown in Figure E.1, including:
+• Cosine decay with restarts for stage 1
+• Polynomial decay for stage 2 and the learning rate is given by(lrinit − lrend) (1 − step/T )2 + lrend, where lrinit = 2e-5,
+lrend = 5e-6, and the number of steps T is 2,000.
+• Constant learning rate for stage 3
+In addition, Figure E.2 shows critical difference diagrams across the three stages of curriculum learning. We observe that
+average rank of TabICL improves consistently from 11.4 (ninth place), to 7.46 (second), and finally to 6.95 (first). This
+provides strong empirical evidence for the effectiveness of curriculum learning.
+19
+
+=== PDF PAGE 20 ===
+TabICL: A Tabular Foundation Model for Large Data
+0 50K 100K 160K
+Step
+0.0
+0.5
+1.0
+Learning rate
+×10 4
+(a) Cosine decay with restarts for stage 1
+0 500 1000 1500 2000
+Step
+0.5
+1.0
+1.5
+2.0
+Learning rate
+×10 5
+ (b) Polynomial decay for stage 2
+0 10 20 30 40 50
+Step
+2Learning rate
+×10 6
+ (c) Constant learning rate for stage 3
+Figure E.1. Learning rate schedules for 3 pretraining stages.
+E.2. Memory-efficient inference
+By employing FlashAttention, we have observed that the inference peak GPU memory consumption of the three trans-
+formers of TabICL for column-wise embedding TFcol, row-wise interaction TFrow, and dataset-wise ICL TFicl can be well
+approximated through the following polynomial regression:
+MEM = α1 × batch size + α2 × seq len + α3 × batch size × seq len + α4
+It is important to note that the specific meanings of batch size and sequence length vary across different transformers, as
+outlined in Table E.1.
+Batch Size Sequence Length
+TFcol Number of features Number of samples
+TFrow Number of samples Number of features
+TFicl Number of datasets Number of samples
+Table E.1. Notions of batch size and sequence length for different transformers
+Given an input X ∈ Rb×n×m, where b, n, and m represent the number of datasets, the number of samples, and the number
+of features, respectively, X is first reshaped to R(b×m)×n and processed by TFcol to get E = R(b×m)×n×d. Subsequently,
+E is reshaped to R(b×n)×m×d and passed to TFrow, which generates H ∈ Rb×n×4d. Finally, H is fed into TFicl to predict
+the test set entirely through ICL. We can see that it is necessary to set appropriate batch sizes for different transformers
+in order to efficiently utilize GPU resources and avoid out-of-memory errors. This is precisely where the aforementioned
+polynomial regression comes into play.
+To this end, we first systematically tracked peak GPU memory usage of different transformers by varying both batch size
+and sequence length on a A100 GPU with 40GB memory, and then we fit the parameters of the above polynomial regression
+to the tracked data, as shown below:
+MEMcol = (0.0708 × batch size) + (7.29 × 10−6 × seq len) + (0.00391 × batch size × seq len) + 137.62
+MEMrow = (−2.07 × 10−5 × batch size) + (2.27 × 10−4 × seq len) + (0.00537 × batch size × seq len) + 138.54
+MEMicl = (−0.260 × batch size) + (4.77 × 10−7 × seq len) + (0.0195 × batch size × seq len) + 140.58
+The estimated memory is measured in megabytes (MB).
+In addition to adjusting the batch size, we also offload intermediate activations to the CPU or disk as needed to further
+alleviate GPU memory constraints. Figure E.3 illustrates the CPU and GPU memory consumption for a large dataset
+containing 100K samples and 500 features (80% training set and 20% test set). As shown, only 5GB of GPU memory and
+25GB of CPU memory are utilized, making this a highly affordable computational setup.
+20
+
+=== PDF PAGE 21 ===
+TabICL: A Tabular Foundation Model for Large Data
+7.510.012.515.017.520.022.525.0
+[6.94] TabPFNv2
+[9.32] TabR
+[9.72] ModernNCA
+[9.76] RealMLP
+[9.96] TabM
+[10.16] CatBoost
+[10.54] LoCalPFN
+[11.08] LightGBM
+[11.40] TabICL-Stage1
+[11.94] XGBoost
+[13.15] FT-T
+[13.70] MLP-PLR
+[14.45] DCNv2
+[14.53] ResNet
+[15.01] MLP
+[15.51] AutoInt
+TabNet [25.19]
+SwitchT [24.95]
+GrowNet [22.69]
+KNN [20.78]
+LogReg [20.63]
+TabT [19.94]
+NODE [19.09]
+DANets [17.95]
+PTaRL [17.11]
+TANGOS [16.92]
+TabCaps [16.64]
+TabPFN [16.25]
+ExcelF [16.16]
+TuneTables [15.94]
+RForest [15.80]
+SNN [15.72]
+(a) Critical difference diagram (based on accuracy) after the stage 1 of curriculum learning
+7.510.012.515.017.520.022.525.0
+[7.13] TabPFNv2
+[7.46] TabICL-Stage2
+[9.45] TabR
+[9.85] ModernNCA
+[9.87] RealMLP
+[10.06] TabM
+[10.30] CatBoost
+[10.66] LoCalPFN
+[11.20] LightGBM
+[12.07] XGBoost
+[13.31] FT-T
+[13.87] MLP-PLR
+[14.54] DCNv2
+[14.63] ResNet
+[15.11] MLP
+[15.63] AutoInt
+TabNet [25.28]
+SwitchT [25.01]
+GrowNet [22.77]
+KNN [20.88]
+LogReg [20.63]
+TabT [19.98]
+NODE [19.16]
+DANets [18.07]
+PTaRL [17.20]
+TANGOS [17.07]
+TabCaps [16.82]
+ExcelF [16.34]
+TabPFN [16.31]
+TuneTables [15.99]
+RForest [15.92]
+SNN [15.84]
+(b) Critical difference diagram (based on accuracy) after the stage 2 of curriculum learning
+7.510.012.515.017.520.022.525.0
+[6.95] TabICL-Stage3
+[7.17] TabPFNv2
+[9.46] TabR
+[9.84] ModernNCA
+[9.90] RealMLP
+[10.11] TabM
+[10.35] CatBoost
+[10.67] LoCalPFN
+[11.25] LightGBM
+[12.09] XGBoost
+[13.30] FT-T
+[13.90] MLP-PLR
+[14.55] DCNv2
+[14.65] ResNet
+[15.12] MLP
+[15.64] AutoInt
+TabNet [25.27]
+SwitchT [24.99]
+GrowNet [22.76]
+KNN [20.86]
+LogReg [20.63]
+TabT [19.99]
+NODE [19.16]
+DANets [18.09]
+PTaRL [17.22]
+TANGOS [17.06]
+TabCaps [16.83]
+ExcelF [16.37]
+TabPFN [16.31]
+TuneTables [16.00]
+RForest [15.92]
+SNN [15.84]
+(c) Critical difference diagram (based on accuracy) after the stage 3 of curriculum learning
+Figure E.2. Critical difference diagrams for different stages of curriculum learning
+21
+
+=== PDF PAGE 22 ===
+TabICL: A Tabular Foundation Model for Large Data
+0 3 6 9 12 15 18
+Time (s)
+0
+5
+10
+15
+20
+25
+CPU Memory (GB)
+0
+1
+2
+3
+4
+5
+GPU Memory (GB)
+Dataset-wise ICL
+Row-wise interaction
+Column-wise embedding
+(a) CPU and GPU Memory Usage without Automatic Mixed Precision
+0 2 4 6 8 10 12
+Time (s)
+0
+5
+10
+15
+20
+25
+CPU Memory (GB)
+0
+1
+2
+3
+4
+5
+GPU Memory (GB)
+Column-wise embedding
+Row-wise interaction
+Dataset-wise ICL
+(b) CPU and GPU Memory Usage with Automatic Mixed Precision
+Figure E.3. CPU and GPU memory consumption during inference for a dataset with 100K samples and 500 features. During
+dataset-wise ICL, there is only a single batch (i.e., a single dataset), which corresponds to a sharp spike in GPU usage at the final stage of
+computation.
+Figure E.4 shows the CPU and GPU memory consumption for a larger dataset containing 500K samples and 500 features
+(80% training set and 20% test set). As depicted, the computation requires less than 14GB of GPU memory. The CPU
+memory usage reaches approximately 120GB, which, however, can be significantly reduced through optional disk offloading
+via memory mapping.
+We can observe that GPU memory consumption exhibits periodic fluctuations during the column-wise embedding and
+row-wise interaction phases. This is because the entire dataset is automatically divided into multiple batches, with the batch
+size determined dynamically based on the polynomial regression mentioned earlier. Additionally, during column-wise
+embedding, the output of TFcol is progressively offloaded to CPU. As a result, we can see an incremental increase in CPU
+memory usage throughout this stage.
+We can also see that enabling automatic mixed precision highly reduces both memory consumption and computation time.
+22
+
+=== PDF PAGE 23 ===
+TabICL: A Tabular Foundation Model for Large Data
+0 50 100 150 200 250
+Time (s)
+0
+20
+40
+60
+80
+100
+120
+CPU Memory (GB)
+0
+2
+4
+6
+8
+10
+12
+14
+GPU Memory (GB)
+Column-wise 
+  embedding Row-wise interaction
+Dataset-wise ICL
+(a) CPU and GPU Memory Usage without Automatic Mixed Precision
+0 20 40 60 80
+Time (s)
+0
+20
+40
+60
+80
+100
+120
+CPU Memory (GB)
+0
+2
+4
+6
+8
+10
+12
+14
+GPU Memory (GB)
+Column-wise embedding
+Dataset-wise ICL
+Row-wise interaction
+(b) CPU and GPU Memory Usage with Automatic Mixed Precision
+Figure E.4. CPU and GPU memory consumption during inference for a dataset with 500K samples and 500 features. The relatively
+high CPU memory consumption can be largely mitigated by optional disk offloading via memory mapping.
+23
+
+=== PDF PAGE 24 ===
+TabICL: A Tabular Foundation Model for Large Data
+E.3. Hierarchical Class-extension Strategy
+Due to pretraining limitations, TabICL cannot natively handle classification problems with more than 10 classes. To address
+this, we employ hierarchical classification to extend the class scalability of TabICL. This involves building a multi-level
+classification tree where:
+1. Each internal node splits the classes assigned to it into at most 10 child groups.
+2. Recursion stops when a node contains ≤ 10 classes, turning it into a leaf.
+Since each split reduces the class count by at least a factor of 10, the tree depth r =
+l
+log10 k
+m
+, where k denotes the total
+number of classes.
+Within the tree, each internal node predicts the probabilities of its child groups, while each leaf predicts the probabilities of
+the classes it contains. For any given class c, the unique path from the root to its containing leaf can be represented by a
+sequence of nodes:
+g0(c) = root, g 1(c), g 2(c), . . . , gr−1(c), g r(c) = c
+where gi(c) denotes the node at depth i on the path leading to class c. Applying the probability chain rule along the path
+yields the overall posterior probability:
+p
+
+y = c | x
+
+=
+rY
+i=1
+p
+
+gi(c)
+ gi−1(c), x, Dgi−1(c)
+
+(7)
+where x is the given test sample, and Dgi−1(c) represents the training data associated with the node gi−1(c). Note that the
+targets in Dgi−1(c) are the child group indices for the node gi−1(c).
+F. Excluded Development Datasets of TabPFNv2
+TabPFNv2 utilized several development datasets for hyperparameter tuning (e.g., learning rate, prior-related parameters),
+early stopping to prevent overfitting by monitoring performance on these datasets, and model selection to identify the
+best-performing model among multiple candidates. These development datasets are provided in the supplementary material
+of TabPFNv2 (Hollmann et al., 2025).
+For a fair comparison, we excluded these development datasets from the main paper. In the table below, we report the
+performance of several high-performing methods on the development datasets included in the TALENT benchmark:
+Table F.1. Performance on 15 development datasets of TabPFNv2
+Dataset TabICL TabPFNv2 TabR ModernNCA RealMLP TabM CatBoost
+Acc. AUC LogL Acc. AUC LogL Acc. AUC LogL Acc. AUC LogL Acc. AUC LogL Acc. AUC LogL Acc. AUC LogL
+allbp 0.973 0.975 0.081 0.978 0.978 0.070 0.970 0.915 0.150 0.971 0.969 0.093 0.971 0.845 0.145 0.974 0.910 0.252 0.978 0.942 0.070
+baseball 0.933 0.963 0.160 0.940 0.969 0.155 0.947 0.965 0.171 0.927 0.951 0.207 0.937 0.899 0.248 0.943 0.964 0.155 0.939 0.965 0.157
+delta ailerons 0.952 0.981 0.161 0.954 0.982 0.159 0.948 0.978 0.175 0.949 0.980 0.165 0.945 0.976 0.184 0.950 0.979 0.172 0.948 0.979 0.164
+eye movements 0.639 0.822 0.757 0.788 0.930 0.488 0.970 0.996 0.184 0.986 0.998 0.090 0.767 0.900 0.626 0.994 1.000 0.043 0.719 0.883 0.623
+eye movements bin 0.588 0.648 0.655 0.678 0.751 0.597 0.659 0.732 1.344 0.909 0.974 0.207 0.596 0.639 2.244 0.593 0.628 0.668 0.615 0.672 0.642
+heloc 0.720 0.799 0.545 0.726 0.803 0.543 0.722 0.795 0.555 0.721 0.797 0.547 0.722 0.798 0.551 0.718 0.789 0.557 0.723 0.799 0.544
+hill-valley 0.785 0.917 0.518 0.983 0.992 0.098 0.700 0.732 0.571 0.781 0.804 1.455 0.796 0.852 0.547 0.512 0.529 0.703 0.517 0.515 0.693
+JapaneseV owels 0.997 1.000 0.011 0.997 1.000 0.008 0.996 1.000 0.016 0.996 1.000 0.013 0.994 1.000 0.113 0.993 1.000 0.051 0.983 1.000 0.048
+led24 0.731 0.953 0.812 0.732 0.956 0.780 0.738 0.949 0.885 0.732 0.955 0.973 0.734 0.954 0.827 0.734 0.958 0.793 0.735 0.956 0.962
+national-longitudinal 0.998 1.000 0.005 1.000 1.000 0.000 0.994 1.000 0.029 0.999 1.000 0.003 0.995 0.996 0.064 1.000 1.000 0.000 1.000 1.000 0.012
+page-blocks 0.976 0.993 0.092 0.975 0.993 0.092 0.968 0.987 0.127 0.967 0.989 0.129 0.971 0.980 0.162 0.968 0.985 0.127 0.967 0.991 0.110
+ringnorm 0.980 0.997 0.066 0.980 0.997 0.055 0.980 0.995 0.075 0.980 0.996 0.072 0.976 0.996 0.079 0.980 0.997 0.062 0.971 0.995 0.083
+rl 0.763 0.853 0.472 0.860 0.937 0.322 0.878 0.934 0.334 0.837 0.916 0.378 0.747 0.824 0.548 0.787 0.869 0.552 0.786 0.863 0.463
+thyroid-ann 0.987 0.999 0.028 0.995 1.000 0.017 0.986 0.996 0.068 0.987 0.996 0.088 0.992 0.998 0.087 0.992 1.000 0.024 0.995 1.000 0.012
+waveform-5000 0.872 0.978 0.259 0.865 0.977 0.263 0.860 0.975 0.310 0.862 0.975 0.278 0.867 0.975 0.291 0.862 0.976 0.279 0.860 0.973 0.297
+G. Random Forest Extension of TabPFNv2 for Large Datasets
+Hollmann et al. (2025) proposed an extension of TabPFNv2 using random forest (RF) to enhance its performance on large
+datasets. During training, the extension recursively partitions the feature space using standard decision tree splitting criteria.
+24
+
+=== PDF PAGE 25 ===
+TabICL: A Tabular Foundation Model for Large Data
+At inference time, instead of relying on simple majority voting at the leaves, it fits TabPFNv2 to the subset of training data
+that reaches each leaf. This extension not only leverages the inductive biases of tree-based models but also reduces the
+number of samples processed by TabPFNv2, thereby mitigating its scalability limitations.
+The ensemble prediction of this RF extension involves two main steps: (1) routing each test sample through all trees to
+their corresponding leaf nodes, and (2) aggregating the predictions from TabPFNv2 at these leaves by either averaging
+probabilities or logits.
+A key innovation of this RF extension is the adaptive pruning mechanism that dynamically determines whether to use parent
+node predictions or leaf node predictions based on validation performance. This prevents overfitting and optimizes the tree
+depth for each region of the feature space.
+This extension is not exclusive to TabPFNv2 and can also be applied to other tabular foundation models like TabICL. We
+evaluated this RF extension with adaptive pruning enabled for both TabPFNv2 and TabICL on large datasets with more than
+10K samples. Additionally, we set the ensemble size for both TabPFNv2 and TabICL to 4, considering that random forest
+already ensembles multiple decision trees. As shown in Figure G.1, the RF extension significantly improves the performance
+of both TabPFNv2 and TabICL.
+10152025
+[7.70] TabR
+[7.73] TabICL-RF
+[8.08] RealMLP
+[8.68] TabM
+[9.17] TabPFNv2-RF
+[9.42] ModernNCA
+[9.85] TabICL
+[10.72] CatBoost
+[11.81] MLP-PLR
+[12.74] FT-T
+[12.75] XGBoost
+[13.26] LightGBM
+[13.43] TabPFNv2
+[14.30] DCNv2
+[14.75] MLP
+[15.11] AutoInt
+[15.28] LoCalPFN
+SwitchT [28.72]
+LogReg [26.23]
+GrowNet [26.21]
+TabPFN [26.15]
+TabNet [25.17]
+KNN [24.92]
+TuneTables [24.70]
+TabT [22.66]
+NODE [22.04]
+RForest [22.04]
+TANGOS [20.60]
+TabCaps [19.34]
+DANets [18.77]
+PTaRL [16.43]
+SNN [16.17]
+ExcelF [15.91]
+ResNet [15.60]
+Figure G.1. Critical difference diagram (based on accuracy) on 53 large datasets with more than 10K samples. For TabICL-RF and
+TabPFNv2-RF, the ”RF” suffix indicates the use of the random forest extension.
+H. Effect of Ensemble Size on TabPFNv2 and TabICL
+Both TabPFNv2 and TabICL break column-order invariance to mitigate the learning collapse problem, as described
+in Section 3.3. To approximately restore permutation invariance, they aggregate predictions across multiple column
+permutations, while also using different preprocessors and shuffling class labels. We analyze the effect of ensemble size on
+their performance, as shown in Figure H.1. Our findings indicate that TabPFNv2 shows a clear improvement even with a
+small ensemble size (≤ 4), whereas TabICL requires a larger ensemble size (≥ 8) for a noticeable performance gain.
+Overall, TabPFNv2 benefits more from ensembling than TabICL. This could be attributed to :
+• TabPFNv2 employs more sophisticated preprocessing operations compared to TabICL.
+• TabPFNv2 benefits more from column permutations inherently. Unlike TabICL, TabPFNv2 never collapses the column
+dimension. This means permuting columns could have a more pronounced impact on the outputs of TabPFNv2, which
+reduces the correlation between ensemble members of TabPFNv2, thereby improving the effectiveness of ensembling.
+25
+
+=== PDF PAGE 26 ===
+TabICL: A Tabular Foundation Model for Large Data
+1 2 4 8 16 32
+Ensemble size E
+-0.2%
+0.0%
+0.2%
+0.4%
+0.6%
+0.8%
+1.0%
+Rel. accuracy improvements over E = 1
+0.00%
+0.18% 0.24% 0.27% 0.30% 0.26%
+0.00%
+0.32%
+0.64% 0.68% 0.74% 0.76%
+TabPFNv2
+Mean
+Median
+(a) TabPFNv2
+1 2 4 8 16 32
+Ensemble size E
+-0.2%
+0.0%
+0.2%
+0.4%
+0.6%
+0.8%
+1.0%
+Rel. accuracy improvements over E = 1
+0.00% 0.00% 0.06% 0.10% 0.15% 0.15%0.00%
+0.10%
+0.44%
+0.61%
+0.72% 0.75%
+TabICL
+Mean
+Median (b) TabICL
+Figure H.1. Effect of ensemble size on TabPFNv2 and TabICL. The figures show the relative accuracy improvements of different
+ensemble sizes over no ensembling across 171 datasets with at most 10 classes.
+I. Average Performance and Rankings
+In this section, we present the average rank of all methods across different dataset categories, including binary datasets,
+multi-class datasets (≤10 classes), small classification datasets (≤10K samples), and large classification datasets (>10K
+samples). The rankings are computed based on accuracy, AUC, and Log Loss. The average rank is given in critical difference
+diagrams, with Wilcoxon-Holm tests with a significance level 0.05. The lower the rank value, the better the performance.
+It is important to note that accuracy is used as the objective metric for hyperparameter tuning in tabular methods. Moreover,
+LoCalPFN (Thomas et al., 2024) and TuneTables (Feuer et al., 2024) are only included in the accuracy-based rankings.
+26
+
+=== PDF PAGE 27 ===
+TabICL: A Tabular Foundation Model for Large Data
+7.510.012.515.017.520.022.525.0
+[6.95] TabICL
+[7.17] TabPFNv2
+[9.46] TabR
+[9.84] ModernNCA
+[9.90] RealMLP
+[10.11] TabM
+[10.35] CatBoost
+[10.67] LoCalPFN
+[11.25] LightGBM
+[12.09] XGBoost
+[13.30] FT-T
+[13.90] MLP-PLR
+[14.55] DCNv2
+[14.65] ResNet
+[15.12] MLP
+[15.64] AutoInt
+TabNet [25.27]
+SwitchT [24.99]
+GrowNet [22.76]
+KNN [20.86]
+LogReg [20.63]
+TabT [19.99]
+NODE [19.16]
+DANets [18.09]
+PTaRL [17.22]
+TANGOS [17.06]
+TabCaps [16.83]
+ExcelF [16.37]
+TabPFN [16.31]
+TuneTables [16.00]
+RForest [15.92]
+SNN [15.84]
+(a) Accuracy
+510152025
+[5.59] TabICL
+[5.99] TabPFNv2
+[9.42] CatBoost
+[9.75] ModernNCA
+[9.89] TabM
+[11.05] TabR
+[11.39] LightGBM
+[11.61] XGBoost
+[12.37] RealMLP
+[13.33] FT-T
+[13.40] MLP-PLR
+[13.89] TabPFN
+[14.55] ResNet
+[14.90] AutoInt
+[14.91] MLP
+TabNet [26.09]
+SwitchT [24.58]
+KNN [22.95]
+GrowNet [22.06]
+TabCaps [20.13]
+LogReg [20.00]
+TabT [19.45]
+NODE [18.93]
+DANets [18.12]
+PTaRL [17.46]
+TANGOS [16.59]
+ExcelF [15.66]
+DCNv2 [15.49]
+SNN [15.16]
+RForest [15.04]
+(b) AUC
+510152025
+[4.21] TabICL
+[4.47] TabPFNv2
+[8.18] CatBoost
+[10.76] ModernNCA
+[10.89] TabM
+[10.96] TabR
+[11.86] FT-T
+[12.41] LightGBM
+[12.88] TabPFN
+[13.63] AutoInt
+[13.73] ExcelF
+[14.71] ResNet
+[14.90] XGBoost
+[15.08] TANGOS
+[15.24] RForest
+KNN [25.80]
+TabCaps [22.70]
+TabNet [22.46]
+SwitchT [21.80]
+GrowNet [20.23]
+DANets [20.11]
+TabT [19.83]
+NODE [19.15]
+LogReg [17.92]
+PTaRL [17.90]
+MLP [17.26]
+SNN [17.15]
+DCNv2 [16.83]
+MLP-PLR [16.10]
+RealMLP [15.55]
+(c) Log Loss
+Figure I.1. Critical difference diagram for all 171 classification datasets (≤ 10 classes).
+27
+
+=== PDF PAGE 28 ===
+TabICL: A Tabular Foundation Model for Large Data
+7.510.012.515.017.520.022.525.0
+[6.32] TabICL
+[7.10] TabPFNv2
+[9.94] TabR
+[10.30] LoCalPFN
+[10.38] CatBoost
+[10.43] ModernNCA
+[10.74] TabM
+[10.76] RealMLP
+[10.96] LightGBM
+[11.83] XGBoost
+[13.22] FT-T
+[13.87] MLP-PLR
+[14.71] DCNv2
+[15.15] AutoInt
+[15.27] MLP
+[15.31] TabPFN
+TabNet [24.74]
+SwitchT [24.51]
+GrowNet [21.87]
+KNN [21.52]
+LogReg [20.49]
+TabT [19.21]
+DANets [17.99]
+NODE [17.50]
+TANGOS [16.87]
+TabCaps [16.64]
+ExcelF [16.22]
+PTaRL [16.18]
+SNN [16.12]
+RForest [15.75]
+ResNet [15.68]
+TuneTables [15.47]
+(a) Accuracy
+510152025
+[4.88] TabICL
+[5.92] TabPFNv2
+[9.68] CatBoost
+[10.19] ModernNCA
+[10.25] TabR
+[10.62] TabM
+[11.10] LightGBM
+[11.51] XGBoost
+[12.88] FT-T
+[12.92] TabPFN
+[12.98] RealMLP
+[13.75] MLP-PLR
+[14.55] RForest
+[15.04] MLP
+[15.12] AutoInt
+TabNet [26.35]
+SwitchT [24.22]
+KNN [22.88]
+GrowNet [21.60]
+TabCaps [19.77]
+TabT [19.58]
+LogReg [19.47]
+DANets [18.39]
+NODE [17.65]
+TANGOS [17.23]
+PTaRL [17.01]
+DCNv2 [15.95]
+ExcelF [15.88]
+SNN [15.59]
+ResNet [15.46]
+(b) AUC
+510152025
+[4.00] TabICL
+[4.40] TabPFNv2
+[8.65] CatBoost
+[10.91] TabM
+[11.04] ModernNCA
+[11.15] TabR
+[11.88] FT-T
+[11.88] LightGBM
+[12.58] TabPFN
+[13.60] ExcelF
+[13.70] AutoInt
+[14.35] XGBoost
+[14.54] RForest
+[15.48] ResNet
+[15.64] RealMLP
+KNN [25.76]
+TabCaps [23.58]
+TabNet [22.47]
+SwitchT [21.88]
+DANets [20.42]
+TabT [20.01]
+GrowNet [19.81]
+PTaRL [17.81]
+NODE [17.73]
+MLP [17.62]
+SNN [17.39]
+LogReg [17.31]
+DCNv2 [17.08]
+MLP-PLR [16.26]
+TANGOS [15.86]
+(c) Log Loss
+Figure I.2. Critical difference diagram for 112 binary classification datasets.
+28
+
+=== PDF PAGE 29 ===
+TabICL: A Tabular Foundation Model for Large Data
+7.510.012.515.017.520.022.525.0
+[7.31] TabPFNv2
+[8.14] TabICL
+[8.27] RealMLP
+[8.56] TabR
+[8.71] ModernNCA
+[8.90] TabM
+[10.29] CatBoost
+[11.37] LoCalPFN
+[11.81] LightGBM
+[12.58] XGBoost
+[12.69] ResNet
+[13.44] FT-T
+[13.97] MLP-PLR
+[14.25] DCNv2
+[14.85] MLP
+[15.29] SNN
+TabNet [26.27]
+SwitchT [25.90]
+GrowNet [24.46]
+NODE [22.31]
+TabT [21.47]
+LogReg [20.90]
+KNN [19.61]
+PTaRL [19.19]
+DANets [18.27]
+TabPFN [18.20]
+TANGOS [17.42]
+TabCaps [17.19]
+TuneTables [17.00]
+ExcelF [16.64]
+AutoInt [16.58]
+RForest [16.25]
+(a) Accuracy
+7.510.012.515.017.520.022.525.0
+[6.13] TabPFNv2
+[6.92] TabICL
+[8.52] TabM
+[8.92] CatBoost
+[8.92] ModernNCA
+[11.22] RealMLP
+[11.80] XGBoost
+[11.95] LightGBM
+[12.57] TabR
+[12.75] MLP-PLR
+[12.85] ResNet
+[14.18] FT-T
+[14.35] SNN
+[14.50] AutoInt
+[14.62] DCNv2
+TabNet [25.60]
+SwitchT [25.27]
+KNN [23.08]
+GrowNet [22.92]
+NODE [21.33]
+LogReg [21.00]
+TabCaps [20.82]
+TabT [19.18]
+PTaRL [18.32]
+DANets [17.60]
+RForest [15.97]
+TabPFN [15.72]
+TANGOS [15.38]
+ExcelF [15.25]
+MLP [14.67]
+(b) AUC
+510152025
+[4.60] TabPFNv2
+[4.60] TabICL
+[7.28] CatBoost
+[10.22] ModernNCA
+[10.60] TabR
+[10.85] TabM
+[11.82] FT-T
+[13.25] ResNet
+[13.40] LightGBM
+[13.45] TabPFN
+[13.50] AutoInt
+[13.60] TANGOS
+[13.98] ExcelF
+[15.38] RealMLP
+[15.82] MLP-PLR
+KNN [25.88]
+TabNet [22.43]
+NODE [21.83]
+SwitchT [21.67]
+TabCaps [21.05]
+GrowNet [21.00]
+DANets [19.52]
+TabT [19.50]
+LogReg [19.08]
+PTaRL [18.07]
+SNN [16.70]
+MLP [16.58]
+RForest [16.55]
+DCNv2 [16.37]
+XGBoost [15.93]
+(c) Log Loss
+Figure I.3. Critical difference diagram for 59 multi-class classification datasets (≤ 10 classes).
+29
+
+=== PDF PAGE 30 ===
+TabICL: A Tabular Foundation Model for Large Data
+510152025
+[5.07] TabPFNv2
+[6.27] TabICL
+[9.05] LoCalPFN
+[10.31] ModernNCA
+[10.76] CatBoost
+[10.76] TabR
+[10.87] LightGBM
+[11.14] RealMLP
+[11.34] TabM
+[12.34] XGBoost
+[12.57] TabPFN
+[12.64] TuneTables
+[13.98] RForest
+[14.20] FT-T
+[14.84] ResNet
+[15.22] DCNv2
+TabNet [26.12]
+SwitchT [24.13]
+GrowNet [21.92]
+KNN [19.59]
+TabT [19.32]
+NODE [18.69]
+LogReg [18.66]
+DANets [18.41]
+PTaRL [18.10]
+ExcelF [17.32]
+AutoInt [16.56]
+TabCaps [16.34]
+SNN [16.33]
+TANGOS [16.24]
+MLP [15.81]
+MLP-PLR [15.47]
+(a) Accuracy
+510152025
+[3.61] TabPFNv2
+[4.65] TabICL
+[9.89] TabPFN
+[10.12] CatBoost
+[10.72] TabM
+[11.16] ModernNCA
+[11.84] LightGBM
+[12.33] XGBoost
+[12.65] TabR
+[12.73] RealMLP
+[14.01] RForest
+[14.29] MLP-PLR
+[14.35] FT-T
+[14.52] ResNet
+[15.28] SNN
+TabNet [27.50]
+SwitchT [24.09]
+KNN [21.93]
+GrowNet [21.33]
+TabCaps [20.03]
+TabT [18.98]
+PTaRL [18.81]
+NODE [18.72]
+DANets [18.47]
+LogReg [18.34]
+ExcelF [16.62]
+DCNv2 [16.25]
+AutoInt [16.05]
+TANGOS [15.89]
+MLP [15.29]
+(b) AUC
+510152025
+[2.49] TabPFNv2
+[3.38] TabICL
+[8.28] CatBoost
+[8.88] TabPFN
+[11.19] TabM
+[12.15] ModernNCA
+[12.17] FT-T
+[12.78] TabR
+[13.24] LightGBM
+[13.66] RForest
+[13.69] AutoInt
+[14.16] ExcelF
+[14.81] TANGOS
+[15.13] ResNet
+[15.63] LogReg
+KNN [24.52]
+TabNet [23.41]
+TabCaps [22.69]
+DANets [21.02]
+SwitchT [20.78]
+NODE [19.83]
+TabT [19.46]
+GrowNet [19.43]
+PTaRL [19.15]
+MLP [17.92]
+DCNv2 [17.78]
+MLP-PLR [17.35]
+SNN [17.03]
+XGBoost [16.52]
+RealMLP [16.16]
+(c) Log Loss
+Figure I.4. Critical difference diagram for 116 small classification datasets (≤ 10K samples).
+30
+
+=== PDF PAGE 31 ===
+TabICL: A Tabular Foundation Model for Large Data
+7.510.012.515.017.520.022.525.027.5
+[6.79] TabR
+[7.17] RealMLP
+[7.60] TabM
+[8.51] ModernNCA
+[8.64] TabICL
+[9.68] CatBoost
+[10.58] MLP-PLR
+[11.49] FT-T
+[11.64] XGBoost
+[11.94] TabPFNv2
+[12.02] LightGBM
+[12.96] DCNv2
+[13.38] MLP
+[13.72] AutoInt
+[13.96] LoCalPFN
+[14.15] ResNet
+SwitchT [26.91]
+LogReg [24.55]
+GrowNet [24.51]
+TabPFN [24.30]
+TabNet [23.38]
+KNN [23.26]
+TuneTables [22.92]
+TabT [21.09]
+NODE [20.43]
+RForest [20.36]
+TANGOS [18.94]
+TabCaps [17.68]
+DANets [17.25]
+PTaRL [15.00]
+SNN [14.77]
+ExcelF [14.45]
+(a) Accuracy
+7.510.012.515.017.520.022.525.0
+[6.49] ModernNCA
+[7.67] TabICL
+[7.85] TabR
+[8.13] CatBoost
+[8.44] TabM
+[10.24] XGBoost
+[10.29] LightGBM
+[11.18] TabPFNv2
+[11.42] FT-T
+[11.55] MLP-PLR
+[11.62] RealMLP
+[12.56] AutoInt
+[13.76] DCNv2
+[13.85] MLP
+[13.93] ExcelF
+SwitchT [25.76]
+KNN [24.89]
+GrowNet [23.55]
+LogReg [23.18]
+TabNet [23.11]
+TabPFN [22.02]
+TabCaps [20.29]
+TabT [20.09]
+NODE [19.84]
+TANGOS [18.07]
+DANets [17.42]
+RForest [17.05]
+SNN [14.85]
+ResNet [14.56]
+PTaRL [14.47]
+(b) AUC
+510152025
+[6.00] TabICL
+[7.31] TabR
+[7.58] ModernNCA
+[8.13] CatBoost
+[8.75] TabPFNv2
+[10.58] LightGBM
+[10.60] TabM
+[11.38] FT-T
+[11.76] XGBoost
+[13.05] ExcelF
+[13.49] MLP-PLR
+[13.60] AutoInt
+[13.76] ResNet
+[14.16] RealMLP
+[14.71] DCNv2
+KNN [28.36]
+SwitchT [23.98]
+TabCaps [22.55]
+LogReg [22.42]
+GrowNet [21.89]
+TabPFN [21.02]
+TabNet [20.38]
+TabT [20.35]
+RForest [18.47]
+DANets [18.33]
+NODE [18.16]
+SNN [17.56]
+MLP [15.67]
+TANGOS [15.65]
+PTaRL [15.09]
+(c) Log Loss
+Figure I.5. Critical difference diagram for 53 large classification datasets (> 10K samples).
+31

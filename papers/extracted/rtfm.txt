@@ -1,0 +1,999 @@
+=== PDF PAGE 1 ===
+Robust Tabular Foundation Models
+Matthew Peroni1,2, Franck Le 2, Vadim Sheinin 2
+1 MIT 2 IBM Research
+mperoni1@mit.edu, fle@us.ibm.com, vadims@us.ibm.com
+Abstract
+The development of tabular foundation models (TFMs) has
+accelerated in recent years, showing strong potential to out-
+perform traditional ML methods for structured data. A key
+finding is that TFMs can be pretrained entirely on synthetic
+datasets, opening opportunities to design data generators that
+encourage desirable model properties. Prior work has mainly
+focused on crafting high-quality priors over generators to im-
+prove overall pretraining performance. Our insight is that pa-
+rameterizing the generator distribution enables an adversarial
+robustness perspective: during training, we can adapt the gen-
+erator to emphasize datasets that are particularly challenging
+for the model. We formalize this by introducing an optimality
+gap measure, given by the difference between TFM perfor-
+mance and the best achievable performance as estimated by
+strong baselines such as XGBoost, CatBoost, and Random
+Forests. Building on this idea, we propose ROBUSTTAB-
+ULARFOUNDATIONMODELS(RTFM), a model-agnostic
+adversarial training framework. Applied to the TabPFN V2
+classifier, RTFM improves benchmark performance, with up
+to a 6% increase in mean normalized AUC over the original
+TabPFN and other baseline algorithms, while requiring less
+than 100k additional synthetic datasets. These results high-
+light a promising new direction for targeted adversarial train-
+ing and fine-tuning of TFMs using synthetic data alone.
+Introduction
+Recent survey studies have challenged the deep learning
+community to improve upon boosted tree methods for learn-
+ing from structured data, having found a significant gap in
+performance remained between the paradigms [14]. In re-
+sponse, substantial progress has been made to close this gap,
+resulting in a variety of strong deep learning approaches
+being proposed over the past few years [24, 13, 15, 16,
+5, 27, 30]. Among these new approaches, tabular founda-
+tion models (TFMs) which rely on in-context learning (ICL)
+[16, 21, 30] have emerged as a promising direction for clas-
+sification and regression tasks with structured datasets. The
+benefits of this approach are two-fold. In many cases, the
+performance of the TFMs improves upon strong traditional
+baselines such as boosted trees [12, 10]. Additionally, this
+performance is achieved in a zero-shot framework, enabling
+high-quality predictions on new datasets in milliseconds
+Copyright © 2026, Association for the Advancement of Artificial
+Intelligence (www.aaai.org). All rights reserved.
+when GPU-accelerated. Further, as we will explore in this
+work, since these TFMs are pretrained using synthetic data,
+there is significant opportunity for improvement as the data
+generation process is expanded and improved.
+Training TFMs relies on generating a large amount of
+diverse synthetic datasets [16]. As we will formally define
+in the following section, this generation process relies on
+constructing structural causal models (SCMs) from which
+datasets can be sampled [20, 23]. The structure of these
+SCMs is implicitly parameterized, giving significant control
+over the data generation process. All current publicly avail-
+able, competitive TFMs [16, 21, 30] have been pretrained on
+datasets generated from a fixed prior distribution over these
+SCM parameters. However, fixed priors underrepresent cer-
+tain regions of the parameter space, potentially degrading
+performance on real-world datasets with similar structure.
+This contributes to state-of-the-art TFMs still lagging be-
+hind tree-based methods on some benchmarks [19, 29]. In
+this work, we leverage the significant control provided by
+the data generation process to frame TFM training from an
+adversarial robustness perspective [18]. Recent work by [26]
+also explores a narrower version of this idea, focusing on
+adjusting the weights of a specific class of SCMs in GAN-
+style training of TFMs. In this work, we focus on a broad
+and highly flexible framework for adversarially robust train-
+ing of TFMs. Our contributions can be summarized as:1)
+We formalize adversarial training over the SCM parameter
+space, allowing the model to adapt to challenging regions
+(e.g., varying numbers of features, categorical feature ra-
+tios, nonlinearities). We introduce anoptimality gapcon-
+cept and use it to target regions where the TFM underper-
+forms relative to the best achievable performance.2)We
+propose an efficient, model-agnostic two-stage adversarial
+training algorithm for TFMs, which we call ROBUSTTABU-
+LARFOUNDATIONMODELS(RTFM).3)We apply RTFM
+to TabPFN V2 [17], showing that with only 90k additional
+training datasets, we can significantly improve the ranking
+of TabPFN on several real-world tabular benchmarks.
+Problem Definition
+We begin by defining some notation, and then introduce
+our theoretical formulation for RTFM. LetΦrepresent the
+space of hypothesis functions which define the relationship
+between featuresxand outcomey. The outcomeycan be
+arXiv:2512.03307v1  [cs.LG]  2 Dec 2025
+
+=== PDF PAGE 2 ===
+Figure 1: Overview of ROBUSTTABULARFOUNDATIONMODELS(RTFM).
+discrete or continuous, but for this work, we focus on clas-
+sification tasks. Then a hypothesisϕ∈Φis a specific func-
+tion which we can treat as a data generating mechanism.
+In the case of SCMs,Φis the entire space of SCMs, and
+ϕ∈Φis a specific instance of an SCM, from which a
+datasetD∼p(ϕ)can be generated. In this work, we imple-
+ment SCMs as randomly initialized multi-layer perceptrons
+(MLPs), as introduced in [16]. Full details of this process
+are provided in Appendix B. For example, we can sample
+the number of layersl∼p(l), the hidden sizeh∼p(h),
+the activation functiona∼p(a), and the ratio of categor-
+ical featuresr cat ∼p(r cat), among other dimensions. An
+SCM is generated by first sampling from the joint distribu-
+tion over these hyperparameters, each of which is parameter-
+ized. For example, we might sample the ratio of categorical
+featuresr cat ∼T runcN orm(µ rcat , a= 0, b= 1)from the
+truncated normal distribution with some meanµ rcat which
+parametrizes the distribution. Then, assuming we have simi-
+lar parameterizations for the distribution over each hyperpa-
+rameter, we defineθ= (µ l, µh, µrcat , . . .)as the parameter-
+ization of the joint distribution over all the hyperparameters.
+We definePas the space of the parameters, such thatθ∈ P.
+The generators are then sampled fromϕ∼p(Φ;θ).
+We now define the original objective for the Prior-Fitted
+Network (PFN) learning task and provide our adversarially
+robust formulation. Letg W be our predictive model param-
+eterized by weight matrixW. As a PFN,g W takes as input
+a sequence of labeled training samples and unlabeled test
+samples, and predicts labels for the test samples. For a given
+data generatorϕ∈Φ, the PFN loss is defined as the cross
+entropy loss over the test samples,
+LP F N(W;ϕ) =(1)
+E({(xt,yt)}∪D)∼p(ϕ)[−log(g W(yt|xt, D)].
+Since the model will be trained by sampling many data gen-
+erators from the distributionϕ∼p(Φ;θ), we can write the
+original optimization problem as follows,
+min
+W
+Eϕ∼p(Φ;θ)[LP F N(W;ϕ)].(2)
+Since our goal is to learn a foundation model which per-
+forms well across all data generation schemes, we want
+to introduce an adversary who can shift the distribution
+over data generators to identify the regions over whichg W
+yields the worst performance. However, there is a key sub-
+tlety in this formulation. Maximizing the loss alone could
+lead the maximizer to select data generators which produce
+datasets that are hard to learn for any model. Instead, we
+want to maximize theoptimality gapbetween the model’s
+current performance and the best achievable performance.
+Since we are using the cross-entropy loss, we can frame
+this optimality gap in terms of the conditional entropy of
+the data. For any data generatorϕ, let us denote the fea-
+tures as a random variableZ x and the target asZ y such
+that(Z x, Zy)∼p(ϕ). Then the Bayes’ optimal predic-
+tor is exactlyf ∗ =p(Z y|Zx)which achieves the cross-
+entropy lossL CE(f ∗) =H ϕ(Zy|Zx), the conditional en-
+tropy of the targetZ y given the featuresZ x. It follows
+that for any fixed data generator,L P F N ≥H(Z y|Zx), and
+LP F N −H(Z y|Zx)≥0is the optimality gap. We can then
+state the adversarially robust optimization problem in terms
+of maximizing the optimality gap,
+min
+W
+max
+θ∈P
+Eϕ∼p(Φ;θ)[LP F N(W;ϕ)−H ϕ(Zy|Zx)].(3)
+In practice, maximizing over a single parameterization could
+lead to the model overfitting to a particular region of the pa-
+rameter space. We therefore frame this problem from a dis-
+tributionally robust optimization (DRO) perspective by con-
+straining the actions of the maximizer [22]. Rather than a
+
+=== PDF PAGE 3 ===
+specific parameterizationθ, we allow the maximizer to se-
+lect a distributionQ∈∆ P over parameters, where∆ P is
+the simplex overP. We assumePis discrete, which is rea-
+sonable in practice since the parameters are either categori-
+cal or can be easily discretized (e.g.µrcat ∈ {0,0.1, . . . ,1}).
+For this work, we do not assume access to a reference dis-
+tribution overPfrom which we can constrain the diver-
+gence ofQ. Instead, we will constrain the minimum en-
+tropy,H min, ofQdirectly. This is equivalent to constrain-
+ing the KL-divergence ofQwhen the reference distribution
+is uniform. For brevity, we denote the objective function as
+δθ(W) =E ϕ∼p(Φ;θ)[LP F N(W;ϕ)−H ϕ(Zy|Zx)]. We can
+then define the DRO problem as
+min
+W
+max
+Q∈∆P
+H(Q)≥H min
+Eθ∼Q[δθ(W)].(4)
+As we prove in Appendix C, the optimal distribution for the
+maximizer in Equation 4 is a softmax distribution. Specifi-
+cally, denotingQ ∗ = (q ∗
+1, . . . , q∗
+|P|)as the optimal distribu-
+tion, for anyi∈ |P|,q ∗
+i ∝exp(η·δ θi(W)). The temperature
+η=η(H min, δθ(W))is uniquely determined by the mini-
+mum entropy and the optimality gaps. The DRO problem
+can then be rewritten as
+min
+W
+|P|X
+i=1
+exp(η·δ θi(W))P
+i∈|P| exp(η·δ θi(W)) ·δ θi(W).(5)
+While Equation 5 is the precise theoretical optimization
+problem we wish to solve, in reality, estimating the condi-
+tional entropyH ϕ(Zy|Zx)or evaluating it analytically is of-
+ten infeasible. Therefore, rather than estimateH ϕ(Zy|Zx)
+directly, in this work, we replace this term with the mini-
+mum cross-entropy loss over a collection of baseline esti-
+matorsf 1, . . . , fe, such as XGBoost, Catboost, and Random
+Forests [6, 9, 4], which are fit to each generated dataset.
+Sincemin i∈[e] LP F N(fi;ϕ)≥H(Z y|Zx), it follows
+thatE ϕ∼p(Φ;θ)[LP F N(W;ϕ)−min i∈[e] LP F N(fi;ϕ)]≤
+δθ(W), providing us with a lower bound on the optimality
+gap. We then modify our original objective function, defin-
+ing
+bδθ(W) =E ϕ∼p(Φ;θ)[LP F N(W;ϕ)−min
+i∈[e]
+LP F N(fi;ϕ)],
+(6)
+and arriving at the following optimization problem,
+min
+W
+|P|X
+i=1
+exp(η· bδθi(W))
+P
+i∈|P| exp(η· bδθi(W))
+·bδθi(W).(7)
+Sincebδθ(W)≤δ θ(W), it follows thatbδθ(W)>0implies
+δθ(W)>0, such that for any parameter estimated to have
+a positive optimality gap, the modelg W does indeed have
+room for improvement. Further, this lower bound can always
+be improved by adding more baseline estimators with vary-
+ing strengths and inductive biases. We aim to solve Equation
+7 to recover a robust tabular foundation model. As a whole,
+this problem is both non-convex and non-differentiable, in-
+cluding a composition of multiple black-box functions. In
+the following section, we introduce a two-stage optimization
+approach to find high-quality solutions to this problem.
+ROBUSTTABULARFOUNDATIONMODELS
+In this section, we give an overview of our two-stage
+optimization algorithm, ROBUSTTABULARFOUNDATION
+MODELS(RTFM), which is visualized in Figure 1. The
+pseudocode and additional details are provided in Appendix
+A. We first decompose the problem naturally into a maxi-
+mization stage (parameter search) and a minimization stage
+(model training). We assume access to a pretrained TFM,
+gW, with weightsWwhich will be used as the input model
+for our RTFM algorithm. While not absolutely necessary,
+starting with a pretrained model gives us a warm-start for the
+model weights. In addition, we specify a fixed set of base-
+line modelsf 1, . . . , fe which will be used to estimate the
+optimality gap. We begin with the maximization stage, dur-
+ing which we freezeg W to maximize the optimality gap in
+its current state. Since the cardinality of the parameter space
+is large in practice, we use a black-box optimization algo-
+rithm [1, 25, 3] to efficiently search the space for parameters
+with large optimality gaps.
+Using the black-box optimization algorithm, parameters
+θi are proposed in sequence. For eachθ i proposed, we
+estimate the optimality gap by sampling a fixed number,
+nds, of generatorsϕ 1, . . . , ϕnds ∼p(Φ;θ i)and datasets
+dj ∼p(ϕ j)and compute bδθi = 1
+nds
+Pnds
+j=1 LP F N(W;d j)−
+mink∈[e] LP F N(fk, dj). Then for each proposedθ i, we
+must fitn ds ·ebaseline estimators. However, each pair of
+dataset and baseline estimator can be fit independently, such
+that this step can be trivially parallelized, where each base-
+line estimator is fit to each dataset in parallel. In practice,
+we found that forn ds = 20ande= 7, the estimated
+optimality gap bδθi could be computed in a matter of sec-
+onds when parallelized, given sufficient CPU cores (we used
+ncores =n ds ·e). We repeat this process for a fixed num-
+ber of trials,n trials, with the underlying optimization algo-
+rithm proposing new parametersθ i based on the observed
+estimated optimality gaps. At the end of this stage, we have
+a collection{(θ i, δθi)}ntrials
+i=1 of parameters and associated
+estimated optimality gaps.
+In the minimization stage, our goal is to traing W on the
+regions of the parameter space with large optimality gaps.
+Following our derivation in Equation 7, we define a distri-
+butionQoverPsuch thatq i ∝exp(η·δ i(W)). The func-
+tionη7→H(Q(η))is strictly decreasing on(0,∞), so we
+can quickly findηgiven a setH min via one-dimensional
+root finding (e.g., bisection). Using the observations from
+the maximization stage, our optimization problem becomes
+min
+W
+ntrialsX
+i=1
+exp(η· bδθi(W))
+P
+i∈[ntrials] exp(η· bδθi(W))
+·bδθi(W).(8)
+Then, to train the TFM, we generate each dataset within a
+batch by samplingθ i ∼Qand generatorϕ∼p(Φ;θ i). This
+sampling and dataset generation process is repeated for each
+batch during model training such that, in expectation, the
+loss is weighted according to Equation 8. After trainingg W
+forn iter iterations, we freeze the model return to the maxi-
+mization stage, using the updated model weights to generate
+the next set of estimated optimality gaps. This max-min iter-
+ation is repeated until the objective in Equation 8 converges.
+
+=== PDF PAGE 4 ===
+Table 1: Experiment results across two tabular dataset benchmarks. For consistency, we report normalized AUC, with values
+scaled to [0,1] for each dataset [19, 17]. For rank-1 wins, we do not count ties, only outright wins.
+Metric Log. Reg. MLP Random Forest CatBoost XGBoost TabPFN n.e. TabPFNn.e. (RTFM)
+TabPertNet[28]
+Mean rank AUC 5.1 4.6 4.0 3.8 4.6 3.22.7
+Mean Norm. AUC0.4253 0.5005 0.6481 0.6663 0.5222 0.74830.8167
+Rank-1 Wins 1 8 5 7 5 1117
+TabArena[10]
+Mean rank AUC OVO 4.9 6.3 4.8 3.4 4.5 2.21.9
+Mean Norm. AUC OVO0.4277 0.1801 0.5761 0.7749 0.5918 0.90310.9298
+Rank-1 Wins 2 0 0 2 0 512
+In addition to the baseline estimatorsf1, . . . , fe, after a fixed
+number of max-min iterations, we incorporate the TFM with
+its original weights as an additional baseline model. This can
+help mitigate any unlearning that has occurred, encouraging
+the model to both improve upon strong baselines as well as
+its own performance at the start of training.
+Experiments
+We evaluate our RTFM algorithm on benchmark classifi-
+cation datasets from TabArena [10] and TabPertNet [28],
+using TabPFN V2 [17] as the starting point for our TFM.
+We provide a full description of the experiment setup and
+results in Appendix D. For the RTFM algorithm, we use
+ntrials = 100andn ds = 20datasets to estimate the opti-
+mality gap for each trail. During the minimization stage, we
+use a learning rate oflr= 1e-5, a batch size ofb= 64,
+and train the model forn iter = 3000training steps per it-
+eration. We run the full max-min loop fore= 30epochs.
+For baseline models, we use Random Forest, CatBoost, XG-
+Boost, Logistic Regression, and MLPs. For this work, we
+evaluate the performance of each algorithm in Table 1 us-
+ing their respective default settings, and report TFM results
+without ensembling. All experiments were run on a single
+node with one A100 GPU and 256 CPU cores over which
+we distributed the training and evaluation of baseline estima-
+tors during the maximization stage. Details of the parameter
+space are provided in Appendix B.
+The results of our experiments are summarized in Table 1,
+and full results are provided in Appendix D. Overall, we ob-
+serve a significant improvement in both AUC and mean rank
+when applying the RTFM algorithm compared to both the
+baseline TabPFN model, as well as a the collection of base-
+line estimators. To measure the significance of our results,
+we first perform the Friedman test for repeated samples on
+the median normalized AUC scores [8, 2]. For the TabPert-
+Net datasets, the Friedman test yieldedp= 2.2×10 −14,
+and for TabArena, the test yieldedp= 1.6×10 −12. Hav-
+ing established significance for the benchmark performance
+varying by model class, we performed the Wilcoxon signed-
+rank test pair-wise, comparing the RTFM version of TabPFN
+to the other models [7]. For TabPertNet, the Wilcoxon test
+comparing TabPFN (RTFM) and the original TabPFN model
+yieldedp= 0.0023, and for TabArena, the test yielded
+p= 0.0103. The other Wilcoxon tests all yielded smaller
+p-values, supporting the significance of applying RTFM to
+improving TabPFN against all the baseline estimators.These
+results support the statistical significance of the performance
+improvements observed from applying the RTFM algorithm.
+Across our three metrics, we observe that TabPFN
+(RTFM) strictly dominates the other models. Further, among
+datasets where the original TabPFN model is not the top
+ranked model (rank>1), we observe consistent improve-
+ment from applying the RTFM algorithm. For example, for
+TabPertNet, among datasets where TabPFN (original) has
+rank>2, the mean rank of TabPFN (RTFM) is 3.26, which
+is the highest mean rank among all models and a 1.24 point
+improvement over the original. We also find that among 21%
+of these datasets where TabPFN (original) is strictly worse
+than the baseline models, TabPFN (RTFM) “leaps” the com-
+petition and is the top ranked model. We observe similar
+gains in mean rank for the TabArena datasets, with a 1.8
+point improvement in mean rank on datasets where TabPFN
+(original) has rank>1 and TabPFN (RTFM) “leaps” the
+competition for 20% of these datasets. These results demon-
+strate the ability of the RTFM algorithm to not only im-
+prove the performance of TFMs overall, but to address spe-
+cific types of datasets where the TFM lags behind traditional
+methods, in some cases becoming the dominant model. We
+also note that these results were achieved while training
+the TabPFN model on an additional90ksynthetic datasets,
+about 1% of the>9million datasets generated to pretrain
+the original TabPFN model.
+Conclusion
+In this work, we introduce an exciting new direction for
+training TFMs which is both model-agnostic and massively
+extensible. We demonstrate its ability to improve upon an
+existing state-of-the-art TFM with limited additional train-
+ing across multiple tabular benchmarks. While we use
+TabPFN as our starting point, RTFM can be applied to any
+TFM, such as Mitra or TabICL. Our framework can also
+be easily extended to regression tasks. Further, we achieve
+these results while only implementing MLP-based SCMs. In
+future work, plan to expand the parameter space and include
+tree-based SCMs within our framework. The RTFM algo-
+rithm is highly-parallelizable, enabling large-scale training
+and efficient parameter search. We hope these promising
+results motivate further research in the direction of opti-
+mized, adaptive synthetic dataset generation for pretraining
+and fine-tuning of TFMs.
+
+=== PDF PAGE 5 ===
+References
+[1] Akiba, T.; Sano, S.; Yanase, T.; Ohta, T.; and Koyama,
+M. 2019. Optuna: A Next-generation Hyperparameter
+Optimization Framework. ArXiv:1907.10902 [cs].
+[2] Benavoli, A.; Corani, G.; and Mangili, F. 2016. Should
+we really use post-hoc tests based on mean-ranks?The
+Journal of Machine Learning Research, 17(1): 152–
+161.
+[3] Bergstra, J.; Bardenet, R.; Bengio, Y .; and K ´egl, B.
+2011. Algorithms for Hyper-Parameter Optimization.
+InAdvances in Neural Information Processing Sys-
+tems, volume 24. Curran Associates, Inc.
+[4] Breiman, L. 2001. Random Forests.Machine Learn-
+ing, 45(1): 5–32.
+[5] Carballo, K. V .; Na, L.; Ma, Y .; Boussioux, L.; Zeng,
+C.; Soenksen, L. R.; and Bertsimas, D. 2023. TabText:
+A Flexible and Contextual Approach to Tabular Data
+Representation. ArXiv:2206.10381 [cs].
+[6] Chen, T.; and Guestrin, C. 2016. XGBoost: A Scal-
+able Tree Boosting System. InProceedings of the 22nd
+ACM SIGKDD International Conference on Knowl-
+edge Discovery and Data Mining, KDD ’16, 785–794.
+New York, NY , USA: Association for Computing Ma-
+chinery. ISBN 978-1-4503-4232-2.
+[7] Conover, W. J. 1999.Practical nonparametric statis-
+tics. john wiley & sons.
+[8] Dem ˇsar, J. 2006. Statistical comparisons of classifiers
+over multiple data sets.Journal of Machine learning
+research, 7(Jan): 1–30.
+[9] Dorogush, A. V .; Ershov, V .; and Gulin, A. 2018. Cat-
+Boost: gradient boosting with categorical features sup-
+port. ArXiv:1810.11363 [cs].
+[10] Erickson, N.; Purucker, L.; Tschalzev, A.; Holzm ¨uller,
+D.; Desai, P. M.; Salinas, D.; and Hutter, F. 2025.
+TabArena: A Living Benchmark for Machine Learning
+on Tabular Data. ArXiv:2506.16791 [cs].
+[11] Frazier, P. I. 2018. A tutorial on Bayesian optimization.
+arXiv preprint arXiv:1807.02811.
+[12] Friedman, J. H. 2001. Greedy function approximation:
+A gradient boosting machine.The Annals of Statistics,
+29(5): 1189–1232. Publisher: Institute of Mathemati-
+cal Statistics.
+[13] Gorishniy, Y .; Rubachev, I.; Khrulkov, V .; and
+Babenko, A. 2023. Revisiting Deep Learning Models
+for Tabular Data. ArXiv:2106.11959 [cs].
+[14] Grinsztajn, L.; Oyallon, E.; and Varoquaux, G. 2022.
+Why do tree-based models still outperform deep learn-
+ing on tabular data? ArXiv:2207.08815 [cs].
+[15] Hegselmann, S.; Buendia, A.; Lang, H.; Agrawal, M.;
+Jiang, X.; and Sontag, D. 2023. TabLLM: Few-shot
+Classification of Tabular Data with Large Language
+Models. InProceedings of The 26th International Con-
+ference on Artificial Intelligence and Statistics, 5549–
+5581. PMLR. ISSN: 2640-3498.
+[16] Hollmann, N.; M ¨uller, S.; Eggensperger, K.; and Hut-
+ter, F. 2023. TabPFN: A Transformer That Solves
+Small Tabular Classification Problems in a Second.
+ArXiv:2207.01848 [cs].
+[17] Hollmann, N.; M ¨uller, S.; Purucker, L.; Krishnakumar,
+A.; K ¨orfer, M.; Hoo, S. B.; Schirrmeister, R. T.; and
+Hutter, F. 2025. Accurate predictions on small data
+with a tabular foundation model.Nature, 637(8045):
+319–326. Publisher: Nature Publishing Group.
+[18] Madry, A.; Makelov, A.; Schmidt, L.; Tsipras, D.;
+and Vladu, A. 2019. Towards Deep Learning Models
+Resistant to Adversarial Attacks. ArXiv:1706.06083
+[stat].
+[19] McElfresh, D.; Khandagale, S.; Valverde, J.; C,
+V . P.; Feuer, B.; Hegde, C.; Ramakrishnan, G.; Gold-
+blum, M.; and White, C. 2024. When Do Neu-
+ral Nets Outperform Boosted Trees on Tabular Data?
+ArXiv:2305.02997 [cs].
+[20] Pearl, J. 2009.Causality. Cambridge: Cambridge Uni-
+versity Press, 2 edition. ISBN 978-0-521-89560-6.
+[21] Qu, J.; Holzm ¨uller, D.; Varoquaux, G.; and Mor-
+van, M. L. 2025. TabICL: A Tabular Founda-
+tion Model for In-Context Learning on Large Data.
+ArXiv:2502.05564 [cs].
+[22] Rahimian, H.; and Mehrotra, S. 2019. Distribution-
+ally robust optimization: A review.arXiv preprint
+arXiv:1908.05659.
+[23] Shanmugam, R. 2018. Elements of causal inference:
+foundations and learning algorithms.Journal of Statis-
+tical Computation and Simulation, 88(16): 3248–3248.
+[24] Somepalli, G.; Goldblum, M.; Schwarzschild, A.;
+Bruss, C. B.; and Goldstein, T. 2021. SAINT:
+Improved Neural Networks for Tabular Data
+via Row Attention and Contrastive Pre-Training.
+ArXiv:2106.01342 [cs].
+[25] Watanabe, S. 2023. Tree-Structured Parzen Es-
+timator: Understanding Its Algorithm Components
+and Their Roles for Better Empirical Performance.
+ArXiv:2304.11127 [cs].
+[26] Wu, Y .; and Bergman, D. L. 2025. Zero-shot Meta-
+learning for Tabular Prediction Tasks with Adversari-
+ally Pre-trained Transformer. ArXiv:2502.04573 [cs].
+[27] Yan, J.; Zheng, B.; Xu, H.; Zhu, Y .; Chen, D. Z.;
+Sun, J.; Wu, J.; and Chen, J. 2024. Making Pre-
+trained Language Models Great on Tabular Prediction.
+ArXiv:2403.01841 [cs].
+[28] Ye, C.; Lu, G.; Wang, H.; Li, L.; Wu, S.; Chen, G.; and
+Zhao, J. 2024. Towards Cross-Table Masked Pretrain-
+ing for Web Data Mining. ArXiv:2307.04308 [cs].
+[29] Ye, H.-J.; Liu, S.-Y .; and Chao, W.-L. 2025. A Closer
+Look at TabPFN v2: Understanding Its Strengths and
+Extending Its Capabilities. ArXiv:2502.17361 [cs].
+[30] Zhang, X.; and Robinson, D. M. 2025. Mitra: Mixed
+synthetic priors for enhancing tabular foundation mod-
+els.
+
+=== PDF PAGE 6 ===
+A RTFM Algorithm
+We summarize ROBUSTTABULARFOUNDATIONMODELS
+in Algorithms 1 and 2. A description of the algorithm is
+given in Section . In Algorithm 2, we reference an abstract
+function SuggestParameters which represents any black-box
+optimization algorithm. In this case, we use the Optuna
+python package [1] and the Tree-structed Parzen Estima-
+tor [25] algorithm, which belongs to the class of Bayesian
+Optimization algorithms [11]. At each iteration, this algo-
+rithm uses the information gained from the previous trials
+(the estimated optimality gaps) to propose a new parameter,
+balancing exploration and exploitation to efficiently find pa-
+rameters corresponding to large optimality gaps. Since we
+will sample the parameters following a softmax distribution,
+identifying the parameters corresponding to the largest op-
+timality gaps is paramount, as the probability of sampling
+from the rest of the parameter space will be negligible. To
+begin the minimization stage, we first construct the distribu-
+tionQ∈∆ P. Rather than constructingHmin as a parameter
+itself, we introduce a scalar parameterc∈(0,1)and de-
+fineH min =clog(n trials), such thatH min is a given as a
+fraction of the maximum possible entropy ofQ. WithH min
+specified, we can findηsuch thatH(Q(η)) =H min using
+one-dimensional root finding (e.g. bisection). Then we gen-
+erate each dataset in a training batch by sampling a parame-
+terθ i ∼Qand generatorϕ∼p(Φ;θ i). We train the model
+for a fixed number of iterations and then return to the maxi-
+mization stage. In our implementation, after five epochs we
+incorporate the original TabPFN model as another baseline
+model. This can potentially address regions of the parameter
+space where the model has reduced its performance by fo-
+cusing on improving in other regions. An illustration of the
+maximum estimated optimality gap found during each max-
+imization stage is shown in Figure 2. We observe that af-
+ter the original TFM is introduced as an additional baseline
+model, the parameter search uncovers larger optimality gaps
+for a few epochs, suggesting that the model did have some
+performance degradation during the initial training epochs
+over some regions of the parameter space.
+The RTFM algorithm is highly parallelizable, both in the
+dataset generation steps and the parameter search. For a
+fixed parameterizationθ, each dataset generatorϕ∼p(Φ;θ)
+is sampled independently from the same distribution, such
+that all datasets generated for a given batch can be created
+concurrently. The ParameterSearch algorithm can be com-
+pletely parallelized within each trial. In our implementation,
+for each trial, we generate a batch of datasets and then fit
+and evaluate each model and dataset pair concurrently. For
+example, in our experiments, we setnd = 20and usede= 7
+baseline models, resulting inn ds ∗e= 140separate pro-
+cesses distributed across all available cores.
+B SCM Parameters
+We summarize the parameter space used in our experiments
+in Table 2. We show the parameters corresponding to the
+maximum optimality gap found over then trials per max-
+min iteration in Table 5. For this work, we implemented
+SCMs as randomized MLPs. In addition to the structure
+Algorithm 1: ROBUSTTABULARFOUNDATIONMODELS
+(RTFM)
+Require:Initial TFM weightsW, baseline estimators
+{f1, . . . , fe},n e,n iter,n t,n d,c∈(0,1)
+{(θi, δi)}ntrials
+i=1 ←ParameterSearch(W,{f 1, . . . , fe}, nt, nd)
+Hmin ←clog(n t)
+η←RootFinding(H min, δ)
+Q←Softmax(η·δ)
+fore∈[n e]do
+fort∈[n iter]do
+θ1, . . . , θnb ∼Q
+ϕ1, . . . , ϕnb ∼p(Φ;θ 1), . . . , p(Φ;θnb)
+{(xi, yi)}nb
+i=1 ∼p(ϕ 1), . . . , p(ϕnb)
+{xi
+train, xi
+test, yi
+train, yi
+test}nb
+i=1 ←
+TrainTestSplit({(xi, yi)}nb
+i=1)
+l(gW)← L P F N(gW,{x i
+train, xi
+test, yi
+train, yi
+test}nb
+i=1)
+W←update(W, l(g W))▷Gradient step
+end for
+{(θi, δi)}ntrials
+i=1 ←
+ParameterSearch(W,{f 1, . . . , fe}, nt, nd)
+η←RootFinding(H min, δ)
+Q←Softmax(η·δ)
+end for
+ReturnRobust TFM modelg W
+Algorithm 2: ParameterSearch
+Require:TFM weightsW, baseline estimators
+{f1, . . . , fe}, num. trialsn t, num. datasetsn d
+Dθ ={}
+fori∈[n t]do
+θi ←SuggestParameters(D θ)▷Black-box optimizer
+proposes new parameter
+forj∈[n d]do
+ϕj ∼p(Φ;θ i)
+xj
+train, xj
+test, yj
+train, yj
+test ∼p(ϕ j)
+lj(gW)← L P F N(gW, xj
+train, yj
+train, xj
+test, yj
+test)
+lb ← ∞
+forf k ∈ {f1, . . . , fe}do
+lj(fk)← L P F N(fk, xj
+train, yj
+train, xj
+test, yj
+test)
+lb ←min(l b, lj(fk))
+end for
+δj
+i ←l j(gW)−l b ▷Estimate optimality gap
+end for
+δi ← 1
+nd
+Pnd
+j=1 δj
+i
+Dθ ←D θ ∪ {(θi, δi)}
+end for
+ReturnParameters and estimated optimality gapsD θ
+of the MLP itself, we can control more general properties
+such as the number of features (node activations) that are
+included in the dataset, and the ratio of features which are
+categorical. An illustration of this implementation is shown
+in Figure 3 . For integer-valued parameters, we sample from
+the truncated normal distribution over the range specified
+in the table, and then round to the nearest integer. For
+
+=== PDF PAGE 7 ===
+Figure 2: Maximum estimated optimality gap after each pa-
+rameter search during model training. After epoch 5, the
+original TFM is introduced as an additional baseline model.
+Figure 3: Anatomy of an MLP-based SCM.
+categorical variables, we use anϵ-greedy sampling scheme.
+For example, we select the activation functionµ a with
+probability1−ϵand with probabilityϵselect another
+activation function at random. For missingness, we mask
+the training data completely at random. During the maxi-
+mizataion stage, when we perform the parameter search, we
+make a few simplifications to reduce the size of the search
+space. We discretize the values for all numeric parameters.
+Rather than varyingµ h, µl, µxin independently, we couple
+them and define five different MLP sizes(µ h, µl, µxin) =
+[(5,3,2),(10,5,3),(32,8,3),(64,10,8),(128,12,13)]to
+search over. The parameters for our experiments is then
+θ= (µ h, µl, µxin , µa, µzx , µc, µrcat , µrs , µm, µd), and each
+parameter is sampled independently. Within our framework,
+we can easily add additional parameters, including those
+that control the variance or completely separate dimensions
+such as the type of SCM (MLP or tree-based).
+C Proof of Optimal Maximizer Distribution
+In this section, we provide the proof that the optimal distri-
+bution for the maximizer in equation 4 is a softmax distribu-
+tion such thatq ∗
+i ∝exp(η·δ θi(W)).
+Proposition 1.Letδ= (δ θ1 , . . . , δθn)∈R n and consider
+max
+Q∈∆n
+nX
+i=1
+qiδθi s.t.H(Q)≥H min,
+whereQ= (q 1, . . . , qn),∆ n ={Q∈R n :q i ≥
+0, P
+i qi = 1}andH(Q) =− P
+i qi logq i. If0< H min <
+lognand∃i, jsuch thatδ θi ̸=δ θj , the optimizerq ∗ is
+strictly positive and there exists a uniqueλ >0such that
+q∗
+i = exp(δθi /λ)Pn
+j=1 exp(δθj /λ) , i= 1, . . . , n,
+whereλis determined implicitly by the entropy constraint
+H(Q ∗) =H min.
+Proof.DefiningF(Q) =− P
+i qiδθi, we rewrite the prob-
+lem as
+min
+Q∈∆n
+F(Q)s.t.g(Q) :=−H(Q) +H min ≤0.
+SinceFandgare convex and the feasible region has inte-
+rior points (e.g., the uniform distribution), Slater’s condition
+holds, so KKT conditions are necessary and sufficient.
+The Lagrangian is given by
+L(Q, λ, µ, γ) =
+−
+X
+i
+qiδθi +λ
+ X
+i
+qi logq i +H min
+!
++µ
+ X
+i
+qi −1
+!
+−
+X
+i
+γiqi,
+whereλ≥0,µ∈R, andγ i ≥0. Stationarity gives
+−δθi +λ(1 + logq i) +µ−γ i = 0.
+When the entropy constraint is active (λ >0) andq i >0,
+complementary slackness impliesγ i = 0, yielding
+λ(1 + logq i) =δ θi −µ.
+Exponentiating and enforcingP
+i qi = 1gives
+qi(λ) = exp(δθi /λ)P
+j exp(δθj /λ) .
+Becauseλ >0, eachq i >0and allγ i = 0, so the
+solution is interior. We now prove the uniqueness ofλ
+solvingH(Q(λ)) =H min. Letq i(λ) = exp(δθi /λ)
+Z(λ) ,
+Z(λ) = P
+j exp(δθj /λ), and writeE(λ) =E Q(λ)[δ] =P
+i qi(λ)δθi,E 2(λ) =E q(λ)[δ2] = P
+i qi(λ)δ2
+θi. The en-
+tropy ofq(λ)can be written
+H(q(λ)) = logZ(λ)− E(λ)
+λ .
+DifferentiatelogZwith respect toλ, we have
+d
+dλ logZ(λ) = 1
+Z(λ)
+X
+i
+exp(δθi /λ)·
+
+−δθi /λ2
+=− E(λ)
+λ2 .
+Next computedE/dλ. Fromlogq i(λ) =δ θi /λ−logZ(λ)
+we get
+dqi
+dλ =q i
+d
+dλ logq i =q i
+
+− δθi
+λ2 − d
+dλ logZ(λ)
+
+.
+
+=== PDF PAGE 8 ===
+Table 2: SCM Parameter space and sampling distributions.
+Parameter Type Range Distribution
+Mean Hidden Sizeµ h integer [3, 256] TruncNorm(µ h,10)
+Mean Num. Layersµ l integer [1, 12] TruncNorm(µ l,1)
+Mean Num. Inputsµ xin integer [1, 15] TruncNorm(µ xin ,1)
+Activation fnµ a categorical [”relu”,”elu”,”identity”,”tanh”]ϵ-greedy (ϵ= 0.3)
+Mean Num. Featuresµ zx integer [2, 200] TruncNorm(µ zx , µzx /4)
+Mean Num. Classesµ c integer [2,10] TruncNorm(µ m,1)
+Mean categorical ratioµ rcat continuous [0, 1] TruncNorm(µ rcat ,0.1)
+Mean ordered cat. ratioµ rs continuous [0,1] TruncNorm(µ rs ,0.1)
+Mean ratio missingµ m continuous [0,1] TruncNorm(µ m,0.1)
+Input distributionµ d categorical [”exponential”, ”uniform”, ”normal”]ϵ-greedy (ϵ= 0.3)
+Using this, we find
+dE
+dλ =
+X
+i
+δθi
+dqi
+dλ
+=− 1
+λ2
+X
+i
+qiδ2
+θi − d
+dλ logZ(λ)
+X
+i
+qiδθi
+=− E2(λ)
+λ2 −
+
+− E(λ)
+λ2
+
+E(λ)
+=− E2(λ)−E(λ) 2
+λ2 .
+Therefore
+dE
+dλ =− VarQ(λ)(δ)
+λ2 .
+Finally, differentiateH(Q(λ)) = logZ(λ)−E(λ)/λ:
+d
+dλ H(Q(λ)) = d
+dλ logZ(λ)− 1
+λ
+dE
+dλ + E(λ)
+λ2 .
+Substituting d
+dλ logZ(λ) =− E(λ)
+λ2 cancels the last term,
+leaving
+d
+dλ H(Q(λ)) =− 1
+λ
+dE
+dλ = VarQ(λ)(δ)
+λ3 .
+SinceVar Q(λ)(δ)≥0andλ >0, the derivative is nonneg-
+ative and is strictly positive unless allδ θi are equal. Hence
+λ7→H(Q(λ))is strictly increasing on(0,∞), which im-
+plies the uniqueness ofλsolvingH(q(λ)) =H min. By
+KKT sufficiency,Q ∗ =Q(λ)is the global optimum.
+D Full Experiment Results
+In Tables 3 and 4 we provide the full experiment results
+from the TabPertNet [28] and TabArena [10] tabular bench-
+marks. For both benchmarks, we evaluate on classification
+datasets only, and limit our evaluation to datasets with at
+mostn= 10ksamples andp= 500features. We hold out
+some datasets from both benchmarks as validation datasets
+during model training. We report our test results onN=
+74datasets from TabPertNet andN= 21datasets from
+TabArena. For TabArena, we use the same folds and repeats
+as defined in the original work and corresponding leader-
+board. For TabPertNet, we use the same train/test split used
+in the original paper. We report AUC for TabPertNet and
+AUC one-vs-one (OVO) for TabArena.
+
+=== PDF PAGE 9 ===
+Table 3: TabPertNet [28] Test Results (AUC↑).
+Dataset TabPFN n.e. (RTFM) TabPFNn.e. (Base) CatBoost Random Forest XGBoost Log. Reg. MLP
+BreastCancer 0.886 0.885 0.830 0.820 0.773 0.852 0.816
+1736combined-wine-data 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+0446newtonhema 0.976 0.952 0.976 0.976 1.000 1.000 0.952
+1564Mammographic-Mass-Data-Set 0.938 0.934 0.843 0.919 0.857 0.916 0.892
+0408pharynx 0.911 0.800 0.778 0.844 0.867 0.867 0.889
+1600VulNoneVul 0.594 0.554 0.693 0.546 0.640 0.637 0.549
+CustomerBehaviour 0.991 0.994 0.734 0.818 0.837 0.855 0.852
+1333ricci vs destefano 1.000 1.000 0.708 0.917 1.000 0.875 0.875
+1635Is-this-a-good-customer 0.789 0.796 0.750 0.767 0.788 0.693 0.639
+1408national-longitudinal-survey-binary 1.000 1.000 0.991 0.988 0.962 0.995 0.998
+b depressed 0.551 0.541 0.513 0.567 0.606 0.446 0.614
+0356deltaelevators 0.951 0.953 0.950 0.955 0.947 0.945 0.945
+0437quake 0.518 0.504 0.496 0.507 0.480 0.603 0.606
+1461heart-failure 0.856 0.867 0.856 0.833 0.839 0.944 0.867
+0124analcatdataimpeach 1.000 1.000 0.550 0.750 0.850 0.900 1.000
+2304electricity 0.891 0.890 0.870 0.856 0.869 0.699 0.790
+0446arsenic-female-bladder 0.811 0.819 0.776 0.825 0.774 0.825 0.887
+0948Ishwar 0.997 0.999 0.961 0.966 0.968 0.961 0.973
+2393airlines 0.650 0.661 0.572 0.645 0.592 0.589 0.567
+0400analcatdatasupreme 1.000 1.000 1.000 1.000 1.000 0.996 0.999
+2619sf-police-incidents 0.584 0.515 0.572 0.449 0.407 0.454 0.477
+2308electricity 0.920 0.913 0.893 0.885 0.895 0.732 0.842
+0885compas-two-years 0.744 0.746 0.692 0.735 0.659 0.729 0.733
+1201Gender-Recognition-by-V oice 1.000 0.999 0.998 0.999 0.999 0.995 0.999
+0546analcatdataseropositive 1.000 1.000 0.833 0.861 1.000 0.972 0.944
+0345deltaailerons 0.977 0.976 0.972 0.973 0.976 0.967 0.971
+0445arsenic-male-bladder 0.983 0.991 0.784 0.991 0.957 0.983 0.595
+2389airlines 0.678 0.699 0.663 0.646 0.637 0.656 0.588
+0424autoPrice 1.000 1.000 0.958 1.000 1.000 0.938 0.938
+0419pm10 0.628 0.591 0.565 0.637 0.675 0.404 0.537
+2703compas-two-years 0.763 0.761 0.731 0.756 0.704 0.752 0.749
+1774Early-Stage-Diabetes 1.000 1.000 1.000 1.000 1.000 0.997 0.999
+1006Titanic 0.742 0.742 0.742 0.742 0.742 0.662 0.742
+1752Wisconsin-breast-cancer 1.000 1.000 0.997 0.999 0.999 1.000 1.000
+0541plasmaretinol 0.688 0.693 0.315 0.562 0.594 0.506 0.574
+1011cleve 0.913 0.909 0.856 0.928 0.923 0.918 0.952
+0472analcatdatamarketing 0.714 0.663 0.566 0.480 0.437 0.383 0.714
+0447arsenic-female-lung 0.948 0.888 0.784 0.888 0.970 0.276 0.293
+2391airlines 0.616 0.628 0.665 0.661 0.629 0.608 0.558
+2392airlines 0.612 0.601 0.665 0.627 0.647 0.691 0.696
+0555socmob 0.996 0.998 0.951 0.957 0.960 0.932 0.959
+2622sf-police-incidents 0.502 0.456 0.398 0.474 0.561 0.504 0.469
+0406visualizingenvironmental 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+diabetesdata upload 1.000 0.998 1.000 1.000 1.000 0.989 0.992
+0312cpu act 0.981 0.981 0.976 0.977 0.971 0.956 0.979
+1458kdd ipumsla 97-small 0.942 0.942 0.932 0.943 0.930 0.881 0.540
+piracydataset 0.678 0.604 0.684 0.737 0.656 0.770 0.778
+2620sf-police-incidents 0.531 0.492 0.367 0.541 0.425 0.491 0.517
+2306electricity 0.879 0.882 0.870 0.862 0.863 0.771 0.838
+2621sf-police-incidents 0.611 0.579 0.634 0.350 0.628 0.630 0.516
+2390airlines 0.600 0.597 0.590 0.574 0.560 0.584 0.516
+BankPersonalLoanModelling 0.589 0.582 0.605 0.594 0.606 0.604 0.562
+1512eye movements 0.652 0.650 0.701 0.686 0.700 0.594 0.660
+NFL 0.632 0.595 1.000 1.000 1.000 1.000 0.977
+2305electricity 0.928 0.931 0.920 0.903 0.911 0.788 0.858
+1592Diabetes-Data-Set 0.882 0.882 0.871 0.884 0.874 0.839 0.844
+0509pollen 0.472 0.467 0.451 0.481 0.485 0.478 0.502
+1413shill-bidding 1.000 1.000 1.000 1.000 0.999 0.999 0.996
+BankNoteAuthentication 1.000 1.000 1.000 1.000 1.000 0.999 1.000
+0284bank8FM 0.992 0.991 0.989 0.991 0.988 0.991 0.991
+0292cpu small 0.980 0.979 0.978 0.979 0.974 0.949 0.972
+1742Loan-Predication 0.729 0.698 0.669 0.671 0.703 0.692 0.657
+Employee Satisfaction Index 0.574 0.538 0.463 0.484 0.522 0.468 0.429
+1759Red–White-wine-Dataset 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+0526collegesaaup 1.000 1.000 0.918 0.913 0.939 0.958 0.960
+bt datasett3 1.000 1.000 1.000 1.000 1.000 0.970 0.997
+0435strikes 1.000 1.000 1.000 0.995 0.991 0.616 0.903
+UniversalBank 0.589 0.582 0.605 0.594 0.609 0.604 0.579
+1692Gender-Classification-Dataset 0.996 0.997 0.994 0.996 0.996 0.996 0.996
+1142Sick numeric 0.999 0.998 0.999 0.999 0.997 0.949 0.943
+1451early-stage-diabetes 1.000 1.000 1.000 1.000 1.000 0.997 1.000
+TravelInsurancePrediction 0.823 0.811 0.812 0.802 0.812 0.786 0.815
+1898Personal-Loan-Modeling 0.590 0.611 0.633 0.630 0.633 0.627 0.601
+newmodel 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+1578kdd ipumsla 97-small 0.957 0.952 0.947 0.958 0.952 0.906 0.534
+loan train 0.731 0.672 0.657 0.682 0.695 0.671 0.645
+
+=== PDF PAGE 10 ===
+Table 4: TabArena [10] Test Results (AUC OVO↑).
+Dataset TabPFN n.e.(RTFM) TabPFNn.e.(Base) CatBoost Random Forest XGBoost Log. Reg. MLP
+BankCustomerChurn0.861±0.007 0.870±0.007 0.843±0.008 0.848±0.007 0.831±0.007 0.838±0.008 0.798±0.009
+FitnessClub0.821±0.012 0.821±0.012 0.748±0.020 0.745±0.020 0.718±0.021 0.780±0.018 0.701±0.022
+Is-this-a-good-customer0.743±0.018 0.738±0.023 0.677±0.025 0.725±0.019 0.679±0.021 0.677±0.024 0.618±0.029
+MIC0.670±0.011 0.660±0.012 0.674±0.019 0.671±0.020 0.667±0.022 0.700±0.025 0.659±0.020
+MarketingCampaign0.902±0.016 0.900±0.017 0.834±0.017 0.837±0.021 0.819±0.020 0.848±0.019 0.810±0.018
+NATICUSdroid0.984±0.002 0.983±0.002 0.984±0.002 0.985±0.002 0.976±0.003 0.981±0.002 0.978±0.003
+anneal0.994±0.010 0.999±0.003 0.983±0.023 0.993±0.011 0.995±0.011 0.995±0.007 0.998±0.003
+blood-transfusion-service-center0.749±0.029 0.748±0.027 0.673±0.033 0.738±0.029 0.681±0.026 0.752±0.027 0.706±0.070
+churn0.926±0.012 0.926±0.010 0.920±0.009 0.923±0.012 0.916±0.008 0.820±0.013 0.828±0.012
+coil2000insurancepolicies0.766±0.012 0.757±0.013 0.711±0.013 0.748±0.012 0.691±0.014 0.714±0.011 0.682±0.012
+credit-g0.779±0.020 0.766±0.017 0.755±0.023 0.770±0.020 0.771±0.020 0.761±0.023 0.723±0.027
+diabetes0.838±0.023 0.840±0.024 0.796±0.020 0.833±0.024 0.820±0.023 0.829±0.024 0.721±0.035
+hazelnut-spread-contaminant-detection0.986±0.003 0.986±0.004 0.974±0.005 0.967±0.005 0.957±0.006 0.608±0.047 0.849±0.014
+maternalhealthrisk0.945±0.013 0.941±0.012 0.939±0.014 0.935±0.014 0.941±0.014 0.800±0.018 0.777±0.024
+polishcompaniesbankruptcy0.956±0.006 0.955±0.007 0.952±0.007 0.958±0.010 0.933±0.006 0.552±0.041 0.650±0.087
+qsar-biodeg0.938±0.012 0.934±0.012 0.923±0.013 0.929±0.012 0.928±0.012 0.925±0.013 0.917±0.013
+seismic-bumps0.771±0.023 0.768±0.029 0.661±0.024 0.746±0.016 0.676±0.016 0.713±0.026 0.639±0.029
+splice0.995±0.002 0.995±0.002 0.994±0.002 0.994±0.002 0.994±0.002 0.989±0.002 0.991±0.002
+studentsdropoutandacademicsuccess0.883±0.007 0.880±0.005 0.866±0.006 0.859±0.007 0.864±0.009 0.844±0.005 0.812±0.007
+taiwanesebankruptcyprediction0.944±0.007 0.943±0.005 0.932±0.010 0.937±0.007 0.923±0.012 0.576±0.027 0.521±0.015
+websitephishing0.965±0.007 0.974±0.005 0.972±0.005 0.972±0.005 0.969±0.005 0.923±0.009 0.969±0.006
+Table 5: Mean parameter values corresponding to the maximum estimated optimality gap for each max-min iteration of the
+RTFM algorithm. We observe significant variation in these parameters across iterations.
+max-min iter. µl µh µxin µzx µrs µc µa µrcat µm µd
+1 5 10 3 5 1.0 8 tanh 0.9 0.4 uniform
+2 3 5 2 5 0.1 2 identity 1.0 0.4 uniform
+3 12 128 13 200 0.0 2 identity 0.4 0.0 uniform
+4 3 5 2 6 0.6 2 tanh 1.0 0.0 exponential
+5 10 64 8 32 0.4 2 tanh 1.0 0.0 uniform
+6 8 32 5 13 0.8 10 identity 0.0 0.2 normal
+7 10 64 8 162 0.9 6 elu 0.6 0.0 normal
+8 5 10 3 13 0.0 10 tanh 0.8 0.0 uniform
+9 5 10 3 5 0.3 6 identity 0.6 0.0 exponential
+10 5 10 3 5 0.1 10 tanh 0.5 0.0 normal
+11 3 5 2 5 0.0 8 relu 1.0 0.0 normal
+12 3 5 2 5 0.6 4 relu 0.6 0.0 exponential
+13 3 5 2 5 0.4 6 tanh 0.6 0.0 normal
+14 5 10 3 5 0.8 8 identity 0.8 0.0 exponential
+15 3 5 2 5 1.0 8 elu 0.6 0.0 uniform
+16 3 5 2 6 0.7 6 identity 0.3 0.0 uniform
+17 8 32 5 91 0.0 2 tanh 1.0 0.0 exponential
+18 3 5 2 5 0.0 8 tanh 1.0 0.0 exponential
+19 3 5 2 6 0.2 6 tanh 0.2 0.0 exponential
+20 12 128 13 200 0.2 2 identity 0.1 0.0 exponential
+21 3 5 2 6 0.9 8 relu 0.6 0.0 exponential
+22 3 5 2 5 0.3 8 identity 0.2 0.0 uniform
+23 5 10 3 5 0.2 4 tanh 0.3 0.0 normal
+24 3 5 2 5 0.8 8 identity 0.1 0.0 uniform
+25 3 5 2 5 0.2 4 relu 1.0 0.0 exponential
+26 3 5 2 5 0.5 8 tanh 0.8 0.0 normal
+27 8 32 5 13 0.1 4 identity 0.0 0.0 exponential
+28 3 5 2 6 0.4 4 tanh 0.1 0.0 exponential
+29 3 5 2 5 0.1 8 identity 0.2 0.0 exponential

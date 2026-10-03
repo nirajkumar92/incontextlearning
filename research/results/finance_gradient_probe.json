@@ -1,0 +1,801 @@
+{
+  "scope": "Tiny CPU random-initialization diagnostics; no optimizer steps, trained TFM accuracy, generalization comparison or MI355X measurements",
+  "interpretation": [
+    "Unit rare-event gradients with an available reference can be much smaller than standard-task gradients at these particular weights and worlds.",
+    "Without a reference, large initial base-rate gradients do not establish a strong later conditional-risk learning signal.",
+    "Entropy scaling changes world allocation, retains query importance weights, and is one when no reference exists.",
+    "Complete/incomplete adjudication changes legal evidence and is not a paired deletion of only the logit reference.",
+    "Equal H probabilities and hidden H are diagnostic overrides; candidate main worlds need not use these H probabilities.",
+    "The tiny P1 tasks are illustrative scale comparators, not the selected R/P1 training mixture or a measured shared-training result.",
+    "Gradient norms do not imply optimizer update ratios: AdamW/Muon operate on the combined shared gradient.",
+    "The 64-candidate diagnostic pool and reduced support caps do not test full-history retrieval throughput."
+  ],
+  "environment": {
+    "python": "3.9.6",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "numpy": "1.26.4",
+    "torch": "2.8.0",
+    "device": "cpu",
+    "threads": 1,
+    "parameter_dtype": "float32",
+    "autocast": false,
+    "optimizer_steps": 0,
+    "class_slots": "default first K output slots; no trainer slot augmentation",
+    "conditional_labels": false,
+    "clipping": false
+  },
+  "seeds": {
+    "model_initialization": 731,
+    "finance_world": 743,
+    "finance_macroepisode": 757,
+    "authored_P1_episode": 761
+  },
+  "model": {
+    "size": "tiny",
+    "finance": true,
+    "options": {
+      "categorical_encoding": "hash_bits",
+      "regression_head": "quantile",
+      "regression_bins": 1025,
+      "regression_quantiles": 999,
+      "length_scaling": "logarithmic",
+      "trunk_query_kv_heads": 2,
+      "hurdle_target_scale": "positive_support"
+    },
+    "resolved_config": {
+      "cell_width": 16,
+      "cell_heads": 2,
+      "cell_hidden": 64,
+      "stages": 2,
+      "column_blocks": 1,
+      "row_blocks": 1,
+      "inducing": 8,
+      "cls_tokens": 4,
+      "width": 64,
+      "heads": 4,
+      "hidden": 176,
+      "layers": 2,
+      "classes": 256,
+      "categorical_encoding": "hash_bits",
+      "regression_head": "quantile",
+      "regression_bins": 1025,
+      "regression_quantiles": 999,
+      "length_scaling": "logarithmic",
+      "trunk_query_kv_heads": 2,
+      "hurdle_target_scale": "positive_support"
+    },
+    "parameter_count": 317732,
+    "initial_state_sha256": "aa13e0aaaeb2250518809e0166b38a11e33de8bf01bfc4ae48b2da53219fd625",
+    "weights_unchanged": true
+  },
+  "standard_arguments": {
+    "family": "P1",
+    "n_support": 64,
+    "n_query": 128,
+    "n_features": 16,
+    "stage": 1
+  },
+  "analytic": {
+    "scope": "Ideal binary scalar log-odds derivatives, not model gradient norms",
+    "population_prevalence": 0.0001,
+    "class_proposal": [
+      0.5,
+      0.5
+    ],
+    "importance_weights": [
+      1.9998,
+      0.0002
+    ],
+    "unit_formula": "d ell / d z = w_y * (p-y)",
+    "entropy": 0.001021029037030943,
+    "hypothetical_reference_entropy_multiplier": 979.4040754295357,
+    "rows": [
+      {
+        "p": 0.0001,
+        "negative_derivative": 0.00019998000000000002,
+        "positive_derivative": -0.00019998000000000002,
+        "balanced_proposal_mean": 0.0,
+        "balanced_proposal_mean_absolute": 0.00019998000000000002,
+        "entropy_scaled_negative": 0.19586122700439856,
+        "entropy_scaled_positive": -0.19586122700439856
+      },
+      {
+        "p": 0.001,
+        "negative_derivative": 0.0019998,
+        "positive_derivative": -0.0001998,
+        "balanced_proposal_mean": 0.0009,
+        "balanced_proposal_mean_absolute": 0.0010998,
+        "entropy_scaled_negative": 1.9586122700439854,
+        "entropy_scaled_positive": -0.19568493427082123
+      },
+      {
+        "p": 0.01,
+        "negative_derivative": 0.019998000000000002,
+        "positive_derivative": -0.00019800000000000002,
+        "balanced_proposal_mean": 0.0099,
+        "balanced_proposal_mean_absolute": 0.010098000000000001,
+        "entropy_scaled_negative": 19.58612270043986,
+        "entropy_scaled_positive": -0.19392200693504807
+      },
+      {
+        "p": 0.5,
+        "negative_derivative": 0.9999,
+        "positive_derivative": -0.0001,
+        "balanced_proposal_mean": 0.4999,
+        "balanced_proposal_mean_absolute": 0.5,
+        "entropy_scaled_negative": 979.3061350219928,
+        "entropy_scaled_positive": -0.09794040754295358
+      }
+    ],
+    "calibrated_finance_to_balanced_binary_magnitude_ratio": 0.00039996000000000004,
+    "joint_80_20_to_all_binary_standard_ratio": 9.999000000000001e-05,
+    "joint_80_20_to_standard_binary_half_share_ratio": 0.00019998000000000002,
+    "mixture_caveat": "These compare per-example scalar magnitudes only, not mean parameter gradients or optimizer updates; standard multiclass/regression scales differ."
+  },
+  "paired_normalization_checks": [
+    {
+      "complete_adjudication": true,
+      "same_forward_and_loss_inputs": true,
+      "same_population_and_query_ids": true,
+      "entropy_multiplier": 786.6910064339136,
+      "loss_and_gradient_scaling_verified": true,
+      "gradient_norm_scaling_relative_errors": {
+        "trunk": 0.00021281300433883212,
+        "shared_head": 0.00023696426764713372,
+        "class_head": 0.00018464321185878715,
+        "regression_head": 0.0
+      },
+      "gradient_norm_scaling_rtol": 0.005,
+      "gradient_norm_scaling_atol": 1e-10
+    },
+    {
+      "complete_adjudication": false,
+      "same_forward_and_loss_inputs": true,
+      "same_population_and_query_ids": true,
+      "entropy_multiplier": 1.0,
+      "loss_and_gradient_scaling_verified": true,
+      "gradient_norm_scaling_relative_errors": {
+        "trunk": 0.0,
+        "shared_head": 0.0,
+        "class_head": 0.0,
+        "regression_head": 0.0
+      },
+      "gradient_norm_scaling_rtol": 0.005,
+      "gradient_norm_scaling_atol": 1e-10
+    }
+  ],
+  "records": [
+    {
+      "name": "finance_reference_unit",
+      "macro_loss": 0.0010150466114282608,
+      "world_multiplier": 1.0,
+      "original_query_denominator": 128,
+      "route_count": 2,
+      "gradient_norm_before_clipping_or_optimizer": {
+        "trunk": 7.824583476024197e-06,
+        "shared_head": 3.6770495762756723e-06,
+        "class_head": 0.00015061782036444326,
+        "regression_head": 0.0
+      },
+      "forward_input_sha256": "7e10abaf4e1cb3f34880df200a1557fad3d7fec4515e3530bc309468f0bbe945",
+      "loss_input_sha256": "f5672d628df486513ebec997e76667973941eae257109b87be56dcbf80862046",
+      "actual_binary_model": {
+        "probability": {
+          "count": 128,
+          "mean": 0.00012595156169936672,
+          "minimum": 0.0001242271246155724,
+          "maximum": 0.00012897784472443163,
+          "mean_absolute": 0.00012595156169936672,
+          "rms": 0.00012595645289107538
+        },
+        "proposal_positive_queries": 64,
+        "per_query_derivative_including_importance_before_macro_mean": {
+          "count": 128,
+          "mean": 2.7014870852326567e-05,
+          "minimum": -0.00019797559070866555,
+          "maximum": 0.0002579302235972136,
+          "mean_absolute": 0.00022499014528420958,
+          "rms": 0.00022661089672325186
+        },
+        "derivative_identity_max_absolute_error": 1.4217398379466964e-10,
+        "by_outcome": {
+          "0": {
+            "probability": {
+              "count": 64,
+              "mean": 0.00012601497678588203,
+              "minimum": 0.0001242271246155724,
+              "maximum": 0.00012897784472443163,
+              "mean_absolute": 0.00012601497678588203,
+              "rms": 0.00012601920285165613
+            },
+            "importance_weight": {
+              "count": 64,
+              "mean": 1.9998019998019996,
+              "minimum": 1.9998019998019998,
+              "maximum": 1.9998019998019998,
+              "mean_absolute": 1.9998019998019996,
+              "rms": 1.9998019998019998
+            },
+            "derivative": {
+              "count": 64,
+              "mean": 0.00025200501613653614,
+              "minimum": 0.0002484297438059002,
+              "maximum": 0.0002579302235972136,
+              "mean_absolute": 0.00025200501613653614,
+              "rms": 0.0002520134673802156
+            }
+          },
+          "1": {
+            "probability": {
+              "count": 64,
+              "mean": 0.00012588814661285141,
+              "minimum": 0.000124296682770364,
+              "maximum": 0.0001287193299503997,
+              "mean_absolute": 0.00012588814661285141,
+              "rms": 0.00012589367165364798
+            },
+            "importance_weight": {
+              "count": 64,
+              "mean": 0.00019800019800019804,
+              "minimum": 0.000198000198000198,
+              "maximum": 0.000198000198000198,
+              "mean_absolute": 0.00019800019800019804,
+              "rms": 0.00019800019800019804
+            },
+            "derivative": {
+              "count": 64,
+              "mean": -0.000197975274431883,
+              "minimum": -0.00019797559070866555,
+              "maximum": -0.00019797471759375185,
+              "mean_absolute": 0.000197975274431883,
+              "rms": 0.00019797527443202002
+            }
+          }
+        }
+      },
+      "finance": {
+        "overrides": {
+          "history_size": 1000000,
+          "future_size": 333333,
+          "width": 16,
+          "prevalence": 0.0001,
+          "mechanism_family": "risk_partition",
+          "feature_view": "hide_h",
+          "positive_h_probability": 0.01,
+          "negative_h_probability": 0.01,
+          "risk_campaigns": false,
+          "arrival_burst": false,
+          "risk_features": 4,
+          "risk_strength": 3.0,
+          "reservoir_cap": 32,
+          "positive_cap": 16,
+          "local_cap": 32,
+          "max_centers": 2,
+          "candidate_cap": 64,
+          "calibration_rows": 128,
+          "complete_adjudication": true,
+          "loss_normalization": "unit"
+        },
+        "stage": 1,
+        "task": "binary",
+        "world_id": "finance-419c5c6c7444774337c5",
+        "population_id": "finance-d7046917b1bbe8e07cfd",
+        "historical_rows": 1000000,
+        "future_rows": 333333,
+        "future_events": 33,
+        "realized_future_prevalence": 9.9000099000099e-05,
+        "eligible_rows": 679030,
+        "eligible_events": 108,
+        "reference_kind": 1,
+        "reference_rows": 678245,
+        "reference_prevalence": 0.00012753484723831767,
+        "finite_query_id_sha256": "3980944cd4c5a8d033c869c2ebdd58e6ec634211677d9315855d4007aee13d59",
+        "candidate_count": 64,
+        "candidate_mode": "declared_uniform_candidate_sample"
+      }
+    },
+    {
+      "name": "finance_reference_entropy",
+      "macro_loss": 0.7985280752182007,
+      "world_multiplier": 786.6910064339136,
+      "original_query_denominator": 128,
+      "route_count": 2,
+      "gradient_norm_before_clipping_or_optimizer": {
+        "trunk": 0.0061542194729641625,
+        "shared_head": 0.002892016364896594,
+        "class_head": 0.11846780637343308,
+        "regression_head": 0.0
+      },
+      "forward_input_sha256": "7e10abaf4e1cb3f34880df200a1557fad3d7fec4515e3530bc309468f0bbe945",
+      "loss_input_sha256": "f5672d628df486513ebec997e76667973941eae257109b87be56dcbf80862046",
+      "actual_binary_model": {
+        "probability": {
+          "count": 128,
+          "mean": 0.00012595156169936672,
+          "minimum": 0.0001242271246155724,
+          "maximum": 0.00012897784472443163,
+          "mean_absolute": 0.00012595156169936672,
+          "rms": 0.00012595645289107538
+        },
+        "proposal_positive_queries": 64,
+        "per_query_derivative_including_importance_before_macro_mean": {
+          "count": 128,
+          "mean": 2.7014873893898607e-05,
+          "minimum": -0.00019797558294297463,
+          "maximum": 0.00025793021058283916,
+          "mean_absolute": 0.00022499013453425524,
+          "rms": 0.00022661088641824488
+        },
+        "derivative_identity_max_absolute_error": 1.459074875894209e-10,
+        "by_outcome": {
+          "0": {
+            "probability": {
+              "count": 64,
+              "mean": 0.00012601497678588203,
+              "minimum": 0.0001242271246155724,
+              "maximum": 0.00012897784472443163,
+              "mean_absolute": 0.00012601497678588203,
+              "rms": 0.00012601920285165613
+            },
+            "importance_weight": {
+              "count": 64,
+              "mean": 1.9998019998019996,
+              "minimum": 1.9998019998019998,
+              "maximum": 1.9998019998019998,
+              "mean_absolute": 1.9998019998019996,
+              "rms": 1.9998019998019998
+            },
+            "derivative": {
+              "count": 64,
+              "mean": 0.0002520050084281538,
+              "minimum": 0.00024842972620390196,
+              "maximum": 0.00025793021058283916,
+              "mean_absolute": 0.0002520050084281538,
+              "rms": 0.0002520134596819237
+            }
+          },
+          "1": {
+            "probability": {
+              "count": 64,
+              "mean": 0.00012588814661285141,
+              "minimum": 0.000124296682770364,
+              "maximum": 0.0001287193299503997,
+              "mean_absolute": 0.00012588814661285141,
+              "rms": 0.00012589367165364798
+            },
+            "importance_weight": {
+              "count": 64,
+              "mean": 0.00019800019800019804,
+              "minimum": 0.000198000198000198,
+              "maximum": 0.000198000198000198,
+              "mean_absolute": 0.00019800019800019804,
+              "rms": 0.00019800019800019804
+            },
+            "derivative": {
+              "count": 64,
+              "mean": -0.00019797526064035663,
+              "minimum": -0.00019797558294297463,
+              "maximum": -0.00019797469268927862,
+              "mean_absolute": 0.00019797526064035663,
+              "rms": 0.00019797526064049711
+            }
+          }
+        }
+      },
+      "finance": {
+        "overrides": {
+          "history_size": 1000000,
+          "future_size": 333333,
+          "width": 16,
+          "prevalence": 0.0001,
+          "mechanism_family": "risk_partition",
+          "feature_view": "hide_h",
+          "positive_h_probability": 0.01,
+          "negative_h_probability": 0.01,
+          "risk_campaigns": false,
+          "arrival_burst": false,
+          "risk_features": 4,
+          "risk_strength": 3.0,
+          "reservoir_cap": 32,
+          "positive_cap": 16,
+          "local_cap": 32,
+          "max_centers": 2,
+          "candidate_cap": 64,
+          "calibration_rows": 128,
+          "complete_adjudication": true,
+          "loss_normalization": "reference_entropy"
+        },
+        "stage": 1,
+        "task": "binary",
+        "world_id": "finance-661929fe9c2af8fc6743",
+        "population_id": "finance-d7046917b1bbe8e07cfd",
+        "historical_rows": 1000000,
+        "future_rows": 333333,
+        "future_events": 33,
+        "realized_future_prevalence": 9.9000099000099e-05,
+        "eligible_rows": 679030,
+        "eligible_events": 108,
+        "reference_kind": 1,
+        "reference_rows": 678245,
+        "reference_prevalence": 0.00012753484723831767,
+        "finite_query_id_sha256": "3980944cd4c5a8d033c869c2ebdd58e6ec634211677d9315855d4007aee13d59",
+        "candidate_count": 64,
+        "candidate_mode": "declared_uniform_candidate_sample"
+      }
+    },
+    {
+      "name": "finance_no_reference_unit",
+      "macro_loss": 0.6317400932312012,
+      "world_multiplier": 1.0,
+      "original_query_denominator": 128,
+      "route_count": 2,
+      "gradient_norm_before_clipping_or_optimizer": {
+        "trunk": 0.10505458961936684,
+        "shared_head": 0.059016485429145005,
+        "class_head": 2.410902772054578,
+        "regression_head": 0.0
+      },
+      "forward_input_sha256": "0fda4ffdcaf4127b03e00f5b6e6d9d5933cd92ead0a462930f254a376ed5a24d",
+      "loss_input_sha256": "e140fc620932a54aca420d2566ce21d61f80b9ba8d1a347a332d42db84297c89",
+      "actual_binary_model": {
+        "probability": {
+          "count": 128,
+          "mean": 0.4962097969837487,
+          "minimum": 0.49314674735069275,
+          "maximum": 0.5026736259460449,
+          "mean_absolute": 0.4962097969837487,
+          "rms": 0.496212091351309
+        },
+        "proposal_positive_queries": 69,
+        "per_query_derivative_including_importance_before_macro_mean": {
+          "count": 128,
+          "mean": 0.4571881229931023,
+          "minimum": -0.00010022448259405792,
+          "maximum": 1.005247712135315,
+          "mean_absolute": 0.4572956356278155,
+          "rms": 0.6734839954989654
+        },
+        "derivative_identity_max_absolute_error": 9.251377297569974e-08,
+        "by_outcome": {
+          "0": {
+            "probability": {
+              "count": 59,
+              "mean": 0.49604030382835257,
+              "minimum": 0.49314674735069275,
+              "maximum": 0.5026736259460449,
+              "mean_absolute": 0.49604030382835257,
+              "rms": 0.49604292749663464
+            },
+            "importance_weight": {
+              "count": 59,
+              "mean": 1.9998019998019998,
+              "minimum": 1.9998019998019998,
+              "maximum": 1.9998019998019998,
+              "mean_absolute": 1.9998019998019998,
+              "rms": 1.9998019998019996
+            },
+            "derivative": {
+              "count": 59,
+              "mean": 0.99198238223286,
+              "minimum": 0.9861958622932434,
+              "maximum": 1.005247712135315,
+              "mean_absolute": 0.99198238223286,
+              "rms": 0.9919876290453657
+            }
+          },
+          "1": {
+            "probability": {
+              "count": 69,
+              "mean": 0.49635472591372504,
+              "minimum": 0.49381622672080994,
+              "maximum": 0.4994097650051117,
+              "mean_absolute": 0.49635472591372504,
+              "rms": 0.4963566929801655
+            },
+            "importance_weight": {
+              "count": 69,
+              "mean": 0.00019800019800019804,
+              "minimum": 0.000198000198000198,
+              "maximum": 0.000198000198000198,
+              "mean_absolute": 0.00019800019800019804,
+              "rms": 0.000198000198000198
+            },
+            "derivative": {
+              "count": 69,
+              "mean": -9.972186408181122e-05,
+              "minimum": -0.00010022448259405792,
+              "maximum": -9.911695815389976e-05,
+              "mean_absolute": 9.972186408181122e-05,
+              "rms": 9.972224792928438e-05
+            }
+          }
+        }
+      },
+      "finance": {
+        "overrides": {
+          "history_size": 1000000,
+          "future_size": 333333,
+          "width": 16,
+          "prevalence": 0.0001,
+          "mechanism_family": "risk_partition",
+          "feature_view": "hide_h",
+          "positive_h_probability": 0.01,
+          "negative_h_probability": 0.01,
+          "risk_campaigns": false,
+          "arrival_burst": false,
+          "risk_features": 4,
+          "risk_strength": 3.0,
+          "reservoir_cap": 32,
+          "positive_cap": 16,
+          "local_cap": 32,
+          "max_centers": 2,
+          "candidate_cap": 64,
+          "calibration_rows": 128,
+          "complete_adjudication": false,
+          "loss_normalization": "unit"
+        },
+        "stage": 1,
+        "task": "binary",
+        "world_id": "finance-d0a90dd8bba4c7521932",
+        "population_id": "finance-b3cfd050b1a5a9e7e348",
+        "historical_rows": 1000000,
+        "future_rows": 333333,
+        "future_events": 33,
+        "realized_future_prevalence": 9.9000099000099e-05,
+        "eligible_rows": 2624,
+        "eligible_events": 107,
+        "reference_kind": 0,
+        "reference_rows": 0,
+        "reference_prevalence": null,
+        "finite_query_id_sha256": "893dc4e23c1c739a774848e68bd2ca0c6d75ffe06de5443e2fc1516e8f1366d6",
+        "candidate_count": 64,
+        "candidate_mode": "declared_uniform_candidate_sample"
+      }
+    },
+    {
+      "name": "finance_no_reference_entropy",
+      "macro_loss": 0.6317400932312012,
+      "world_multiplier": 1.0,
+      "original_query_denominator": 128,
+      "route_count": 2,
+      "gradient_norm_before_clipping_or_optimizer": {
+        "trunk": 0.10505458961936684,
+        "shared_head": 0.059016485429145005,
+        "class_head": 2.410902772054578,
+        "regression_head": 0.0
+      },
+      "forward_input_sha256": "0fda4ffdcaf4127b03e00f5b6e6d9d5933cd92ead0a462930f254a376ed5a24d",
+      "loss_input_sha256": "e140fc620932a54aca420d2566ce21d61f80b9ba8d1a347a332d42db84297c89",
+      "actual_binary_model": {
+        "probability": {
+          "count": 128,
+          "mean": 0.4962097969837487,
+          "minimum": 0.49314674735069275,
+          "maximum": 0.5026736259460449,
+          "mean_absolute": 0.4962097969837487,
+          "rms": 0.496212091351309
+        },
+        "proposal_positive_queries": 69,
+        "per_query_derivative_including_importance_before_macro_mean": {
+          "count": 128,
+          "mean": 0.4571881229931023,
+          "minimum": -0.00010022448259405792,
+          "maximum": 1.005247712135315,
+          "mean_absolute": 0.4572956356278155,
+          "rms": 0.6734839954989654
+        },
+        "derivative_identity_max_absolute_error": 9.251377297569974e-08,
+        "by_outcome": {
+          "0": {
+            "probability": {
+              "count": 59,
+              "mean": 0.49604030382835257,
+              "minimum": 0.49314674735069275,
+              "maximum": 0.5026736259460449,
+              "mean_absolute": 0.49604030382835257,
+              "rms": 0.49604292749663464
+            },
+            "importance_weight": {
+              "count": 59,
+              "mean": 1.9998019998019998,
+              "minimum": 1.9998019998019998,
+              "maximum": 1.9998019998019998,
+              "mean_absolute": 1.9998019998019998,
+              "rms": 1.9998019998019996
+            },
+            "derivative": {
+              "count": 59,
+              "mean": 0.99198238223286,
+              "minimum": 0.9861958622932434,
+              "maximum": 1.005247712135315,
+              "mean_absolute": 0.99198238223286,
+              "rms": 0.9919876290453657
+            }
+          },
+          "1": {
+            "probability": {
+              "count": 69,
+              "mean": 0.49635472591372504,
+              "minimum": 0.49381622672080994,
+              "maximum": 0.4994097650051117,
+              "mean_absolute": 0.49635472591372504,
+              "rms": 0.4963566929801655
+            },
+            "importance_weight": {
+              "count": 69,
+              "mean": 0.00019800019800019804,
+              "minimum": 0.000198000198000198,
+              "maximum": 0.000198000198000198,
+              "mean_absolute": 0.00019800019800019804,
+              "rms": 0.000198000198000198
+            },
+            "derivative": {
+              "count": 69,
+              "mean": -9.972186408181122e-05,
+              "minimum": -0.00010022448259405792,
+              "maximum": -9.911695815389976e-05,
+              "mean_absolute": 9.972186408181122e-05,
+              "rms": 9.972224792928438e-05
+            }
+          }
+        }
+      },
+      "finance": {
+        "overrides": {
+          "history_size": 1000000,
+          "future_size": 333333,
+          "width": 16,
+          "prevalence": 0.0001,
+          "mechanism_family": "risk_partition",
+          "feature_view": "hide_h",
+          "positive_h_probability": 0.01,
+          "negative_h_probability": 0.01,
+          "risk_campaigns": false,
+          "arrival_burst": false,
+          "risk_features": 4,
+          "risk_strength": 3.0,
+          "reservoir_cap": 32,
+          "positive_cap": 16,
+          "local_cap": 32,
+          "max_centers": 2,
+          "candidate_cap": 64,
+          "calibration_rows": 128,
+          "complete_adjudication": false,
+          "loss_normalization": "reference_entropy"
+        },
+        "stage": 1,
+        "task": "binary",
+        "world_id": "finance-678a944bfe687ccc19b2",
+        "population_id": "finance-b3cfd050b1a5a9e7e348",
+        "historical_rows": 1000000,
+        "future_rows": 333333,
+        "future_events": 33,
+        "realized_future_prevalence": 9.9000099000099e-05,
+        "eligible_rows": 2624,
+        "eligible_events": 107,
+        "reference_kind": 0,
+        "reference_rows": 0,
+        "reference_prevalence": null,
+        "finite_query_id_sha256": "893dc4e23c1c739a774848e68bd2ca0c6d75ffe06de5443e2fc1516e8f1366d6",
+        "candidate_count": 64,
+        "candidate_mode": "declared_uniform_candidate_sample"
+      }
+    },
+    {
+      "name": "authored_P1_binary",
+      "macro_loss": 0.6935895085334778,
+      "world_multiplier": 1.0,
+      "original_query_denominator": 128,
+      "route_count": 1,
+      "gradient_norm_before_clipping_or_optimizer": {
+        "trunk": 0.009542369749307073,
+        "shared_head": 0.004543633139014982,
+        "class_head": 0.24000194447949047,
+        "regression_head": 0.0
+      },
+      "forward_input_sha256": "755990a961e5daba4f72201a458cabdd1384423183c0224d6912e90de8564cf4",
+      "loss_input_sha256": "586fe2521f327dd677da33a432021f54218f5d37e169edb22df1f53c3ba3ca3f",
+      "actual_binary_model": {
+        "probability": {
+          "count": 128,
+          "mean": 0.4976981654763222,
+          "minimum": 0.49285101890563965,
+          "maximum": 0.5018635988235474,
+          "mean_absolute": 0.4976981654763222,
+          "rms": 0.4977020388849487
+        },
+        "proposal_positive_queries": 62,
+        "per_query_derivative_including_importance_before_macro_mean": {
+          "count": 128,
+          "mean": 0.013323165010660887,
+          "minimum": -0.5069756507873535,
+          "maximum": 0.5018635988235474,
+          "mean_absolute": 0.5002120030112565,
+          "rms": 0.500221108163611
+        },
+        "derivative_identity_max_absolute_error": 8.940696716308594e-08,
+        "by_outcome": {
+          "0": {
+            "probability": {
+              "count": 66,
+              "mean": 0.4979734994245298,
+              "minimum": 0.49285101890563965,
+              "maximum": 0.5018635988235474,
+              "mean_absolute": 0.4979734994245298,
+              "rms": 0.4979775830846241
+            },
+            "importance_weight": {
+              "count": 66,
+              "mean": 1.0,
+              "minimum": 1.0,
+              "maximum": 1.0,
+              "mean_absolute": 1.0,
+              "rms": 1.0
+            },
+            "derivative": {
+              "count": 66,
+              "mean": 0.49797349626367743,
+              "minimum": 0.49285098910331726,
+              "maximum": 0.5018635988235474,
+              "mean_absolute": 0.49797349626367743,
+              "rms": 0.49797757993576514
+            }
+          },
+          "1": {
+            "probability": {
+              "count": 62,
+              "mean": 0.49740506804758505,
+              "minimum": 0.4930243194103241,
+              "maximum": 0.5014321804046631,
+              "mean_absolute": 0.49740506804758505,
+              "rms": 0.4974085499105149
+            },
+            "importance_weight": {
+              "count": 62,
+              "mean": 1.0,
+              "minimum": 1.0,
+              "maximum": 1.0,
+              "mean_absolute": 1.0,
+              "rms": 1.0
+            },
+            "derivative": {
+              "count": 62,
+              "mean": -0.5025949295490019,
+              "minimum": -0.5069756507873535,
+              "maximum": -0.4985678195953369,
+              "mean_absolute": 0.5025949295490019,
+              "rms": 0.5025983754591377
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "authored_P1_regression",
+      "macro_loss": 0.38310566258480244,
+      "world_multiplier": 1.0,
+      "original_query_denominator": 128,
+      "route_count": 1,
+      "gradient_norm_before_clipping_or_optimizer": {
+        "trunk": 0.0013968845571110415,
+        "shared_head": 0.0006540043442628589,
+        "class_head": 0.0,
+        "regression_head": 0.03038004067664475
+      },
+      "forward_input_sha256": "a342a01b19d2ff915e394dd973a8287280bb2bb941f7ae89bc379068fa404dc3",
+      "loss_input_sha256": "8074ffc12e3bfa4f5e00f20b0a26d40824c5706a405fa91329eaf6dd476d77bf"
+    }
+  ],
+  "source_sha256": {
+    "research/probes/finance_gradient_probe.py": "eb3128341bf4c7841478749c7d8149d66fe2511efd7e3b3f3077c01c518dd4ab",
+    "src/tabular_foundation/model.py": "3730e0d9ca4483979f0f2cdcd9a29c34a4953acbe11f7f5d66b98caa4441a6b6",
+    "src/tabular_foundation/codec.py": "923427ddc6a52556707ee631fd4e73ba3da6674b27b7ee5252bbc0d2a2a1c967",
+    "src/tabular_foundation/distributions.py": "e19ac2077242ab3ee0478cc47dedf20e780ed4632d78f0065bcbd0c84d6f89db",
+    "src/tabular_foundation/train.py": "3d51ed1e7ab0ce9b941a53db9863cadfbea8c1b23b15001de8fc1ef20144d7f0",
+    "src/tabular_foundation/runtime.py": "002b7098d90dbef01a0b8133aad41a69b4a0681170c58c6974a721500bb4e30e",
+    "src/tabular_foundation/schema.py": "bf6d373e252b7da2b811e9fb01d39cf1b8d6373978aecc2d33c7e17e40e5ba86",
+    "src/tabular_foundation/retrieval.py": "622cc08f997e76e11a3b88fd9dc86f0ddb9e217c90c92efcb4c596362fb14df0",
+    "src/tabular_foundation/finance_prior.py": "236e4ae08fc68725ca0541430b12deacba65f58742c72ff57d5fde7410ca6a85",
+    "src/tabular_foundation/static_prior.py": "75b7c5937869212b0f62fb3a789863cab934d95e77d522cd9e0911277c5cbb7a"
+  }
+}

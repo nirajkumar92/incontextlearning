@@ -1,0 +1,853 @@
+{
+  "schema_version": "static-recipe-v3.0",
+  "status": "authored provisional candidate; no empirical optimality or SOTA claim",
+  "objective": [
+    "binary_classification",
+    "multiclass_classification",
+    "regression"
+  ],
+  "profile": {
+    "P0": 0.85,
+    "P1": 0.1,
+    "P4": 0.05
+  },
+  "task_heads": {
+    "P0_P1": {
+      "binary": 0.34035087719298246,
+      "multiclass": 0.3508771929824561,
+      "regression": 0.3087719298245614
+    },
+    "P0_P1_exact_formula": [
+      "(1/3 - 0.05*0.2)/0.95",
+      "(1/3)/0.95",
+      "(1/3 - 0.05*0.8)/0.95"
+    ],
+    "P4": {
+      "binary": 0.2,
+      "regression": 0.8
+    },
+    "nominal_marginal": {
+      "binary": 0.3333333333333333,
+      "multiclass": 0.3333333333333333,
+      "regression": 0.3333333333333333
+    },
+    "accepted_marginal": "default known-label-universe mode does not alter task shares by class coverage; report any arithmetic failures separately"
+  },
+  "conventions": {
+    "RU": "uniform integer on inclusive [a,b]",
+    "LU": "exp(U(log(a),log(b)))",
+    "DLU": "min(b,max(a,floor(exp(U(log(a),log(b+1))))))",
+    "U": "continuous uniform, upper endpoint excluded",
+    "choose": "uniform without replacement unless stated otherwise",
+    "calibration_moments": "population means and variances; ddof=0",
+    "quantile": "linear interpolation between adjacent sorted observations; NumPy method=linear",
+    "tree_boundary": "numeric equality routes left",
+    "quantile_category_boundary": "equality routes to upper bin; searchsorted(edges,value,side=right)",
+    "world_scope": "all quantities are per-world unless explicitly row-specific",
+    "generation_dtype": "float64; cast learner inputs only after generation",
+    "categorical_probabilities": "normalize in float64",
+    "softmax": "subtract maximum logit",
+    "rng_streams": [
+      "shape",
+      "parameters",
+      "calibration",
+      "support",
+      "query",
+      "labels",
+      "rendering"
+    ],
+    "rng_key_fields": [
+      "world_id",
+      "retry_number",
+      "stream_name",
+      "object_index",
+      "row_index"
+    ],
+    "rng_stream_contract": "independent counter-based streams; no calls in one stream advance another",
+    "null_or_empty_terms": "contribute zero; log, do not reject",
+    "vector_normalization": "divide by max(L2 norm,1e-12); all-zero vector stays zero"
+  },
+  "shape": {
+    "support_bins": [
+      [
+        32,
+        127
+      ],
+      [
+        128,
+        511
+      ],
+      [
+        512,
+        2048
+      ]
+    ],
+    "support_bin_probabilities": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "support_within_bin": "RU(lower,upper)",
+    "query_size": "min(128,max(16,floor(n_support/4)))",
+    "width_values": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "width_probabilities": [
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.15,
+      0.15
+    ],
+    "minimum_width": {
+      "P0": 4,
+      "P1": 8,
+      "P4": 4
+    },
+    "multiclass_K": "RU(3,10)",
+    "binary_K": 2,
+    "multiclass_support_override": "n_support=max(n_support,16*K); recompute query_size; authored context-complexity conditioning, not class-coverage necessity; record realized shape distribution",
+    "calibration_rows": 4096,
+    "calibration_visibility": "generator only; never support or scored queries",
+    "active_dimensions": {
+      "sparse_probability": 0.75,
+      "sparse": "DLU(1,min(available_width,16))",
+      "dense": "RU(ceil(available_width/3),available_width)"
+    },
+    "available_width": {
+      "P0": "p",
+      "P1": "p-4",
+      "P4": "p-1"
+    }
+  },
+  "feature_factory": {
+    "categorical_fraction": {
+      "values": [
+        0,
+        0.25,
+        0.5,
+        1
+      ],
+      "probabilities": [
+        0.35,
+        0.3,
+        0.25,
+        0.1
+      ],
+      "assignment": "independent Bernoulli(fraction) per base coordinate"
+    },
+    "numeric": {
+      "correlation_values": [
+        0,
+        0.3,
+        0.8
+      ],
+      "correlation_probabilities": [
+        0.4,
+        0.4,
+        0.2
+      ],
+      "block_size": 4,
+      "block_assignment": "randomly permute numeric coordinates, then partition in consecutive blocks",
+      "row_draw": "v_j=sqrt(r)*u_block+sqrt(1-r)*epsilon_j; u and epsilon independent standard normal",
+      "heavy_tail_world_probability": 0.2,
+      "heavy_tail_multiplier": "one sqrt(5/chisquare(5)) shared by all numerical informative coordinates per row"
+    },
+    "categorical": {
+      "cardinality_values": [
+        2,
+        3,
+        5,
+        10,
+        32,
+        128
+      ],
+      "cardinality_probabilities": [
+        0.25,
+        0.15,
+        0.2,
+        0.2,
+        0.15,
+        0.05
+      ],
+      "rank_exponent": "U(0,1.5)",
+      "frequencies": "randomly permute category ranks; normalize rank^(-exponent)",
+      "latent_effects": "independent N(0,1), centered/scaled by exact frequency-weighted moments; variance floor 1e-12",
+      "row_draw": "categorical(frequencies)",
+      "score_input": "fixed latent effect of sampled category",
+      "learner_input": "independently permuted nominal category code; never use its integer magnitude"
+    },
+    "remaining_columns": {
+      "copy_probability": 0.3,
+      "copy_source": "uniform informative coordinate",
+      "numeric_copy_noise_sd": "LU(0.01,0.3)",
+      "numeric_copy_row_noise": "N(0,sd^2)",
+      "categorical_copy_redraw_probability": 0.05,
+      "categorical_copy_redraw": "independent draw from source frequencies",
+      "independent_probability": 0.7,
+      "independent_rule": "same world categorical fraction and single-coordinate factory; no shared factors with informative coordinates"
+    },
+    "observation": {
+      "numeric_transform_values": [
+        "identity",
+        "asinh",
+        "signed_power",
+        "exp_clip"
+      ],
+      "numeric_transform_probabilities": [
+        0.5,
+        0.15,
+        0.2,
+        0.15
+      ],
+      "signed_power_exponent": "LU(0.3,3)",
+      "exponential_clip": [
+        -5,
+        5
+      ],
+      "affine_scale": "LU(0.1,10)",
+      "affine_location": "N(0,3^2)",
+      "coarsen_world_probability": 0.25,
+      "coarsen_columns": "choose min(number_numeric,floor(p/4)) numeric columns",
+      "grid_width": "LU(0.05,0.5)*calibration_sd_of_rendered_column",
+      "rounding": "nearest integer multiple; ties to even",
+      "constant_column": "keep, no division by zero",
+      "missingness_none_probability": 0.7,
+      "missingness_other_rate": "U(0.01,0.20)",
+      "mask_draw": "independent Bernoulli(rate) per cell; includes reserved columns",
+      "permutations": "one column permutation and one code permutation per categorical column per world",
+      "reserved_numeric_columns": "P1 metadata and P4 exposure receive common numeric rendering and masks"
+    }
+  },
+  "response_compiler": {
+    "score_outputs": {
+      "regression": 1,
+      "binary": 1,
+      "multiclass": "K"
+    },
+    "score_normalization": {
+      "calibration_sd_floor": 1e-06,
+      "variance_degeneracy_threshold": 1e-12,
+      "degenerate_behavior": "set normalized score to zero and log"
+    },
+    "regression": {
+      "signal_classes": [
+        "null",
+        "weak",
+        "medium",
+        "strong",
+        "noiseless"
+      ],
+      "signal_class_probabilities": [
+        0.05,
+        0.2,
+        0.45,
+        0.25,
+        0.05
+      ],
+      "rho_rules": [
+        "0",
+        "U(0.02,0.2)",
+        "U(0.2,0.7)",
+        "U(0.7,0.98)",
+        "1"
+      ],
+      "nonnull": "w=standardized_score+sqrt((1-rho)/rho)*h*epsilon",
+      "null": "w=epsilon; no target-to-feature paths",
+      "noise_values": [
+        "normal",
+        "t5_unit_variance",
+        "laplace_unit_variance",
+        "contaminated_normal_unit_variance"
+      ],
+      "noise_probabilities": [
+        0.6,
+        0.2,
+        0.1,
+        0.1
+      ],
+      "noise_rules": [
+        "N(0,1)",
+        "sqrt(3/5)*StudentT(df=5)",
+        "Laplace(0,1/sqrt(2))",
+        "draw mixture 0.9*N(0,0.5^2)+0.1*N(0,2^2), divide sample by sqrt(0.625)"
+      ],
+      "homoscedastic_probability": 0.6,
+      "heteroscedastic": "choose one informative coordinate; h0=exp(0.5*tanh(v_j)); h=h0/sqrt(mean_calibration(h0^2))",
+      "target_transform_values": [
+        "identity",
+        "signed_log1p",
+        "exp_clip"
+      ],
+      "target_transform_probabilities": [
+        0.75,
+        0.15,
+        0.1
+      ],
+      "target_exponential_clip": [
+        -8,
+        8
+      ],
+      "target_scale": "LU(0.1,100)",
+      "target_location": "N(0,(10*target_scale)^2)",
+      "emitted_target": "location+scale*transform(w)",
+      "rho_interpretation": "approximate pretransform variance fraction, not final observed R2"
+    },
+    "classification": {
+      "null_probability": 0.05,
+      "null_behavior": "zero all score logits and remove target-to-feature paths",
+      "dirichlet_alpha_values": [
+        0.2,
+        1,
+        5
+      ],
+      "dirichlet_alpha_probabilities": [
+        0.35,
+        0.4,
+        0.25
+      ],
+      "prevalence": "u~Dirichlet(alpha*ones(K)); delta=min(2/n_support,1/(2*K)); pi=delta+(1-K*delta)*u",
+      "logit_scale": "LU(0.25,8)",
+      "base_logits_binary": "G=(0,a*s)",
+      "base_logits_multiclass": "G=a*F",
+      "intercept_initial": "b=log(pi)",
+      "intercept_iterations": 64,
+      "intercept_step": 0.5,
+      "intercept_clip": [
+        -12,
+        12
+      ],
+      "intercept_probability_floor": 1e-08,
+      "intercept_update": "mean_p=mean_calibration(softmax(G+b)); b=clip(b+0.5*log(pi/max(1e-8,mean_p)),-12,12); b=b-mean(b)",
+      "contamination_zero_probability": 0.6,
+      "contamination_other": "U(0,0.15)",
+      "row_probabilities": "(1-contamination)*softmax(G+b)+contamination*pi",
+      "row_label": "categorical(row_probabilities)",
+      "class_permutation": "one uniformly random permutation per world",
+      "prevalence_guarantee": "approximate only; record achieved calibration prevalence and conditional entropy"
+    },
+    "support_acceptance": {
+      "requires_all_declared_classes": false,
+      "support_draw_attempts_per_world": 8,
+      "world_replacements_after_initial": 4,
+      "maximum_world_attempts": 5,
+      "retry_scope": "same initially selected family/subfamily/head/shape; redraw world parameters with retry-number RNG key",
+      "exhausted_behavior": "return explicit invalid episode and count failures, never change family/head silently",
+      "query_order": "draw query after support construction; optional coverage mode accepts support first",
+      "prohibited": [
+        "query class balancing",
+        "query relabeling",
+        "query outcome rejection"
+      ],
+      "interpretation": "default uses unconditioned support; optional reference-compatible coverage mode is support-conditioned",
+      "default_mode": "known_label_universe",
+      "class_universe": "declare K and its alphabet before rows; synthetic K never derived from query outcomes; real-evaluation universe follows benchmark legal training-only protocol",
+      "known_label_universe_rule": "accept support whether or not every declared class appears; no support resampling for class coverage",
+      "optional_mode": "reference_compatible_coverage_required",
+      "optional_mode_requires_all_declared_classes": true
+    }
+  },
+  "P0": {
+    "subfamily_values": [
+      "linear_gam",
+      "tree",
+      "heterogeneous_scm",
+      "local_kernel",
+      "regime"
+    ],
+    "subfamily_probabilities": [
+      0.2,
+      0.25,
+      0.3,
+      0.15,
+      0.1
+    ],
+    "output_sharing": "share input structure and sparsity; independent output coefficients for each score head",
+    "linear_gam": {
+      "exact_linear_probability": 0.4,
+      "exact_linear_interactions": false,
+      "nonlinear_basis_values": [
+        "identity",
+        "tanh",
+        "hinge",
+        "sine",
+        "clipped_square"
+      ],
+      "nonlinear_basis_probabilities": [
+        0.4,
+        0.15,
+        0.2,
+        0.15,
+        0.1
+      ],
+      "hinge_knot": "calibration quantile at U(0.2,0.8)",
+      "sine_frequency": "LU(0.5,4)",
+      "sine_phase": "U(0,2*pi)",
+      "square_clip": [
+        -5,
+        5
+      ],
+      "basis_scaling": "center/scale by calibration moments with common degeneracy rule",
+      "coefficient_exponent": "U(0,2)",
+      "coefficients": "randomly permute ranks 1..d; w_j=N(0,1)*rank_j^(-exponent); normalize L2",
+      "nonlinear_no_interaction_probability": 0.5,
+      "interaction_count": "0 if d<2, else RU(1,min(6,d*(d-1)/2)) on interaction branch",
+      "interaction_pairs": "choose distinct unordered pairs uniformly",
+      "interaction_feature": "product of centered/scaled main bases",
+      "interaction_coefficients": "N(0,0.5^2) independently per pair and output"
+    },
+    "tree": {
+      "tree_count_values": [
+        1,
+        4,
+        16,
+        64
+      ],
+      "tree_count_probabilities": [
+        0.25,
+        0.25,
+        0.35,
+        0.15
+      ],
+      "max_depth_values": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "max_depth_probabilities": [
+        0.1,
+        0.2,
+        0.3,
+        0.3,
+        0.1
+      ],
+      "oblivious_probability": 0.5,
+      "split_coordinate": "choose uniform informative coordinate",
+      "numeric_threshold": "calibration quantile at U(0.1,0.9)",
+      "categorical_predicate": "choose subset size RU(1,C-1), then choose that many categories uniformly",
+      "oblique_given_numeric_probability": 0.3,
+      "oblique_dimensions": "min(3,number_informative_numeric); choose uniformly",
+      "oblique_coefficients": "independent N(0,1), normalize L2",
+      "oblique_fallback": "axis aligned if fewer than 2 informative numeric coordinates",
+      "oblivious_calibration": "full calibration pool; one shared predicate per depth",
+      "asymmetric_calibration": "rows reaching node; stop when fewer than 8 reach node",
+      "leaf_values": "N(0,1) independently per leaf and output",
+      "tree_weights": "N(0,1) per tree and output, normalize L2",
+      "training": "no fitted labels or boosted residuals; freeze predicates and leaves before support/query"
+    },
+    "heterogeneous_scm": {
+      "observed_node_count": "r=min(d,16)",
+      "node_count": "RU(max(8,r+2),max(16,2*r+8))",
+      "parent_count_values": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "parent_count_probabilities": [
+        0.4,
+        0.3,
+        0.2,
+        0.1
+      ],
+      "parents": "for node i>0 truncate sampled count to i, choose earlier nodes uniformly",
+      "target_position": "RU(1,M-2)",
+      "observed_nodes": "r distinct nodes excluding target",
+      "enforce_target_parent_probability": 0.7,
+      "enforce_target_parent_rule": "include one uniformly selected parent of target then uniformly fill remaining observed nodes; graph-only condition",
+      "mechanism_values": [
+        "linear",
+        "mlp",
+        "tree",
+        "rff"
+      ],
+      "mechanism_probabilities": [
+        0.25,
+        0.35,
+        0.25,
+        0.15
+      ],
+      "linear_weights": "N(0,1/parent_count)",
+      "mlp_width_values": [
+        8,
+        16,
+        32
+      ],
+      "mlp_width_probabilities": [
+        0.3,
+        0.4,
+        0.3
+      ],
+      "mlp_hidden_layer_values": [
+        1,
+        2
+      ],
+      "mlp_hidden_layer_probabilities": [
+        0.75,
+        0.25
+      ],
+      "mlp_activation_values": [
+        "tanh",
+        "relu",
+        "sine"
+      ],
+      "mlp_activation_probabilities": [
+        0.5,
+        0.3,
+        0.2
+      ],
+      "mlp_weight_variance": "inverse fan-in",
+      "mlp_bias": "N(0,0.5^2)",
+      "tree": "one asymmetric axis-aligned tree, depth 2, calibration node stop below 8 rows",
+      "rff": "64 cosine features; all parents; Gaussian frequencies/ell_j; ell_j=LU(0.3,3)*exp(N(0,0.35^2)); phase U(0,2*pi); output weights N(0,1)/sqrt(64)",
+      "root": "N(0,1) independently per row",
+      "ordinary_node_noise": "independent N(0,0.1^2), then center/scale by calibration moments",
+      "target_rule": "target mechanism emits required output dimension; run common response compiler AT target node; no second target generator",
+      "regression_target_to_children": "actual generated target standardized by its calibration moments",
+      "classification_target_to_children": "fixed independent N(0,1) embedding per class selected by actual generated target",
+      "calibration_order": "topological; fit each node using parent calibration rows, freeze before support/query",
+      "observed_categorical": "Bernoulli(world_categorical_fraction); factory cardinality and Zipf frequencies; calibration quantiles at cumulative frequency cuts; duplicates/empty bins valid",
+      "observed_numerical": "retain standardized node value",
+      "remaining_width": "copy/distractor rule from r observed nodes, yielding p columns",
+      "null_override": "independent feature factory and independent target; no target descendants",
+      "label_law_hook": false
+    },
+    "local_kernel": {
+      "input_dimensions": "min(8,d), choose uniformly",
+      "rff_probability": 0.7,
+      "rff_features": 128,
+      "frequency_values": [
+        "gaussian",
+        "multivariate_t3"
+      ],
+      "frequency_probabilities": [
+        0.6,
+        0.4
+      ],
+      "t3_rule": "one independent chi-square(3) per frequency vector; divide all Gaussian coordinates by sqrt(chi_square/3)",
+      "length_scales": "independently per coordinate LU(0.3,3)*exp(N(0,0.35^2))",
+      "phase": "U(0,2*pi)",
+      "rff_output_coefficients": "N(0,1)/sqrt(128)",
+      "center_branch_probability": 0.3,
+      "center_count": 16,
+      "centers": "choose calibration rows uniformly without replacement",
+      "center_bandwidth": "LU(0.3,3)",
+      "center_weights": "normalize exp(-squared_distance/(2*h^2)) by log-sum-exp",
+      "center_values": "independent N(0,1) per center and output"
+    },
+    "regime": {
+      "regime_count": "RU(2,4)",
+      "hard_gate_probability": 0.7,
+      "hard_numeric_gate": "choose informative numerical coordinate uniformly; calibration quantiles j/R for j=1..R-1",
+      "hard_all_categorical_gate": "first informative categorical coordinate; random round-robin category assignment to regimes, empty regimes allowed",
+      "soft_gate": "softmax of Gaussian projections on min(3,d) uniformly selected informative coordinates divided by temperature",
+      "temperature": "LU(0.2,2)",
+      "base_score": "linear_gam",
+      "residual_values": [
+        "linear",
+        "axis_aligned_tree_depth_2"
+      ],
+      "residual_probabilities": [
+        0.5,
+        0.5
+      ],
+      "residual_tree": "asymmetric; stop below 8 calibration rows",
+      "amplitude_values": [
+        0,
+        0.5,
+        1,
+        2
+      ],
+      "amplitude_probabilities": [
+        0.2,
+        0.3,
+        0.3,
+        0.2
+      ],
+      "score": "F=F0+amplitude*sum_r(gate_r*residual_r)",
+      "no_regime_control": "amplitude=0"
+    }
+  },
+  "P1": {
+    "reserved_columns": [
+      "entity_id",
+      "organization_id",
+      "entity_metadata_1",
+      "entity_metadata_2"
+    ],
+    "entity_count": "DLU(8,min(4096,max(16,2*n_support)))",
+    "organization_count": "RU(2,min(32,max(2,floor(entity_count/2))))",
+    "entity_to_organization": "randomly permute entities then round-robin",
+    "metadata": "z_e~N(0,I_2) once per entity",
+    "uniform_frequency_probability": 0.2,
+    "other_frequencies": "permuted Zipf ranks with exponent U(0.6,1.8)",
+    "row_entity_draw": "independent same fixed entity distribution in calibration/support/query",
+    "forced_entity_or_group_holdout": false,
+    "base_score": "linear_gam on ordinary informative coordinates",
+    "omega_values": [
+      0,
+      0.5,
+      1
+    ],
+    "omega_probabilities": [
+      0.3,
+      0.4,
+      0.3
+    ],
+    "entity_effect_scale_values": [
+      0,
+      0.25,
+      1,
+      2
+    ],
+    "entity_effect_scale_probabilities": [
+      0.15,
+      0.25,
+      0.4,
+      0.2
+    ],
+    "entity_effect": "tau*(sqrt(omega)*dot(beta,z_e)+sqrt(1-omega)*epsilon_e); beta=normalized Gaussian 2-vector; epsilon_e~N(0,1)",
+    "organization_effect_sd_values": [
+      0,
+      0.5,
+      1
+    ],
+    "organization_effect_sd_probabilities": [
+      0.5,
+      0.3,
+      0.2
+    ],
+    "slope_sd_values": [
+      0,
+      0.25,
+      0.75
+    ],
+    "slope_sd_probabilities": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "slopes": "independent Gaussian effects on first min(2,d) ordinary informative coordinates; categorical uses latent effect",
+    "score": "F0+entity_effect+organization_effect+dot(entity_slopes,v_first_min_2_d)",
+    "effect_lifetime": "draw once per entity/group and output; share support/query",
+    "output_compiler": "common_response_compiler",
+    "diagnostics_only": [
+      "occupancy",
+      "unseen_query_entity_fraction",
+      "group_effect_variances"
+    ]
+  },
+  "P4": {
+    "reserved_columns": [
+      "exposure"
+    ],
+    "score_mechanism": "two independently parameterized standardized linear_gam scores s and s_V on ordinary features",
+    "exposure_sigma_values": [
+      0,
+      0.5,
+      1
+    ],
+    "exposure_sigma_probabilities": [
+      0.2,
+      0.5,
+      0.3
+    ],
+    "row_exposure": "clip(exp(N(-sigma^2/2,sigma^2)),0.02,50)",
+    "mean_values": [
+      0.2,
+      1,
+      5,
+      20
+    ],
+    "mean_probabilities": [
+      0.25,
+      0.35,
+      0.25,
+      0.15
+    ],
+    "signal_scale": "LU(0.25,2)",
+    "rate_normalizer": "Z=mean_calibration(exposure*exp(clip(a*s,-4,4)))",
+    "conditional_mean": "mu=mu0*exposure*exp(clip(a*s,-4,4))/max(1e-6,Z)",
+    "dispersion_values": [
+      0.5,
+      2,
+      10,
+      "infinity"
+    ],
+    "dispersion_probabilities": [
+      0.2,
+      0.35,
+      0.25,
+      0.2
+    ],
+    "count": "NB(kappa,kappa/(kappa+mu)); if infinite kappa use Poisson(mu)",
+    "NB_convention": "failures before successes; mean mu, variance mu+mu^2/kappa",
+    "zero_inflation_values": [
+      0,
+      0.2,
+      0.6
+    ],
+    "zero_inflation_probabilities": [
+      0.5,
+      0.35,
+      0.15
+    ],
+    "row_zero_rule": "independent Bernoulli(zeta): N=0 if true, else sampled count; zero-inflated, not hurdle",
+    "regression_kind_values": [
+      "count",
+      "compound_gamma_amount"
+    ],
+    "regression_kind_probabilities": [
+      0.6,
+      0.4
+    ],
+    "severity_mean_base": "LU(1,100)",
+    "severity_coupling_values": [
+      -0.5,
+      0,
+      0.5
+    ],
+    "severity_coupling_probabilities": [
+      0.2,
+      0.4,
+      0.4
+    ],
+    "severity_shape_values": [
+      0.5,
+      2,
+      10
+    ],
+    "severity_shape_probabilities": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "severity_mean": "nu=nu0*exp(clip(c*s+0.5*s_V,-4,4))",
+    "amount": "0 if N=0 else Gamma(shape=N*k_V,scale=nu/k_V); exact compound Gamma sum with one draw",
+    "binary": "1[N>0], then world-level Bernoulli(0.5) reverses both label IDs",
+    "common_additive_noise_compiler": false,
+    "count_caps": null,
+    "diagnostics": "calibration zero rate, mean, dispersion; invalid arithmetic raises explicit failure"
+  },
+  "shifts": {
+    "baseline_enabled": false,
+    "simultaneous_toggles_first_ablation": 1,
+    "SCM_enabled": false,
+    "SCM_reason": "intervening generated observed nodes need not preserve observational conditional; specify graph-root intervention separately",
+    "numeric_selection": "choose min(number_informative_numeric,ceil(d/4)) numeric informative coordinates; empty means logged no-op",
+    "numeric_scale": "LU(0.7,1.4)",
+    "numeric_location": "U(-0.5,0.5)",
+    "covariate_shift": "query v_prime=a*v+b before score and rendering, same direct conditional mechanism",
+    "measurement_shift": "query transform only in rendering",
+    "category_frequency_shift": "query categorical probabilities proportional to original_probability^gamma, gamma=LU(0.5,2); same category effects/codes",
+    "label_mechanism_reversal": "uncertainty audit only, off in baseline"
+  },
+  "context_conditioning_candidate": {
+    "baseline_version": "static-v3-base",
+    "candidate_version": "static-v3-context",
+    "default_enabled": false,
+    "active_dimension": "d=min(sampled_d,max(1,floor(n_support/8)))",
+    "tree_depth": "min(sampled_D,max(1,floor(log2(max(2,n_support/4)))))",
+    "scope": "all relevant primitives before parameters; SCM uses capped d for r and M; P1/P4 ordinary score mechanisms",
+    "unchanged": [
+      "width",
+      "categorical_cardinality",
+      "SNR",
+      "outer_mixture"
+    ],
+    "interpretation": "first experimental setting, not optimum; approximately four samples per leaf only for balanced full trees",
+    "diagnostics": "estimate actual empty-leaf mass on separately seeded diagnostic pool; ensemble diagnostic is not exact Bayes error",
+    "comparison": "equal sampled rows and FLOPs, same seeds, stratify by context length and head",
+    "uncapped_replay_probability": 0.1,
+    "capped_candidate_probability": 0.9,
+    "branch_draw": "independent Bernoulli(0.90) per candidate episode, before d and depth overrides; uncapped branch follows static-v3-base exactly"
+  },
+  "teacher_selection": {
+    "baseline_enabled": false,
+    "contract": "selector may use independently seeded diagnostic worlds with their own train/validation splits; freeze selected parameter distribution for next tranche",
+    "logs": [
+      "diagnostic_world_ids",
+      "candidate_parameters",
+      "teacher_versions",
+      "validation_scores",
+      "selection_probabilities"
+    ],
+    "forbidden": "validation labels from emitted episodes or final real-data evaluation",
+    "comparison": "retain unselected control; synthetic disagreement alone is not useful-transfer evidence"
+  },
+  "label_law": {
+    "default_training_use": false,
+    "field_name": "latent_conditional_law",
+    "location": "evaluator_only",
+    "allowed_arms": [
+      "P0.linear_gam",
+      "P0.tree",
+      "P0.local_kernel",
+      "P0.regime",
+      "P1",
+      "P4"
+    ],
+    "SCM": "unavailable for every SCM world in first implementation",
+    "classification_P0_P1": "complete conditional probabilities from response compiler, with label permutation",
+    "regression_P0_P1": "exact mean only for identity target transform: location+scale*standardized_score, or location if null; unavailable for other target transforms",
+    "P4_positive_probability": "(1-zeta)*(1-(kappa/(kappa+mu))^kappa); use exp(-mu) instead of power for Poisson; then label permutation",
+    "P4_count_mean": "(1-zeta)*mu",
+    "P4_amount_mean": "(1-zeta)*mu*nu",
+    "interpretation": "conditional on full simulated state, not observational Bayes law given learner-visible X when latent features/effects are hidden",
+    "loss_contract": "hold support labels, query inputs, predictions, and masks fixed; integrate only fresh query outcome noise; never feed law or latent state to model",
+    "SCM_exclusion_reason": "features descending from sampled query target change with target noise; forward target law is not posterior given descendants",
+    "actual_evaluation": "always hard sampled outcomes; soft-label CE is optional variance-reduction estimator"
+  },
+  "output_contract": {
+    "learner_keys": [
+      "x_support",
+      "y_support",
+      "x_query",
+      "feature_types",
+      "support_missing",
+      "query_missing",
+      "task_kind",
+      "class_universe"
+    ],
+    "evaluator_keys": [
+      "y_query",
+      "latent_conditional_law",
+      "world_id",
+      "arm",
+      "mechanism",
+      "calibration_diagnostics",
+      "retry_log"
+    ],
+    "preprocessing": "fit learner preprocessing and any learner target normalization only on support; retain inverse for scoring",
+    "input_serialization": "reject evaluator-only keys and hidden graph/score/effect/rate/calibration-label fields",
+    "invariants": [
+      "deterministic seed replay",
+      "row-order equivariance",
+      "category-code permutation consistency",
+      "query outcomes do not affect acceptance/input/preprocessing/model forward",
+      "P4 independent diagnostic empirical moments match stated distribution"
+    ],
+    "acceptance": "arithmetic validity only in default known-label-universe mode; support class coverage only in explicitly selected optional mode; keep null/constant/weak-signal worlds; log failures and accepted/proposed proportions"
+  },
+  "generation_order": [
+    "sample family/subfamily/head/shape",
+    "draw world parameters",
+    "draw independent calibration rows",
+    "fit/freeze generator scales, predicates, response constants",
+    "draw/accept support without query",
+    "draw query independently",
+    "apply world rendering and row masks",
+    "fit learner preprocessing on support",
+    "return learner inputs separately from evaluator"
+  ],
+  "SCM_generation_order": "topological for calibration and each row, target compiler executed once at target node",
+  "selection_status": "Authored replacement baseline; reference-preserving grafts are now first research priority; see prior_bank_spec.json"
+}

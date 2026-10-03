@@ -1,0 +1,148 @@
+{
+  "status": "CPU falsification probes and analytic calculations, not competitive evaluation",
+  "environment": {
+    "torch": "2.8.0",
+    "numpy": "1.26.4",
+    "device": "cpu"
+  },
+  "source_sha256": {
+    "src/tabular_foundation/codec.py": "082a7c9e4cfc45fdd9efb20f6a7d1031221c2c3f35e5c88bb25bf3c588708bad",
+    "src/tabular_foundation/model.py": "398ee6ee9d88942fa969e667826ae34c58d405e3b40b33043a6a3fe05059a992",
+    "src/tabular_foundation/distributions.py": "183443319823bed0f5b2c0bda5dcfbc849323bcddaaf387ffd53abfb5306f6b4",
+    "src/tabular_foundation/finance_prior.py": "78f1785a7bde0d60e4d1e13ce8a665c89f6033c1bdca4b8111c0f9321e949a08",
+    "research/probes/independent_audit_probes.py": "d0c0771a450ef14ed9a70343bc8ab52b733eb3fb8bc98dd5644f1a313e8cf9d0"
+  },
+  "categorical_aliasing": {
+    "support_categories": 50000,
+    "encoding_seed": 0,
+    "model_seed": 1729,
+    "categories": [
+      "category_28838",
+      "category_39200"
+    ],
+    "codes": [
+      0.3012232053555499,
+      0.30122320696485594
+    ],
+    "hash_gap": 1.6093060217770017e-09,
+    "raw_hash_collision": false,
+    "fp32_embedding_max_difference": 3.5762786865234375e-07,
+    "cpu_bf16_embedding_max_difference": 0.0,
+    "cpu_bf16_embeddings_identical": true,
+    "scope": "One untrained cell encoder and recoding seed; not universal trained-model or GPU behavior."
+  },
+  "regression_resolution": {
+    "targets": [
+      0.005,
+      0.07
+    ],
+    "nll": [
+      2.3180892795300108,
+      2.3180892795300108
+    ],
+    "gradient_max_difference": 0.0,
+    "bin_width": 0.078125,
+    "constant_target_original_units": 7.0,
+    "limiting_histogram_mean": 7.0390625,
+    "constant_target_bias": 0.0390625,
+    "scope": "Population NLL-optimal bin mass; not an executed training run. Tails cannot recover within-bin labels."
+  },
+  "regression_affine_precision": {
+    "original_targets": [
+      100000000.0,
+      100000001.0
+    ],
+    "old_cast_before_subtract": [
+      0.0,
+      0.0
+    ],
+    "repaired_standardized_targets": [
+      0.0,
+      2.0
+    ],
+    "repaired_gradient_max_difference": 1.0,
+    "status": "Repaired numerical defect; independent from unchanged histogram resolution."
+  },
+  "finance_shortcut": {
+    "prevalence": 0.0001,
+    "P_H1_given_fraud": 0.8,
+    "analytic_population_results": [
+      {
+        "P_H1_given_legit": 1e-06,
+        "roc_auc": 0.8999995000000001,
+        "precision_at_recall_0_8": 0.9876555403154819,
+        "threshold_step_AP": 0.7901444322523855
+      },
+      {
+        "P_H1_given_legit": 0.0001,
+        "roc_auc": 0.89995,
+        "precision_at_recall_0_8": 0.44446913717428743,
+        "threshold_step_AP": 0.35559530973943
+      },
+      {
+        "P_H1_given_legit": 0.001,
+        "roc_auc": 0.8995000000000001,
+        "precision_at_recall_0_8": 0.0740809334197611,
+        "threshold_step_AP": 0.059284746735808885
+      },
+      {
+        "P_H1_given_legit": 0.01,
+        "roc_auc": 0.895,
+        "precision_at_recall_0_8": 0.00793729536660383,
+        "threshold_step_AP": 0.006369836293283064
+      }
+    ],
+    "scope": "H is the observable hard-negative indicator, not reference availability. Conditional on these rates; finite populations fluctuate."
+  },
+  "finance_gradient_scaling": {
+    "pi_reference": 0.0001,
+    "entropy_multiplier": 979.4040754295357,
+    "balanced_query_proposal": [
+      {
+        "predicted_probability": 0.0001,
+        "raw_negative_gradient": 0.00019998000000000002,
+        "raw_positive_gradient": -0.00019998000000000002,
+        "normalized_negative_gradient": 0.19586122700439856,
+        "normalized_positive_gradient": -0.19586122700439856
+      },
+      {
+        "predicted_probability": 0.5,
+        "raw_negative_gradient": 0.9999,
+        "raw_positive_gradient": -0.0001,
+        "normalized_negative_gradient": 979.3061350219928,
+        "normalized_positive_gradient": -0.09794040754295358
+      }
+    ],
+    "scope": "Scalar-logit calculation only. Proper importance weighting remains unbiased; relative task allocation and clipping still require measurement."
+  },
+  "attention_dilution": {
+    "fixed_logit_gap": 8.31752199628717,
+    "results": [
+      {
+        "keys": 4096,
+        "clipped_log_length": 1.3862943611198906,
+        "anchor_weight_fixed_gap": 0.4999999999999999,
+        "gap_needed_for_90pct_mass": 10.51474657362339
+      },
+      {
+        "keys": 8192,
+        "clipped_log_length": 1.3862943611198906,
+        "anchor_weight_fixed_gap": 0.33330620218134455,
+        "gap_needed_for_90pct_mass": 11.208015846851822
+      },
+      {
+        "keys": 32768,
+        "clipped_log_length": 1.3862943611198906,
+        "anchor_weight_fixed_gap": 0.11109001139384728,
+        "gap_needed_for_90pct_mass": 12.594401767691604
+      },
+      {
+        "keys": 131072,
+        "clipped_log_length": 1.3862943611198906,
+        "anchor_weight_fixed_gap": 0.030296080375242285,
+        "gap_needed_for_90pct_mass": 13.980719017431655
+      }
+    ],
+    "scope": "Analytic single-anchor stress case, no trained attention measurements."
+  }
+}

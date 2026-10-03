@@ -1,0 +1,97 @@
+{
+  "status": "Exact probability and finite-distribution diagnostics; not fraud model results",
+  "rarity_examples": [
+    {
+      "prevalence": 1e-06,
+      "expected_positives_in_3m_rows": 3.0,
+      "probability_zero_positives_in_32768_iid_context": 0.9677630387194278,
+      "precision_at_recall_80pct_fpr_1e_minus3": 0.0007993613103130599,
+      "fpr_required_for_precision_80pct_recall_80pct": 2.0000020000019993e-07,
+      "false_positives_per_million_negatives_at_required_fpr": 0.20000020000019994,
+      "iid_negatives_needed_for_zero_fp_one_sided_95pct_upper_at_required_fpr": 14978645
+    },
+    {
+      "prevalence": 1e-05,
+      "expected_positives_in_3m_rows": 30.000000000000004,
+      "probability_zero_positives_in_32768_iid_context": 0.7205923921307148,
+      "precision_at_recall_80pct_fpr_1e_minus3": 0.00793658667248683,
+      "fpr_required_for_precision_80pct_recall_80pct": 2.000020000200002e-06,
+      "false_positives_per_million_negatives_at_required_fpr": 2.000020000200002,
+      "iid_negatives_needed_for_zero_fp_one_sided_95pct_upper_at_required_fpr": 1497850
+    },
+    {
+      "prevalence": 0.0001,
+      "expected_positives_in_3m_rows": 300.0,
+      "probability_zero_positives_in_32768_iid_context": 0.037742675412408985,
+      "precision_at_recall_80pct_fpr_1e_minus3": 0.0740809334197611,
+      "fpr_required_for_precision_80pct_recall_80pct": 2.000200020002e-05,
+      "false_positives_per_million_negatives_at_required_fpr": 20.00200020002,
+      "iid_negatives_needed_for_zero_fp_one_sided_95pct_upper_at_required_fpr": 149771
+    },
+    {
+      "prevalence": 0.001,
+      "expected_positives_in_3m_rows": 3000.0,
+      "probability_zero_positives_in_32768_iid_context": 5.779871577694273e-15,
+      "precision_at_recall_80pct_fpr_1e_minus3": 0.44469149527515284,
+      "fpr_required_for_precision_80pct_recall_80pct": 0.00020020020020020016,
+      "false_positives_per_million_negatives_at_required_fpr": 200.20020020020016,
+      "iid_negatives_needed_for_zero_fp_one_sided_95pct_upper_at_required_fpr": 14963
+    }
+  ],
+  "selection_correction": {
+    "population_posterior": [
+      0.0006995110417817946,
+      2.222219506176159e-06,
+      1.1001109900877789e-07
+    ],
+    "selected_posterior": [
+      0.4117649480970283,
+      1.1110998766568028e-05,
+      2.2002221738146453e-08
+    ],
+    "feature_conditioned_correction": [
+      0.0006995110417817945,
+      2.2222195061761595e-06,
+      1.1001109900877789e-07
+    ],
+    "scalar_class_correction": [
+      0.4393550886931565,
+      1.2438895651380114e-05,
+      2.4631782322839218e-08
+    ],
+    "feature_conditioned_max_error": 1.0842021724855044e-19,
+    "scalar_max_error": 0.4386555776513747
+  },
+  "enriched_query_importance_risk": {
+    "population_bce": 1.1502609364215584e-05,
+    "importance_weighted_proposal_bce": 1.1502609364215584e-05,
+    "absolute_error": 0.0
+  },
+  "recall_confidence_examples": [
+    {
+      "independent_positive_events": 3,
+      "caught": 3,
+      "observed_recall": 1.0,
+      "two_sided_95pct_exact_lower_recall": 0.2924017738212866
+    },
+    {
+      "independent_positive_events": 10,
+      "caught": 10,
+      "observed_recall": 1.0,
+      "two_sided_95pct_exact_lower_recall": 0.6915028921812392
+    },
+    {
+      "independent_positive_events": 30,
+      "caught": 30,
+      "observed_recall": 1.0,
+      "two_sided_95pct_exact_lower_recall": 0.8842966917779722
+    },
+    {
+      "independent_positive_events": 100,
+      "caught": 100,
+      "observed_recall": 1.0,
+      "two_sided_95pct_exact_lower_recall": 0.9637833073548235
+    }
+  ],
+  "limitations": "Binomial examples assume independent outcomes. Bursts/campaign dependence can reduce effective evidence. No trained classifier, ROCm timing, or real financial data was used."
+}
