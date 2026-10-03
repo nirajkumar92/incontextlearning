@@ -1,6 +1,6 @@
 {
   "source": "prior_bank_assessment.tex",
-  "sha256": "760c3836f9b740b4c4cdefb72772c97bb2fb64c8677bc24e1dec4d5d7a81754a",
+  "sha256": "845e1cccf8b64a20d23e6e7bf7f61f7b4ae4ff6b1c67108b69f6e8abdea1b320",
   "resolved_citation_keys": 59,
   "bibliography_entries": 59,
   "ablation_rows": 28,
@@ -14,12 +14,12 @@
   "native_compile": "success",
   "competitive_performance": "not evaluated",
   "date": "2026-10-03",
-  "revision": "Section-by-section prose rewrite; starting 317M architecture and separate 41M comparator introduced early; reference priors and deferred experiments moved to appendices.",
+  "revision": "Adopt TesseraTab as the model name and Tessera as the planned family name in the report and README; technical recipe unchanged.",
   "native_compiler": "Codex desktop compile_latex_document",
   "pdf_export_engine": "Tectonic 0.17.0",
   "pdf": "prior_bank_assessment.pdf",
   "pdf_pages": 95,
-  "pdf_sha256": "281cb93e96f846833eebf2028ce266a65ea553db6c17b0330ea20f26fa8ab012",
+  "pdf_sha256": "c1fb69ec98b895324740553f0a7af60cc3bbf6ce30ae85376b71954c5ce12ccf",
   "source_is_standalone": true,
   "inline_tikz_figures": 7,
   "figure_pages": {
@@ -35,17 +35,17 @@
   "missing_character_warnings": 0,
   "extracted_replacement_characters": 0,
   "visual_layout_inspection": {
-    "all_pages_contact_sheets": true,
     "page_count": 95,
-    "all_seven_figures_inspected_at_full_resolution": true,
-    "overlaps_or_clipping_found_after_repair": false,
-    "independent_review": "Two independent reviewers checked all seven figure pages and the first 72 pages; root checked the remaining pages and final repaired contents, opening narrative and Figures 1 and 2.",
-    "repairs": [
-      "Break three overflowing prose lines without changing formulas or settings",
-      "Keep the Bayesian example together below its figure",
-      "Fit contents into two pages",
-      "Remove a long filename from the architecture caption to avoid stretched spaces"
-    ]
+    "body_changed_pages_inspected_at_full_resolution": [
+      1,
+      4,
+      6,
+      33,
+      35
+    ],
+    "remaining_page_text_unchanged_except_running_header": true,
+    "figure_pages_unchanged": true,
+    "overlaps_or_clipping_found_after_repair": false
   },
   "editorial_review": {
     "scope": "Every main section and appendix; purpose before mechanism, current method before historical controls, code status distinguished from proposed experiments.",
@@ -495,5 +495,31 @@
         ]
       }
     }
+  },
+  "pre_naming_revision": {
+    "sha256": "760c3836f9b740b4c4cdefb72772c97bb2fb64c8677bc24e1dec4d5d7a81754a",
+    "pdf_sha256": "281cb93e96f846833eebf2028ce266a65ea553db6c17b0330ea20f26fa8ab012",
+    "revision": "Section-by-section prose rewrite; starting 317M architecture and separate 41M comparator introduced early; reference priors and deferred experiments moved to appendices.",
+    "visual_layout_inspection": {
+      "all_pages_contact_sheets": true,
+      "page_count": 95,
+      "all_seven_figures_inspected_at_full_resolution": true,
+      "overlaps_or_clipping_found_after_repair": false,
+      "independent_review": "Two independent reviewers checked all seven figure pages and the first 72 pages; root checked the remaining pages and final repaired contents, opening narrative and Figures 1 and 2.",
+      "repairs": [
+        "Break three overflowing prose lines without changing formulas or settings",
+        "Keep the Bayesian example together below its figure",
+        "Fit contents into two pages",
+        "Remove a long filename from the architecture caption to avoid stretched spaces"
+      ]
+    }
+  },
+  "naming_revision": {
+    "model": "TesseraTab",
+    "family": "Tessera",
+    "native_compile": "success",
+    "pdf_title": "TesseraTab: Tabular In-Context Learning from Structured Priors",
+    "technical_equations_and_listings_unchanged": true,
+    "runtime_code_changed": false
   }
 }

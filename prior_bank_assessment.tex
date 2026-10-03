@@ -24,7 +24,7 @@
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{listings}
-\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!55!black,citecolor=blue!45!black,pdftitle={Tabular In-Context Learning: Priors, Architecture, and Training}}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!55!black,citecolor=blue!45!black,pdftitle={TesseraTab: Tabular In-Context Learning from Structured Priors}}
 \setlength{\parskip}{5pt}
 \setlength{\parindent}{0pt}
 \setlist{nosep,leftmargin=*}
@@ -40,12 +40,12 @@
 \newcommand{\risk}{\textbf{Failure mode.} }
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small Tabular in-context learning: recipe and evidence}
+\fancyhead[L]{\small TesseraTab: priors, architecture and training}
 \fancyhead[R]{\small Research assessment / 3 October 2026}
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{14pt}
 \lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,frame=single,rulecolor=\color{black!20}}
-\title{Tabular In-Context Learning:\protect\\Priors, Architecture, and Training\protect\\[6pt]\large A research proposal for standard benchmarks and rare-event prediction}
+\title{TesseraTab:\protect\\Tabular In-Context Learning\protect\\from Structured Priors\protect\\[6pt]\large A research proposal for standard benchmarks and rare-event prediction}
 \author{Research assessment prepared for Niraj Kumar}
 \date{3 October 2026}
 \begin{document}
@@ -53,7 +53,7 @@
 \thispagestyle{empty}
 
 \begin{abstract}
-\noindent We propose a training distribution and an in-context model for binary classification, multiclass classification and regression. The aim is to improve on current tabular foundation models on standard benchmarks, then adapt the pretrained model to large financial tables with missing values and fraud rates near $10^{-4}$. The model learns from synthetic prediction tasks during pretraining. At deployment, its weights remain fixed and labeled rows from the new table provide the context for prediction.
+\noindent We propose TesseraTab, a tabular in-context model in the planned Tessera family, and a training distribution for binary classification, multiclass classification and regression. The aim is to improve on current tabular foundation models on standard benchmarks, then adapt the pretrained model to large financial tables with missing values and fraud rates near $10^{-4}$. The model learns from synthetic prediction tasks during pretraining. At deployment, its weights remain fixed and labeled rows from the new table provide the context for prediction.
 
 The starting architecture is a dense model with 317M parameters. It encodes individual cells, summarizes each row and processes the row representations with a 24-layer transformer. The initial prior mixture assigns 50/20/15/10/5 percent of tasks to reference graphs, direct forests, categorical hierarchies, smooth or local functions, and sparse interactions. Missingness and coarsening are sampled separately from the target-generating mechanism. We also implement a 41M model that retains feature-level representations through its attention stages. A controlled comparison will determine which prior and architecture to use for the main training run.
 
@@ -80,7 +80,7 @@ Two applications guide the design. Standard benchmarks test transfer across tabl
 \subsection{Starting architecture}
 \label{sec:main-candidate}
 
-\textbf{The starting configuration is the 317M compressed-row model}, named \texttt{base} in the code. Each cell is first embedded in 128 dimensions. Two stages of column and within-row attention produce eight learned summary vectors per row. Concatenating those vectors gives a 1,024-dimensional row representation, which enters a 24-layer row transformer. A classification head produces class probabilities; a regression head predicts 999 quantiles. Figure~\ref{fig:architecture-choice} gives the complete outline, and Section~\ref{sec:icl-blueprint} specifies every layer.
+\textbf{TesseraTab's starting configuration is the 317M compressed-row model}, named \texttt{base} in the code. Each cell is first embedded in 128 dimensions. Two stages of column and within-row attention produce eight learned summary vectors per row. Concatenating those vectors gives a 1,024-dimensional row representation, which enters a 24-layer row transformer. A classification head produces class probabilities; a regression head predicts 999 quantiles. Figure~\ref{fig:architecture-choice} gives the complete outline, and Section~\ref{sec:icl-blueprint} specifies every layer.
 
 The model uses categorical hash bits, explicit missing-value indicators, logarithmic attention scaling and two shared key/value heads on the query path. Support processing in the row transformer still uses all 16 attention heads. With the finance adapter and optional realized-loss head included, it has exactly \textbf{317,116,304 parameters}. The realized-loss head contains a zero atom and a 1,025-bin positive density; it is reserved for the separate finance-regression experiment and is not trained by the standard and binary-fraud runs.
 
@@ -126,7 +126,7 @@ The mathematical examples explain particular properties of a generator, estimato
 \fill[pfnblue!4,rounded corners=3pt] (.1,-2.05) rectangle (7.8,-15.65);
 \fill[pfngreen!4,rounded corners=3pt] (8.2,-2.05) rectangle (15.9,-15.65);
 \node[font=\large\bfseries,text=pfnblue,align=center] at (3.95,-2.6)
-  {Starting model: 317M};
+  {TesseraTab: 317M};
 \node[note] at (3.95,-3.25) {Compressed rows \quad \texttt{model=base}};
 \node[font=\large\bfseries,text=pfngreen,align=center] at (12.05,-2.6)
   {Comparator: 41M};
@@ -192,7 +192,7 @@ The mathematical examples explain particular properties of a generator, estimato
   {Two architectures to be trained separately at the same allocated budget.\\
    In both, support states depend only on support; queries never update them.};
 \end{tikzpicture}
-\caption{Two implemented architectures for the same prediction task. The standard training configuration uses the 317M model on the left. The 41M model on the right is the compact alternative in the architecture study. Each column-attention block is an induced set-attention block (ISAB): it forms summaries from support and lets feature cells attend to those summaries. Each within-row block mixes the cells and eight learned summary tokens of one record. The left model compresses before its row transformer; the right model keeps cells until the output. The arrows describe computation within each model, not an ensemble connecting them. Both support binary and multiclass classification with up to 256 classes, and regression.}
+\caption{Two implemented architectures for TesseraTab. The standard training configuration uses the 317M model on the left. The 41M model on the right is the compact alternative in the architecture study. Each column-attention block is an induced set-attention block (ISAB): it forms summaries from support and lets feature cells attend to those summaries. Each within-row block mixes the cells and eight learned summary tokens of one record. The left model compresses before its row transformer; the right model keeps cells until the output. The arrows describe computation within each model, not an ensemble connecting them. Both support binary and multiclass classification with up to 256 classes, and regression.}
 \label{fig:architecture-choice}
 \end{figure}
 
@@ -991,7 +991,7 @@ The earlier motifs have other limits. They are rotated eight-dimensional Gaussia
 \section{The model architecture}
 \label{sec:icl-blueprint}
 
-The starting model is the 317,116,304-parameter compressed-row architecture introduced in Figure~\ref{fig:architecture-choice}. It shares a backbone across classification and regression, with a separate output head for each task. Numerical features, categories, and precomputed temporal or customer features all enter as table columns. Two stages of feature processing produce one vector per row; a 24-layer transformer then predicts each query from those vectors and the labeled support. The older 315,021,456-parameter ICL-315 model is retained as a control. The 41M alternative is described in Section~\ref{sec:persistent-comparator}. Architecture comparisons hold the prior fixed.
+TesseraTab starts from the 317,116,304-parameter compressed-row architecture introduced in Figure~\ref{fig:architecture-choice}. It shares a backbone across classification and regression, with a separate output head for each task. Numerical features, categories, and precomputed temporal or customer features all enter as table columns. Two stages of feature processing produce one vector per row; a 24-layer transformer then predicts each query from those vectors and the labeled support. The older 315,021,456-parameter ICL-315 model is retained as a control. The 41M alternative is described in Section~\ref{sec:persistent-comparator}. Architecture comparisons hold the prior fixed.
 
 We describe the computation in the order it is executed: preprocessing, cell embedding, feature interactions, row attention and prediction. We then specify the additional inputs used by the finance model. Section~\ref{sec:latency-moe} explains how to cache support states and select context from a large history. The deferred architecture experiments are collected in Appendix~\ref{app:deferred-methods}; none is enabled in the starting configuration.
 
@@ -1090,7 +1090,7 @@ Column attention collects information about one feature across the support rows.
   {No query-to-query attention; queries never update support.\\The frontend has 18 attention blocks in total.\\The eight summaries are learned representations, not selected features.};
 
 \end{tikzpicture}
-\caption{Detailed computation in the 317,116,304-parameter starting model (\texttt{base}). Support and query paths share weights. Each column summary block contains two attention calls, giving 18 frontend attention blocks in total. The query path shares two KV heads, reducing retained cache storage; support prefill uses all 16 heads. Queries neither attend to one another nor update support states. The optional severity head is omitted here and is not trained by the standard and binary-fraud runs. Matrices and layer stacks are schematic; dimensions are stated explicitly.}
+\caption{Detailed computation in TesseraTab's 317,116,304-parameter starting configuration (\texttt{base}). Support and query paths share weights. Each column summary block contains two attention calls, giving 18 frontend attention blocks in total. The query path shares two KV heads, reducing retained cache storage; support prefill uses all 16 heads. Queries neither attend to one another nor update support states. The optional severity head is omitted here and is not trained by the standard and binary-fraud runs. Matrices and layer stacks are schematic; dimensions are stated explicitly.}
 \label{fig:model-overview}
 \end{figure}
 

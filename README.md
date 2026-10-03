@@ -1,10 +1,10 @@
-# Tabular foundation model research
+# TesseraTab: Tabular In-Context Learning from Structured Priors
 
-This repository implements frozen-weight in-context learning for binary classification, multiclass classification and regression, including finance worlds with large finite histories, rare events and delayed labels. No competitive pretrained checkpoint is bundled.
+TesseraTab is the tabular model in the planned Tessera family. This repository implements frozen-weight in-context learning for binary classification, multiclass classification and regression, including finance worlds with large finite histories, rare events and delayed labels. No competitive pretrained checkpoint is bundled.
 
 **Start with the [prior-selection recipe](docs/prior_selection.md).** The proposed challenger uses graph/direct-forest/hierarchy/smooth-local/sparse-interaction weights of 50/20/15/10/5, with separately sampled observation mechanisms. A costed 40-run selection plan compares mechanisms, weights and architectures within the existing 50,000 GPU-hour project budget. The new generators, observation laws, trainer integration and phase materializer are implemented. Start with the CPU smoke, then measure each curriculum stage on your hardware before freezing research runs.
 
-The starting architecture is **`base`, a 317,116,304-parameter dense model**: cell embeddings → two feature-attention stages → eight summaries per row → a 24-layer row transformer → classification or regression outputs. It uses hash-bit categories, 999 regression quantiles and two shared query KV heads. **`persistent_small` is a separate 41,089,248-parameter comparison model** that retains feature cells through twelve stages and has no row transformer. Neither architecture has yet won the planned comparison. Figure 1 in the report shows them side by side.
+TesseraTab's starting architecture is **`base`, a 317,116,304-parameter dense model**: cell embeddings → two feature-attention stages → eight summaries per row → a 24-layer row transformer → classification or regression outputs. It uses hash-bit categories, 999 regression quantiles and two shared query KV heads. **`persistent_small` is a separate 41,089,248-parameter comparison model** that retains feature cells through twelve stages and has no row transformer. Neither architecture has yet won the planned comparison. Figure 1 in the report shows them side by side.
 
 The [executable reference pilot](docs/main_recipe.md) uses the same 317M architecture with the earlier R+P1 sampler. That prior remains a control for Q. A separate covariate-first fraud continuation retains frozen-weight ICL deployment.
 
