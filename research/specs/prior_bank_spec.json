@@ -1,6 +1,6 @@
 {
   "name": "Tabular ICL research and implementation v4 \u2014 concrete reference-derived candidate",
-  "status": "Runnable recommended candidate; local mathematical, learned-head and integration checks; no competitive pretraining or GPU calibration",
+  "status": "Runnable prior-selection program and reference pilot; local mathematical and integration checks; no competitive pretraining or GPU calibration",
   "as_of": "2026-10-03",
   "primary_objectives": [
     "standard_benchmark_binary_multiclass_regression",
@@ -13,9 +13,10 @@
     "assessment": "../../prior_bank_assessment.tex",
     "experiments": "ablation_plan.csv",
     "latency_and_moe": "latency_recipe_v3.json",
-    "finance_generator_and_context": "finance_recipe_v3.json"
+    "finance_generator_and_context": "finance_recipe_v3.json",
+    "current_prior_selection": "prior_selection_v1.json"
   },
-  "configuration_precedence": "main_candidate below, configs/candidate_standard.json, configs/candidate_fraud.json and docs/main_recipe.md define the current recommendation. Older flat prior/curriculum/candidate_model/default_training fields document the authored control and remain for reproducible comparisons. Runtime configs are bounded pilots, not full-volume launch files. Research-only arms are not trainer flags.",
+  "configuration_precedence": "prior_selection_v1.json and docs/prior_selection.md define the current selection recipe. Runtime standard_prior=selection uses challenger_prior.py and selection_laws.py; phase materialization freezes actual trainer configs. configs/selection_candidate_standard.json and selection_candidate_fraud.json are provisional full-volume starting configurations, not a selected winner. main_candidate and old candidate_*.json retain the reference pilot. Older flat fields are authored controls.",
   "initial_family_probabilities": {
     "P0": 0.85,
     "P1": 0.1,
@@ -230,7 +231,7 @@
         },
         {
           "id": "A",
-          "description": "R and selected challenger on authored compressed and compact persistent-cell backbones; identical output contracts. Two seeds per cell;400 hours each. Equal-cost system comparison, not topology-only attribution. Compact backbone remains unimplemented.",
+          "description": "R and selected challenger on authored compressed and compact persistent-cell backbones; identical output contracts. Two seeds per cell;400 hours each. Equal-cost system comparison, not topology-only attribution. Implemented persistent_small has41,089,248 parameters with candidate heads and finance adapter; compressed base has317,116,304. The comparator retains feature cells and uses support-derived inducing summaries.",
           "arms": 4,
           "seeds": 2,
           "hours_per_arm_seed": 400,
@@ -556,6 +557,7 @@
   "prior_selection": {
     "spec": "prior_selection_v1.json",
     "guide": "../../docs/prior_selection.md",
-    "status": "Current research recommendation: specified challenger and costed selection, not implemented new sampler or demonstrated winner."
+    "status": "Implemented challenger and costed selection program; no experimentally selected winner.",
+    "implementation_status": "Executable sampler, laws, phase materializer, persistent-cell comparator and paired evaluation; hardware calibration and measured selection pending."
   }
 }

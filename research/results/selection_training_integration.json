@@ -1,0 +1,251 @@
+{
+  "status": "passed",
+  "execution": "actual_CPU_training",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "torch_version": "2.8.0",
+  "world_sizes": [
+    1,
+    2
+  ],
+  "backend": "gloo",
+  "gpu_training_tested": false,
+  "multinode_training_tested": false,
+  "config": "/tmp/pfn-selection-training-check/config.json",
+  "config_sha256": "88d59eda78d38f09aab67da1f0a21e3868ae46bef94550ee413cdef6dbb77664",
+  "serial": {
+    "completion": {
+      "steps": 3,
+      "requested_steps": 3,
+      "cumulative_gpu_hours": 0.0,
+      "status": "completed"
+    },
+    "checkpoint": "/tmp/pfn-selection-training-check/serial/last.pt",
+    "checkpoint_sha256": "3a8d1d1f5d6d23aa036ddbdce652cf04437b1dcd24e5acd07fb4410e6d8c12ae",
+    "steps": [
+      1,
+      2,
+      3
+    ],
+    "stages": [
+      1,
+      2,
+      3
+    ],
+    "losses": [
+      1.8347055912017822,
+      0.7894474010686788,
+      1.493384838104248
+    ],
+    "gradient_norms": [
+      1.8885325193405151,
+      0.05239987373352051,
+      2.442046880722046
+    ],
+    "macroepisodes": 6,
+    "support_rows": 96,
+    "query_targets": 48,
+    "cells": 1128,
+    "families": {
+      "R": 3,
+      "forest": 2,
+      "hierarchy": 1,
+      "smooth_local": 0,
+      "sparse_interaction": 0
+    },
+    "observations": {
+      "identity": 3,
+      "mcar": 0,
+      "mar": 0,
+      "mnar": 1,
+      "coarsen": 2
+    },
+    "parameter_count": 317732,
+    "log": "/tmp/pfn-selection-training-check/serial.log"
+  },
+  "two_rank": {
+    "completion": {
+      "steps": 3,
+      "requested_steps": 3,
+      "cumulative_gpu_hours": 0.0,
+      "status": "completed"
+    },
+    "checkpoint": "/tmp/pfn-selection-training-check/distributed/last.pt",
+    "checkpoint_sha256": "891d2811bdd451771284ca97ee5774444e0d219125151e9bb8ae0eea9cd9a324",
+    "steps": [
+      1,
+      2,
+      3
+    ],
+    "stages": [
+      1,
+      2,
+      3
+    ],
+    "losses": [
+      1.8347055912017822,
+      0.7894474010686788,
+      1.493384838104248
+    ],
+    "gradient_norms": [
+      1.8885325193405151,
+      0.05239987373352051,
+      2.442046880722046
+    ],
+    "macroepisodes": 6,
+    "support_rows": 96,
+    "query_targets": 48,
+    "cells": 1128,
+    "families": {
+      "R": 3,
+      "forest": 2,
+      "hierarchy": 1,
+      "smooth_local": 0,
+      "sparse_interaction": 0
+    },
+    "observations": {
+      "identity": 3,
+      "mcar": 0,
+      "mar": 0,
+      "mnar": 1,
+      "coarsen": 2
+    },
+    "parameter_count": 317732,
+    "log": "/tmp/pfn-selection-training-check/distributed.log"
+  },
+  "persistent_tiny": {
+    "completion": {
+      "steps": 3,
+      "requested_steps": 3,
+      "cumulative_gpu_hours": 0.0,
+      "status": "completed"
+    },
+    "checkpoint": "/tmp/pfn-selection-training-check/persistent/last.pt",
+    "checkpoint_sha256": "341f1a9765c3664e9890bd08d134c702197a4f12da0ef8ef28b03c42664f5cba",
+    "steps": [
+      1,
+      2,
+      3
+    ],
+    "stages": [
+      1,
+      2,
+      3
+    ],
+    "losses": [
+      1.8425740599632263,
+      0.7895450729327284,
+      1.4931747913360596
+    ],
+    "gradient_norms": [
+      1.5628161430358887,
+      0.045128777623176575,
+      1.863509178161621
+    ],
+    "macroepisodes": 6,
+    "support_rows": 96,
+    "query_targets": 48,
+    "cells": 1128,
+    "families": {
+      "R": 3,
+      "forest": 2,
+      "hierarchy": 1,
+      "smooth_local": 0,
+      "sparse_interaction": 0
+    },
+    "observations": {
+      "identity": 3,
+      "mcar": 0,
+      "mar": 0,
+      "mnar": 1,
+      "coarsen": 2
+    },
+    "parameter_count": 229458,
+    "log": "/tmp/pfn-selection-training-check/persistent.log"
+  },
+  "comparison": {
+    "max_state_tensor_absolute_difference": 0.0,
+    "all_state_tensors_bit_identical": true,
+    "consumed_task_counts_identical": true,
+    "losses_identical": true,
+    "tensor_count": 143
+  },
+  "commands": [
+    "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONHASHSEED=0 PYTHONPATH=src GLOO_SOCKET_IFNAME=lo0 .venv/bin/python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --master_addr=127.0.0.1 --master_port=29876 -m tabular_foundation.train --config /tmp/pfn-selection-training-check/config.json --output /tmp/pfn-selection-training-check/distributed",
+    "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONHASHSEED=0 PYTHONPATH=src .venv/bin/python -m tabular_foundation.train --config /tmp/pfn-selection-training-check/config.json --output /tmp/pfn-selection-training-check/serial",
+    "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONHASHSEED=0 PYTHONPATH=src .venv/bin/python -m tabular_foundation.train --config /tmp/pfn-selection-training-check/persistent.json --output /tmp/pfn-selection-training-check/persistent"
+  ],
+  "source_sha256": {
+    "src/tabular_foundation/train.py": "98c218d3d053ddc55b1a8082ba13738883e549cb20d2308af73f178a2db591a3",
+    "src/tabular_foundation/producer.py": "ca0a1c97e7ebb6a18cdd5b1d0ee72366a1b8a79045d958d90c82637f8dc29cd0",
+    "src/tabular_foundation/model.py": "c82c97bbe3e17663b0bf8428c4b26224b3ae5b722e16570053784cd0e099cd63",
+    "src/tabular_foundation/challenger_prior.py": "5260e04338c8221566c9f6d76e303c1a7c4709691d524389645a6167a691084e",
+    "src/tabular_foundation/selection_laws.py": "09018fc8a69167d146c24c13ec0b92d5aa6217f21c158353a0abebb7046b8591",
+    "src/tabular_foundation/reference_prior.py": "dfbd9b0f3e1d9c9eddc0f6c8f72d4936f7564bf0a04f242d8e994df44185b4b5",
+    "src/tabular_foundation/optim.py": "04c64018cc4f00cfeeed7b539df1e6cc934bd58362c4fccddee81c5604791f79"
+  },
+  "limits": [
+    "Two local CPU ranks only; no 64-GPU, cross-node, CUDA, ROCm, throughput or model-quality claim.",
+    "Tiny diagnostic shapes; curriculum exercises stages 1/2/3 but is not the research 90/9/1 allocation.",
+    "Gloo needed an explicitly permitted loopback rendezvous; the first sandboxed localhost:0 launch was stopped before training."
+  ],
+  "config_content": {
+    "model": "tiny",
+    "model_options": {
+      "categorical_encoding": "hash_bits",
+      "regression_head": "quantile",
+      "regression_bins": 1025,
+      "regression_quantiles": 999,
+      "length_scaling": "logarithmic",
+      "trunk_query_kv_heads": 2,
+      "hurdle_target_scale": "positive_support"
+    },
+    "device": "cpu",
+    "cpu_threads": 1,
+    "seed": 1729,
+    "steps": 3,
+    "global_batch": 2,
+    "finance_share": 0,
+    "finance_adapter": true,
+    "optimizer": "muon",
+    "adam_lr": 0.0003,
+    "muon_lr": 0.0008,
+    "weight_decay": 0.0,
+    "gradient_clip": 10,
+    "bf16": false,
+    "activation_checkpointing": false,
+    "checkpoint_every": 1,
+    "stage_end_steps": [
+      1,
+      2,
+      3
+    ],
+    "standard_prior": "selection",
+    "reference_task": "mixed",
+    "producer_workers": 2,
+    "prefetch_tasks": 2,
+    "allocated_gpus": 0,
+    "selection_options": {
+      "mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "complexity_conditioned_probability": 0.8,
+      "namespace": "train"
+    },
+    "reference_shape": {
+      "n_support": 16,
+      "n_query": 8,
+      "n_features": 8
+    }
+  }
+}

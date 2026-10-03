@@ -1,6 +1,6 @@
 # Implementation and specification map
 
-The current recommendation is the [317M standard candidate followed by a binary-fraud specialist](main_recipe.md). Runtime configurations are in `configs/`; research specifications explain intent and evidence but are not accepted training configs. [`prior_volume.md`](prior_volume.md) describes the new episode-count plan. Earlier audit results remain historical records, rather than proof that the new candidate has been trained or benchmarked.
+The current recommendation is the [executable prior-selection program](prior_selection.md), followed by a selected standard model and a binary-fraud specialist. The [317M reference pilot](main_recipe.md) remains a control. Runtime configurations are in `configs/`; research specifications explain intent and evidence but are not accepted training configs. [`prior_volume.md`](prior_volume.md) describes the new episode-count plan. Earlier audit results remain historical records, rather than proof that the new candidate has been trained or benchmarked.
 
 ## Module boundaries
 
@@ -8,6 +8,8 @@ The current recommendation is the [317M standard candidate followed by a binary-
 | --- | --- |
 | `schema.py` | Episode validation and the explicit `model_inputs()` allowlist |
 | `reference_prior.py` | Verified upstream graph-prior import, native filters, branch controls and explicit envelope extensions |
+| `challenger_prior.py`, `selection_laws.py` | Five-way task/shape-first sampler, independent calibration, responses and observation laws |
+| `selection_evaluation.py` | Declared standard panels, paired proper-loss objective and source-lineage bootstrap |
 | `static_prior.py` | Authored P0 mechanisms, P1 categorical hierarchy and P4 count/amount laws |
 | `finance_prior.py` | Finite populations, label availability, feature controls, support preparation and macroepisodes |
 | `retrieval.py` | Observable reservoir codec, centers, streamed candidate selection, routing and deduplication |
@@ -28,6 +30,8 @@ The adapter fixes task, class budget and shape before independently selecting R,
 
 The native output has already undergone its numeric representation and does not retain category-type identities. Its Episode mask marks columns numerical; this limits direct training coverage of the separate nominal encoder. `static_prior.generate_episode()` retains authored feature types and separate calibration/support/query streams. Its conditional classification-law metadata is used only by the optional loss control where valid; unsupported mechanisms use sampled targets.
 
+The new `standard_prior="selection"` dispatches through the native task/shape callback before any graph is generated. `selection_options` fixes the mechanism and observation simplexes and dimension-conditioning probability. New families use independent calibration; R observation fitting uses clean support features. H width fallback is explicit. Query labels, soft probabilities and diagnostics remain loss/audit-only. The exact recipe and configuration map are in [prior_selection.md](prior_selection.md).
+
 ## Finance generation and controls
 
 `generate_finance_world()` builds finite strata and replayable row identities. The default legacy family is class-conditional Gaussian motif geometry. The main candidate explicitly selects `mechanism_family="risk_partition"`: product covariate cells, sparse threshold main/interaction risk, a historical rare-event intercept, binomial event counts and optional feature rotation. It preserves finite scarcity; expected prevalence calibration does not fix actual positive counts.
@@ -36,7 +40,7 @@ The existing observation process still determines which historical outcomes are 
 
 `feature_view="all"|"hide_h"|"h_only"` masks rendered columns before both selection and model use. `loss_normalization="reference_entropy"|"unit"` controls only the additional world-loss multiplier. `positive_h_probability` and `negative_h_probability` control H's generative informativeness. Equal probabilities make H nondiscriminative in the population, not necessarily after selective observation.
 
-A `population_id` excludes view and normalization controls, preserving population and query draws across those paired comparisons; `world_id` still identifies the full configuration. New risk-partition count/outcome/policy/reveal streams are separately keyed. Changing the H law preserves aggregate day/cell/class outcome counts in that family, but can change stratum boundaries, row identities and eligibility. The legacy family's sequential count RNG is retained; it does not promise the same outcome counts under H-law changes.
+A `population_id` excludes view, normalization and support-selector controls, preserving population and query draws across those paired comparisons; `world_id` still identifies the full configuration. New risk-partition count/outcome/policy/reveal streams are separately keyed. Changing the H law preserves aggregate day/cell/class outcome counts in that family, but can change stratum boundaries, row identities and eligibility. The legacy family's sequential count RNG is retained; it does not promise the same outcome counts under H-law changes.
 
 `sample_macroepisode()` samples global finite future classes and IDs before observable query routing. Per-query weights recover natural finite-population risk. Route losses use the original query denominator, never an equal mean of route means. `training=False` defaults to unique natural-prevalence queries. The real-data `FinancePredictor` uses the same reservoir/positive/local context structure; nearest-to-center selection remains an approximation to query-specific optimal support.
 
@@ -55,7 +59,7 @@ The finance metadata vector has 14 observable coordinates, including reference c
 
 ## Training, production and provenance
 
-`TaskProducer` optionally prepares tasks in a single spawned process per rank, preserving consumption order and isolating upstream global RNG use. It bounds pending task count and caches four finance worlds. It does not implement byte-bounded queues, pinned-memory transfers or separate copy streams. `PYTHONHASHSEED=0` is required before Python startup for reference generation.
+`TaskProducer` optionally prepares tasks in a configured pool of spawned processes per rank, preserving consumption order and isolating upstream global RNG use. It bounds pending task count and caches four finance worlds. It does not implement byte-bounded queues, pinned-memory transfers or separate copy streams. `PYTHONHASHSEED=0` is required before Python startup for reference generation.
 
 The trainer sums per-query scores with proposal weights, applies the macroepisode multiplier and original query denominator, then averages macros across ranks. Globally inactive parameters receive no update; rank-local inactive parameters contribute zero if another rank used them. Muon operates on registered full hidden matrices; AdamW handles the remaining parameters. The candidate explicitly disables weight decay.
 
@@ -69,6 +73,10 @@ The repository contains the new prior controls, encoding/head/attention options,
 
 MoE, general sparse support graphs, feature-feedback training, auxiliary consistency, adaptive prior mixtures and real-data pretraining remain research branches. No production producer farm, FSDP or expert-parallel backend is claimed. Improvements to systems code must preserve deterministic consumption, finite populations, selection laws and accounting. See [training](training.md), [data/evaluation](data_and_evaluation.md) and the [audit](audit.md) for operational boundaries.
 
-## Proposed prior-selection program
+## Executable prior-selection program
 
-[prior_selection.md](prior_selection.md) specifies the new standard challenger and its costed trials. `scripts/plan_prior_selection.py` and `research/probes/prior_information_analysis.py` are implemented accounting/analysis tools. The new family versions, common observation wrapper and compact architecture are not integrated training components. Existing candidate configs keep their reference-pilot meaning.
+[prior_selection.md](prior_selection.md) specifies the new standard challenger and its costed trials. `scripts/plan_prior_selection.py` and `research/probes/prior_information_analysis.py` are implemented accounting/analysis tools. The new family versions, common observation wrapper and compact architecture are integrated training components. Phase materialization, scheduler submission and paired standard-panel evaluation are implemented. Older candidate configs keep their reference-pilot meaning; the new selection configs contain the provisional full-volume hypothesis.
+
+## Persistent-cell comparison
+
+`build_model("persistent_small", model_options=...)` retains width-256 feature cells through twelve stages, each with one column ISAB and one row MAB. Each ISAB uses 128 support-derived inducing summaries per column. Eight row summary tokens are projected to width 512 only at the final readout. There is no row-level ICL trunk. With candidate heads and the finance adapter the model has 41,089,248 parameters. `persistent_tiny` is the diagnostic counterpart. Support labels enter the feature encoder; queries never update support summaries. This tests an authored compact architecture at equal allocated cost, rather than reproducing a competitor or isolating topology at equal parameter count. The `trunk_query_kv_heads` option has no effect when there is no trunk.

@@ -1,0 +1,60 @@
+{
+  "model": "tiny",
+  "model_options": {
+    "categorical_encoding": "hash_bits",
+    "regression_head": "quantile",
+    "regression_bins": 1025,
+    "regression_quantiles": 999,
+    "length_scaling": "logarithmic",
+    "trunk_query_kv_heads": 2,
+    "hurdle_target_scale": "positive_support"
+  },
+  "device": "cpu",
+  "cpu_threads": 1,
+  "seed": 1729,
+  "steps": 3,
+  "global_batch": 2,
+  "finance_share": 0,
+  "finance_adapter": true,
+  "optimizer": "muon",
+  "adam_lr": 0.0003,
+  "muon_lr": 0.0008,
+  "weight_decay": 0.0,
+  "gradient_clip": 10,
+  "bf16": false,
+  "activation_checkpointing": false,
+  "checkpoint_every": 1,
+  "stage_end_steps": [
+    1,
+    2,
+    3
+  ],
+  "standard_prior": "selection",
+  "reference_task": "mixed",
+  "producer_workers": 2,
+  "prefetch_tasks": 2,
+  "allocated_gpus": 0,
+  "selection_options": {
+    "mechanism_weights": {
+      "R": 0.5,
+      "forest": 0.2,
+      "hierarchy": 0.15,
+      "smooth_local": 0.1,
+      "sparse_interaction": 0.05
+    },
+    "observation_weights": {
+      "identity": 0.5,
+      "mcar": 0.15,
+      "mar": 0.15,
+      "mnar": 0.1,
+      "coarsen": 0.1
+    },
+    "complexity_conditioned_probability": 0.8,
+    "namespace": "train"
+  },
+  "reference_shape": {
+    "n_support": 16,
+    "n_query": 8,
+    "n_features": 8
+  }
+}

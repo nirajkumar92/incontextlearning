@@ -39,7 +39,11 @@ _ALLOWED_OVERRIDES = {
     "mechanism_family", "risk_features", "risk_strength", "risk_interaction_fraction",
     "risk_rotate",
 }
-_PAIRED_CONTROLS = {"feature_view", "loss_normalization"}
+_PAIRED_CONTROLS = {
+    "feature_view", "loss_normalization", "reservoir_cap", "positive_cap",
+    "local_cap", "candidate_cap", "max_centers", "max_positive_centers",
+    "index_dimension", "scan_chunk_size",
+}
 
 
 def _rng(seed: int, namespace: str) -> np.random.Generator:
@@ -254,7 +258,8 @@ class FinanceWorld:
         self._support_cache: dict[tuple[int, bool], _SupportIndex] = {}
         self.world_id = "finance-" + hashlib.sha256(json.dumps({"seed": self.seed, "stage": stage, "task": self.task,
                                                                 "overrides": self.overrides}, sort_keys=True).encode()).hexdigest()[:20]
-        # Views and the loss multiplier do not alter the population or query draw.
+        # Feature views, support selection and loss multipliers do not alter
+        # the finite population or the paired query proposal.
         # Preserve the old query namespace when neither control was supplied.
         population_overrides = {k: v for k, v in self.overrides.items() if k not in _PAIRED_CONTROLS}
         self.population_id = "finance-" + hashlib.sha256(json.dumps(

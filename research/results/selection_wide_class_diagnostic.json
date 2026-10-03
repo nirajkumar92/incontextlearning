@@ -1,0 +1,97 @@
+{
+  "diagnostic_only": true,
+  "date": "2026-10-03",
+  "device": "cpu",
+  "seed": 60001,
+  "support_rows": 64,
+  "query_rows": 16,
+  "features": 512,
+  "legal_classes": 256,
+  "observation": "mnar",
+  "rows": [
+    {
+      "family": "forest",
+      "seconds": 1.488477458,
+      "shape": [
+        64,
+        512
+      ],
+      "legal_classes": 256,
+      "observed_classes": 47,
+      "calibration_summary": {
+        "maximum_absolute_error": 4.270941365867517e-05,
+        "total_variation": 0.0005088587624196836,
+        "iterations": 0,
+        "backtracking_steps": 0,
+        "tolerance": 0.001,
+        "max_iterations": 200,
+        "converged": true
+      },
+      "numerical_retries": 0
+    },
+    {
+      "family": "hierarchy",
+      "seconds": 0.535444875,
+      "shape": [
+        64,
+        512
+      ],
+      "legal_classes": 256,
+      "observed_classes": 50,
+      "calibration_summary": {
+        "maximum_absolute_error": 7.040799482191037e-05,
+        "total_variation": 0.0010050071280212696,
+        "iterations": 0,
+        "backtracking_steps": 0,
+        "tolerance": 0.001,
+        "max_iterations": 200,
+        "converged": true
+      },
+      "numerical_retries": 0
+    },
+    {
+      "family": "smooth_local",
+      "seconds": 0.5016929170000002,
+      "shape": [
+        64,
+        512
+      ],
+      "legal_classes": 256,
+      "observed_classes": 53,
+      "calibration_summary": {
+        "maximum_absolute_error": 5.704244010805437e-05,
+        "total_variation": 0.0012735939418180445,
+        "iterations": 0,
+        "backtracking_steps": 0,
+        "tolerance": 0.001,
+        "max_iterations": 200,
+        "converged": true
+      },
+      "numerical_retries": 0
+    },
+    {
+      "family": "sparse_interaction",
+      "seconds": 0.49550529099999974,
+      "shape": [
+        64,
+        512
+      ],
+      "legal_classes": 256,
+      "observed_classes": 49,
+      "calibration_summary": {
+        "maximum_absolute_error": 7.129690111488604e-05,
+        "total_variation": 0.001049115771507918,
+        "iterations": 0,
+        "backtracking_steps": 0,
+        "tolerance": 0.001,
+        "max_iterations": 200,
+        "converged": true
+      },
+      "numerical_retries": 0
+    }
+  ],
+  "source_sha256": {
+    "src/tabular_foundation/challenger_prior.py": "5260e04338c8221566c9f6d76e303c1a7c4709691d524389645a6167a691084e",
+    "src/tabular_foundation/selection_laws.py": "09018fc8a69167d146c24c13ec0b92d5aa6217f21c158353a0abebb7046b8591"
+  }
+}

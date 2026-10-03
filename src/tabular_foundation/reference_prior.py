@@ -235,7 +235,8 @@ def generate_reference_batch(seed: int, *, arm: str = "R", task: str = "classifi
                              shape: ReferenceShape | None = None,
                              envelope: dict | None = None,
                              source_root: str | Path | None = None,
-                             max_reference_attempts: int = 1000) -> ReferenceBatch:
+                             max_reference_attempts: int = 1000,
+                             source_callback=None) -> ReferenceBatch:
     """Run the native batch sampler, replacing eligible draws with 5% P1/P4.
 
     The native sampler draws ALL batch parameters before calling any generator.
@@ -243,7 +244,16 @@ def generate_reference_batch(seed: int, *, arm: str = "R", task: str = "classifi
     by a curriculum. Filters retry inside the same selected reference slot;
     failures abort, never switch source. Accepted addition mass is 0.05 times
     eligibility, not an unconditional 5%; raw-reference proposal mass differs.
+
+    ``source_callback(params, event)`` is an optional extension hook used by the
+    challenger. It runs after native task/shape sampling, sets the selected
+    source in ``event``, and returns an Episode or None for unmodified native R.
+    Replacement episodes must preserve requested task, shape and vocabulary.
     """
+    # A callback may supply a replacement only after native task/shape draws.
+    # Returning None preserves the complete native generation/filter path.
+    if source_callback is not None and arm != "R":
+        raise ValueError("source_callback requires arm=R")
     kwargs = reference_kwargs(stage, task, batch_size, envelope=envelope)
     if arm not in ARMS:
         raise ValueError(f"arm must be one of {ARMS}")
@@ -291,6 +301,10 @@ def generate_reference_batch(seed: int, *, arm: str = "R", task: str = "classifi
                 audit["events"].append(event)
                 selected = event["selected_source"]
                 try:
+                    replacement = None
+                    if source_callback is not None:
+                        replacement = source_callback(dict(params), event)
+                        selected = event["selected_source"]
                     if selected == "R":
                         with _observe_native(dataset, self, event, max_reference_attempts):
                             X, y, d = super().generate_dataset(params)
@@ -305,12 +319,21 @@ def generate_reference_batch(seed: int, *, arm: str = "R", task: str = "classifi
                                                "class_universe_declared_before_rows": True},
                                      encoding_seed=int(seed))
                     else:
-                        authored_seed = int(_rng(seed, "reference_addition", index).integers(0, 2**63))
-                        ep = generate_authored_episode(authored_seed, family=selected, task=episode_task,
-                                                      n_support=event["n_support"], n_query=event["n_query"],
-                                                      n_features=event["requested_features"],
-                                                      n_classes=classes, stage=stage)
-                        event["raw_dataset_attempts"] = 1
+                        if source_callback is not None:
+                            if not isinstance(replacement, Episode):
+                                raise TypeError("source_callback must return an Episode for a replacement source")
+                            ep = replacement
+                            if (ep.x_support.shape != (event["n_support"], event["requested_features"]) or
+                                    ep.x_query.shape != (event["n_query"], event["requested_features"]) or
+                                    ep.task != episode_task or ep.n_classes != classes):
+                                raise ValueError("source_callback changed the sampled task/shape")
+                        else:
+                            authored_seed = int(_rng(seed, "reference_addition", index).integers(0, 2**63))
+                            ep = generate_authored_episode(authored_seed, family=selected, task=episode_task,
+                                                          n_support=event["n_support"], n_query=event["n_query"],
+                                                          n_features=event["requested_features"],
+                                                          n_classes=classes, stage=stage)
+                            event["raw_dataset_attempts"] = 1
                         X = torch.zeros((params["seq_len"], params["max_features"]), dtype=torch.float32)
                         X[:, :ep.x_support.shape[1]] = torch.from_numpy(np.concatenate([ep.x_support, ep.x_query])).float()
                         y = torch.from_numpy(np.concatenate([ep.y_support, ep.y_query])).to(
@@ -331,12 +354,15 @@ def generate_reference_batch(seed: int, *, arm: str = "R", task: str = "classifi
 
         prior = ControlledPrior(config=config, **kwargs)
         native = prior.get_batch()
+    sources = tuple(dict.fromkeys(("R", "P1", "P4",
+                                  *(e["selected_source"] for e in audit["events"]),
+                                  *(e["branch_draw"] for e in audit["events"]))))
     for name, field in (("branch_counts", "branch_draw"), ("selected_counts", "selected_source")):
-        audit[name] = {s: sum(e[field] == s for e in audit["events"]) for s in ("R", "P1", "P4")}
+        audit[name] = {s: sum(e[field] == s for e in audit["events"]) for s in sources}
     audit["accepted_counts"] = {s: sum(e["accepted"] and e["selected_source"] == s for e in audit["events"])
-                                for s in ("R", "P1", "P4")}
+                                for s in sources}
     audit["raw_attempt_counts"] = {s: sum(e["raw_dataset_attempts"] for e in audit["events"] if e["selected_source"] == s)
-                                   for s in ("R", "P1", "P4")}
+                                   for s in sources}
     audit["accepted_source_mass"] = {s: count / len(episodes) for s, count in audit["accepted_counts"].items()}
     audit["ineligible_returns"] = sum(e["ineligible_mass_returned"] for e in audit["events"])
     return ReferenceBatch(episodes=episodes, audit=audit, native=native)

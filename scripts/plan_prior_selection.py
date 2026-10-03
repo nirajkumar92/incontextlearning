@@ -1,7 +1,8 @@
 """Write a deterministic, unexecuted prior-selection experiment manifest.
 
-This planner performs accounting only. It neither implements the proposed
-generators nor launches training, selects a winning prior, or estimates accuracy.
+This planner performs accounting only. Implemented generators and the companion
+materializer supply training configs; this file does not launch training, choose
+a winning prior, or estimate accuracy.
 """
 from __future__ import annotations
 
@@ -160,8 +161,8 @@ def exposure_counts(mechanisms, observations, episodes):
         "generation_or_training_gpu_hours": None,
         "assumptions": [
             "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-            "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-            "This shape law must be implemented and verified before these expectations describe a training run.",
+            "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+            "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
             "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
             "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
             "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -190,8 +191,8 @@ def build_plan(spec, episodes=64_000_000):
     grid_mixtures = {f"R{anchor * 100:g}": mixture_with_anchor(mechanisms, anchor) for anchor in grid}
     exposure.update({f"M_{name}": exposure_counts(mix, observations, episodes)
                      for name, mix in grid_mixtures.items()})
-    shared_blockers = ["shared_shape_law_and_paired_experiment_harness_not_implemented",
-                       "GPU_hardware_and_end_to_end_timings_unavailable"]
+    shared_blockers = ["GPU_hardware_and_end_to_end_timings_unavailable",
+                       "full_schedule_horizon_requires_measured_stage_costs"]
     trials, phase_runs = [], {}
     phase_arms = {
         "P": [name for name, _, _ in p_arms],
@@ -209,23 +210,20 @@ def build_plan(spec, episodes=64_000_000):
             for seed in range(seed_base[phase], seed_base[phase] + allocations[phase]["seeds"]):
                 run_id = f"{phase}_{arm}_seed{seed}"
                 blockers = list(shared_blockers)
-                if phase == "P" and arm not in ("R",):
-                    blockers.append("specified_generator_or_observation_extension_not_implemented")
                 if phase == "M":
                     blockers.append("surviving_mechanisms_and_observation_policy_not_selected")
                 if phase == "A":
-                    blockers.extend(["prior_not_selected", "compact_persistent_cell_control_not_implemented"])
+                    blockers.append("prior_not_selected")
                 if phase == "V":
                     blockers.append("final_architecture_prior_pair_not_selected")
                 if phase == "F":
-                    blockers.extend(["shared_standard_parent_checkpoint_not_selected_or_trained",
-                                     "paired_finance_control_harness_not_implemented"])
+                    blockers.append("shared_standard_parent_checkpoint_not_selected_or_trained")
                 trial = {
                     "id": run_id, "phase": phase, "arm": arm, "seed": seed,
                     "paired_seed_group": f"{phase}_seed{seed}",
                     "gpu_hour_ceiling": allocations[phase]["gpu_hours_per_run"],
-                    "status": "blocked_unimplemented" if phase == "P" else "pending_selection",
-                    "implementation_status": "specified_not_implemented",
+                    "status": "ready_to_materialize" if phase == "P" else "pending_selection",
+                    "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
                     "dependencies": [] if previous is None else list(phase_runs[previous]),
                     "blockers": blockers,
                     "selection_gate": None if previous is None else f"review_and_freeze_after_{previous}",
@@ -253,9 +251,10 @@ def build_plan(spec, episodes=64_000_000):
         raise ValueError("Generated trials must conserve the validated run count and screening budget")
     return {
         "schema_version": 1,
-        "status": "unexecuted_research_plan_with_implementation_and_selection_gates",
+        "status": "unexecuted_research_plan_with_selection_and_hardware_gates",
         "not_a_training_launch_config": True, "performance_guarantee": False,
-        "runtime_candidate_configuration_changed": False,
+        "runtime_candidate_configuration_changed": True,
+        "materializer": "scripts/materialize_prior_selection.py",
         "project_gpu_hour_ceiling": math.fsum(project.values()),
         "project_gpu_hour_budget": project,
         "screening_gpu_hour_ceiling": math.fsum(t["gpu_hour_ceiling"] for t in trials),
@@ -266,16 +265,18 @@ def build_plan(spec, episodes=64_000_000):
         "conditional_volume_examples": exposure,
         "volume_note": "The episode target illustrates one future run under each fixed proposal; it is not a target for every screening trial or a claim that the target fits its GPU-hour ceiling.",
         "implementation_inventory": {
-            "R": "existing_pinned_reference_generator; shared_selection_harness_not_implemented",
-            "forest": "specified_not_implemented", "hierarchy": "specified_hyperlaw_extension_not_implemented; existing_P1_is_only_a_control",
-            "smooth_local": "specified_not_implemented", "sparse_interaction": "specified_not_implemented",
-            "observation_wrapper": "specified_not_implemented",
-            "common_shape_law": "specified_not_implemented",
-            "compact_persistent_cell": "specified_not_implemented"},
+            "R": "implemented_pinned_reference_with_shared_selection_shape_law",
+            "forest": "implemented", "hierarchy": "implemented_selection_hyperlaw",
+            "smooth_local": "implemented", "sparse_interaction": "implemented",
+            "observation_wrapper": "implemented",
+            "common_shape_law": "implemented",
+            "compact_persistent_cell": "implemented_authored_inducing_attention_comparator",
+            "phase_materializer": "implemented_explicit_reviewed_decisions_required",
+            "slurm_submission": "implemented_scheduler_time_cap"},
         "paired_comparison_contract": [
             "Same seed index pairs initialization and task-shape schedules; mechanism-specific randomness is namespaced rather than falsely claiming identical tables.",
             "Fix architecture, optimizer, shape law, preprocessing and inference budget for P and M; record achieved exposure and compute as separate quantities.",
-            "A crosses R and the selected prior with the authored compressed and proposed compact persistent-cell architectures.",
+            "A crosses R and the selected prior with the authored compressed and compact persistent-cell inducing-attention architectures.",
             "M uses fresh seeds 2 and 3 rather than duplicating P's central mixture replicates; V uses fresh seeds 4 and 5, unseen during P/M/A, and a held-out confirmation panel.",
             "F starts all arms from the same selected standard checkpoint and compares standard replay, reservoir-plus-positive support, and the full finance selector.",
             "GPU-hour ceilings include charged generation, training and within-run validation overhead; no throughput or completion is inferred.",

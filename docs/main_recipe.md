@@ -1,5 +1,7 @@
 # Executable reference pilot and specialist training
 
+> This page preserves the earlier reference-derived pilot. Use [prior_selection.md](prior_selection.md) for the current five-family challenger, architecture comparison and full-volume launch workflow.
+
 The [prior-selection recipe](prior_selection.md) is the current research recommendation. It specifies a stronger challenger and experiments to select the final bank. The new sampler is not yet integrated; the commands below retain the runnable reference-derived pilot.
 
 Use the **317,116,304-parameter dense candidate** for a protected standard checkpoint, then initialize a separate binary-fraud specialist from it. Both perform frozen-weight in-context prediction at deployment. The standard target is **64 million accepted episodes**; the finance target is **1.024 million macroepisodes**. Their final-training ceilings are **9,000 and 3,000 allocated GPU-hours**, respectively, within the existing 50,000-hour research program. These are concrete targets and budget limits, not measured MI355X throughput or established accuracy wins.

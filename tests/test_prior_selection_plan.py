@@ -45,7 +45,7 @@ def test_run_graph_conserves_budget_and_never_implies_execution(spec):
         assert trial["launched"] is False and trial["completed"] is False
         assert trial["actual_gpu_hours"] is None and trial["benchmark_scores"] is None
         assert trial["accepted_training_episodes"] is None and trial["training_command"] is None
-        assert trial["blockers"] and trial["status"] in {"blocked_unimplemented", "pending_selection"}
+        assert trial["blockers"] and trial["status"] in {"ready_to_materialize", "pending_selection"}
         visited.add(trial["id"])
     assert len(visited) == 40
 
@@ -165,6 +165,6 @@ def test_cli_output_is_deterministic_and_does_not_mutate_spec(spec, tmp_path):
     assert output.read_bytes() == first and source.read_bytes() == before
     result = json.loads(first)
     assert result["not_a_training_launch_config"] and result["performance_guarantee"] is False
-    assert result["runtime_candidate_configuration_changed"] is False
+    assert result["runtime_candidate_configuration_changed"] is True
     assert result["source_spec_sha256"] == hashlib.sha256(before).hexdigest()
     assert result["conditional_volume_examples"]["Q_clean"]["conditional_accepted_episode_target"] == 1000

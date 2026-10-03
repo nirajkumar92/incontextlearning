@@ -1680,6 +1680,26 @@
         "research/reviews/prior_selection_evidence.md": "4150cb294d911d50e4967e72e84bef74c3e7eea6d6b7477a5a5e58f9942565a9",
         "research/specs/prior_selection_v1.json": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f"
       }
+    },
+    {
+      "date": "2026-10-03",
+      "revision": "Implement the complete costed prior-selection workflow",
+      "current_record": "research/results/selection_implementation_validation.json",
+      "pdf_sha256": "67f11cf81a7c5ec780b14af074a5d503b89b2f53c3936ffa361de0e309ffdb8d",
+      "source_sha256": "2fdf6099a2546de3bc80a09ce20524651d6543a8af0cdc138f634a594716e309",
+      "pdf_pages": 95,
+      "tests_passed": 354,
+      "new_files_rationale": {
+        "challenger_prior.py and selection_laws.py": "Execute the five-way sampler and exact response/observation laws",
+        "selection_evaluation.py": "Paired transfer objective and protected panel comparison",
+        "materialize_prior_selection.py / submit_training.py / record_allocation.py": "Runnable phase contracts and actual allocation accounting",
+        "audit_selection_priors.py": "Native-shape streaming distribution diagnostics",
+        "new tests": "Probability, leakage, cache, distributed, selection and budget contracts",
+        "selection_candidate configs": "Provisional full-volume hypothesis and compatible fraud continuation",
+        "selection result JSON records": "Compact executed CPU evidence with hashes and limits"
+      },
+      "temporary_checkpoints_logs_renderings": "Outside repository; not published",
+      "removed_files": []
     }
   ]
 }

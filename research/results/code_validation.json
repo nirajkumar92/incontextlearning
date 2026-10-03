@@ -1487,5 +1487,27 @@
     "pretraining_performed": false,
     "benchmark_performance_measured": false,
     "gpu_latency_measured": false
+  },
+  "prior_selection_implementation": {
+    "date": "2026-10-03",
+    "status": "local_implementation_verified_no_competitive_result",
+    "tests": {
+      "tests": "354",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "27.281"
+    },
+    "training_integration": "research/results/selection_training_integration.json",
+    "prior_smoke_audit": "research/results/selection_prior_smoke_audit.json",
+    "wide_class_diagnostic": "research/results/selection_wide_class_diagnostic.json",
+    "measurement_limits": [
+      "No competitive pretrained checkpoint or benchmark accuracy",
+      "No CUDA/ROCm or multi-node execution",
+      "No measured GPU utilization or latency",
+      "Native-shape large distribution audit and real-data panels are still required",
+      "Equal budget ceilings do not guarantee equal consumed time; scheduled evaluation charging requires reconciliation"
+    ],
+    "record": "research/results/selection_implementation_validation.json"
   }
 }

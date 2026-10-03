@@ -35,7 +35,12 @@ _COUNT_KEYS = ('R','P0','P1','P4','finance','binary','multiclass','regression',
                'observed_classes_3_10','observed_classes_11_32','observed_classes_33_128',
                'observed_classes_129_256','observed_classes_over_256',
                'finance_reuse_0','finance_reuse_1','finance_reuse_2','finance_reuse_3',
-               'finance_history_rows_macro_sum','finance_eligible_rows_macro_sum')
+               'finance_history_rows_macro_sum','finance_eligible_rows_macro_sum',
+               'forest','hierarchy','smooth_local','sparse_interaction',
+               'selection_hierarchy_fallback','selection_raw_attempts',
+               *('selection_requested_' + key for key in ('R','forest','hierarchy','smooth_local','sparse_interaction')),
+               *('observation_requested_' + key for key in ('identity','mcar','mar','mnar','coarsen')),
+               *('observation_effective_' + key for key in ('identity','mcar','mar','mnar','coarsen')))
 
 
 def macroepisode_task_counts(entry, routes, standard_prior='authored'):
@@ -53,17 +58,29 @@ def macroepisode_task_counts(entry, routes, standard_prior='authored'):
     counts = {key: 0 for key in _COUNT_KEYS}
     first = routes[0]
     reference = first.metadata.get('reference_control', {})
+    selection = first.metadata.get('selection', {})
     family = ('finance' if entry['profile'] == 'finance' else
-              reference.get('selected_source', first.metadata.get('family', 'P0')))
-    if family not in ('R', 'P0', 'P1', 'P4', 'finance'):
+              selection.get('selected_mechanism', reference.get('selected_source', first.metadata.get('family', 'P0'))))
+    if family not in ('R', 'P0', 'P1', 'P4', 'finance', 'forest', 'hierarchy', 'smooth_local', 'sparse_interaction'):
         raise ValueError('Unknown consumed prior family: ' + str(family))
     counts[family] = 1
+    if selection:
+        for name, prefix, choices in (
+                ('requested_mechanism', 'selection_requested_', ('R','forest','hierarchy','smooth_local','sparse_interaction')),
+                ('requested_observation', 'observation_requested_', ('identity','mcar','mar','mnar','coarsen')),
+                ('effective_observation', 'observation_effective_', ('identity','mcar','mar','mnar','coarsen'))):
+            value = selection[name]
+            if value not in choices:
+                raise ValueError('Unknown selection accounting value: ' + str(value))
+            counts[prefix + value] = 1
+        counts['selection_hierarchy_fallback'] = int(selection.get('hierarchy_fallback', False))
+        counts['selection_raw_attempts'] = int(selection.get('raw_attempts', 1))
     task = ('regression' if first.task in ('regression', 'amount', 'fraud_loss') else
             'binary' if first.n_classes == 2 else 'multiclass')
     counts[task] = 1
     counts['envelope_extended'] = int(bool(first.metadata.get('reference_envelope')))
     counts['nominal_branch_macros'] = int(any(np.any(ep.categorical) for ep in routes))
-    if reference:
+    if reference and family in ('R', 'P1', 'P4'):
         counts['reference_p1_eligible_slots'] = int(standard_prior == 'R_P1_05' and reference.get('eligible', False))
         counts['reference_p4_eligible_slots'] = int(standard_prior == 'R_P4_05' and reference.get('eligible', False))
         branch = reference.get('branch_draw', 'R')
@@ -215,7 +232,8 @@ def validate_config(config):
                'stage_end_steps','allocated_gpus','update_reserve_seconds','static_overrides',
                'finance_overrides','conditional_label_fraction','model_options',
                'standard_prior','reference_task','reference_shape','reference_envelope',
-               'producer_workers','prefetch_tasks','weight_decay','reference_envelope_probability','finance_task'}
+               'producer_workers','prefetch_tasks','weight_decay','reference_envelope_probability','finance_task',
+               'selection_options','initial_checkpoint','initial_checkpoint_required'}
     unknown = set(config) - allowed
     if unknown:
         raise ValueError('Unknown training configuration keys: ' + str(sorted(unknown)))
@@ -227,13 +245,13 @@ def validate_config(config):
         raise ValueError('finance_share must be 0,0.2 or1 for a declared controlled profile')
     if not 0 <= config.get('conditional_label_fraction',0) <= 1:
         raise ValueError('conditional_label_fraction must lie in[0,1]')
-    if config.get('standard_prior', 'authored') not in ('authored','R','R_P1_05','R_P4_05'):
+    if config.get('standard_prior', 'authored') not in ('authored','R','R_P1_05','R_P4_05','selection'):
         raise ValueError('Unknown standard_prior')
     if config.get('reference_task', 'mixed') not in ('mixed','classification','regression'):
         raise ValueError('Unknown reference_task')
     workers = config.get('producer_workers', 0)
-    if isinstance(workers, bool) or workers not in (0,1):
-        raise ValueError('producer_workers must be 0 or 1 per training rank')
+    if isinstance(workers, bool) or not isinstance(workers, int) or workers < 0:
+        raise ValueError('producer_workers must be a nonnegative integer per training rank')
     depth = config.get('prefetch_tasks', 2)
     if isinstance(depth, bool) or not isinstance(depth, int) or depth < 1:
         raise ValueError('prefetch_tasks must be a positive integer')
@@ -243,12 +261,50 @@ def validate_config(config):
         raise ValueError('weight_decay must be finite and nonnegative')
     if not 0 <= config.get('reference_envelope_probability', 1.) <= 1:
         raise ValueError('reference_envelope_probability must lie in[0,1]')
+    options = config.get('selection_options', {})
+    if not isinstance(options, dict) or set(options) - {'mechanism_weights','observation_weights',
+            'complexity_conditioned_probability','namespace','max_attempts'}:
+        raise ValueError('Unknown selection_options keys or invalid mapping')
+    if options and config.get('standard_prior') != 'selection':
+        raise ValueError('selection_options requires standard_prior=selection')
+    for name, names in [('mechanism_weights', ('R','forest','hierarchy','smooth_local','sparse_interaction')),
+                        ('observation_weights', ('identity','mcar','mar','mnar','coarsen'))]:
+        if name in options:
+            weights = options[name]
+            if (not isinstance(weights, dict) or set(weights) != set(names)
+                    or any(isinstance(x, bool) or not isinstance(x, (float,int)) or not np.isfinite(x) or x < 0 for x in weights.values())
+                    or not np.isclose(sum(weights.values()), 1., rtol=0, atol=1e-12)):
+                raise ValueError(name + ' must be a complete probability simplex')
+    probability = options.get('complexity_conditioned_probability', .8)
+    if isinstance(probability, bool) or not isinstance(probability, (float,int)) or not np.isfinite(probability) or not 0 <= probability <= 1:
+        raise ValueError('complexity_conditioned_probability must lie in [0,1]')
+    if not isinstance(options.get('namespace', 'train'), str) or not options.get('namespace', 'train'):
+        raise ValueError('selection namespace must be nonempty')
+    attempts = options.get('max_attempts', 100)
+    if isinstance(attempts, bool) or not isinstance(attempts, int) or attempts < 1:
+        raise ValueError('selection max_attempts must be a positive integer')
+    for key in ('gpu_hour_cap','update_reserve_seconds'):
+        if key in config and (isinstance(config[key], bool) or not isinstance(config[key], (float,int)) or not np.isfinite(config[key]) or config[key] < 0):
+            raise ValueError(key + ' must be finite and nonnegative')
+    if 'allocated_gpus' in config and (isinstance(config['allocated_gpus'], bool) or not isinstance(config['allocated_gpus'], int) or config['allocated_gpus'] < 0):
+        raise ValueError('allocated_gpus must be a nonnegative integer')
+    if not isinstance(config.get('initial_checkpoint_required', False), bool):
+        raise ValueError('initial_checkpoint_required must be boolean')
+    if config.get('initial_checkpoint') is not None and (not isinstance(config['initial_checkpoint'], str) or not config['initial_checkpoint']):
+        raise ValueError('initial_checkpoint must be a nonempty path string')
     if config.get('finance_task') not in (None,'binary','multiclass','regression'):
         raise ValueError('finance_task must be binary, multiclass, regression, or null')
 
 
 def run(config, output_dir, resume=None, initialize_from=None):
     validate_config(config)
+    configured_parent = config.get('initial_checkpoint')
+    if configured_parent and initialize_from and Path(configured_parent).resolve() != Path(initialize_from).resolve():
+        raise ValueError('CLI parent disagrees with initial_checkpoint in the config')
+    if not resume:
+        initialize_from = initialize_from or configured_parent
+    if config.get('initial_checkpoint_required') and not (resume or initialize_from):
+        raise ValueError('This continuation requires --initialize-from or initial_checkpoint')
     if resume and initialize_from:
         raise ValueError('Choose exact resume or new-run initialization, not both')
     from .model import build_model

@@ -526,14 +526,26 @@ class TabularFoundationModel(nn.Module):
 
 def build_model(size="tiny", finance=True, device=None, activation_checkpointing=False, model_options=None):
     grid = {"small50": (512, 12), "small100": (768, 12), "wide500": (1280, 24), "large1000": (1536, 32)}
-    if size in grid:
+    if size == "persistent_small":
+        # Retain feature cells through every attention stage; compress only at
+        # the readout. Cross-row communication uses inducing summaries, so this
+        # is an authored compact comparator, not a TabPFN reproduction or full
+        # cell-to-cell attention. The existing support-only cache law applies.
+        cfg = ModelConfig(cell_width=256, cell_heads=8, cell_hidden=1024,
+                          stages=12, column_blocks=1, row_blocks=1, inducing=128,
+                          cls_tokens=8, width=512, heads=8, hidden=1408, layers=0)
+    elif size == "persistent_tiny":
+        cfg = replace(ModelConfig.tiny(), stages=3, column_blocks=1,
+                      row_blocks=1, layers=0)
+    elif size in grid:
         width, layers = grid[size]
         cfg = ModelConfig(width=width, layers=layers, heads=width // 64,
                           hidden=64 * math.ceil((11 * width / 4) / 64))
     elif size in ("tiny", "base"):
         cfg = ModelConfig() if size == "base" else ModelConfig.tiny()
     else:
-        raise ValueError("unknown dense size; choose tiny/base/small50/small100/wide500/large1000")
+        raise ValueError("unknown model size; choose tiny/base/small50/small100/"
+                         "wide500/large1000/persistent_small/persistent_tiny")
     if model_options:
         allowed = {"categorical_encoding", "regression_head", "regression_bins", "regression_quantiles", "length_scaling",
                    "trunk_query_kv_heads", "hurdle_target_scale"}

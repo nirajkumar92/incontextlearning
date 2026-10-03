@@ -1,9 +1,10 @@
 {
   "schema_version": 1,
-  "status": "unexecuted_research_plan_with_implementation_and_selection_gates",
+  "status": "unexecuted_research_plan_with_selection_and_hardware_gates",
   "not_a_training_launch_config": true,
   "performance_guarantee": false,
-  "runtime_candidate_configuration_changed": false,
+  "runtime_candidate_configuration_changed": true,
+  "materializer": "scripts/materialize_prior_selection.py",
   "project_gpu_hour_ceiling": 50000.0,
   "project_gpu_hour_budget": {
     "systems": 5000,
@@ -32,12 +33,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
-        "GPU_hardware_and_end_to_end_timings_unavailable"
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -68,12 +69,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
-        "GPU_hardware_and_end_to_end_timings_unavailable"
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -104,13 +105,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -141,13 +141,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -178,13 +177,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -215,13 +213,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -252,13 +249,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -289,13 +285,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -326,13 +321,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -363,13 +357,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -400,13 +393,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -437,13 +429,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -474,13 +465,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -511,13 +501,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -548,13 +537,12 @@
       "seed": 0,
       "paired_seed_group": "P_seed0",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -585,13 +573,12 @@
       "seed": 1,
       "paired_seed_group": "P_seed1",
       "gpu_hour_ceiling": 300,
-      "status": "blocked_unimplemented",
-      "implementation_status": "specified_not_implemented",
+      "status": "ready_to_materialize",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "specified_generator_or_observation_extension_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs"
       ],
       "selection_gate": null,
       "launched": false,
@@ -623,7 +610,7 @@
       "paired_seed_group": "M_seed2",
       "gpu_hour_ceiling": 300,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "P_R_seed0",
         "P_R_seed1",
@@ -643,8 +630,8 @@
         "P_Q_observed_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "surviving_mechanisms_and_observation_policy_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_P",
@@ -678,7 +665,7 @@
       "paired_seed_group": "M_seed3",
       "gpu_hour_ceiling": 300,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "P_R_seed0",
         "P_R_seed1",
@@ -698,8 +685,8 @@
         "P_Q_observed_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "surviving_mechanisms_and_observation_policy_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_P",
@@ -733,7 +720,7 @@
       "paired_seed_group": "M_seed2",
       "gpu_hour_ceiling": 300,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "P_R_seed0",
         "P_R_seed1",
@@ -753,8 +740,8 @@
         "P_Q_observed_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "surviving_mechanisms_and_observation_policy_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_P",
@@ -788,7 +775,7 @@
       "paired_seed_group": "M_seed3",
       "gpu_hour_ceiling": 300,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "P_R_seed0",
         "P_R_seed1",
@@ -808,8 +795,8 @@
         "P_Q_observed_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "surviving_mechanisms_and_observation_policy_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_P",
@@ -843,7 +830,7 @@
       "paired_seed_group": "M_seed2",
       "gpu_hour_ceiling": 300,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "P_R_seed0",
         "P_R_seed1",
@@ -863,8 +850,8 @@
         "P_Q_observed_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "surviving_mechanisms_and_observation_policy_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_P",
@@ -898,7 +885,7 @@
       "paired_seed_group": "M_seed3",
       "gpu_hour_ceiling": 300,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "P_R_seed0",
         "P_R_seed1",
@@ -918,8 +905,8 @@
         "P_Q_observed_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "surviving_mechanisms_and_observation_policy_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_P",
@@ -953,7 +940,7 @@
       "paired_seed_group": "A_seed0",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -963,10 +950,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -984,7 +970,7 @@
       "paired_seed_group": "A_seed1",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -994,10 +980,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1015,7 +1000,7 @@
       "paired_seed_group": "A_seed0",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -1025,10 +1010,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1046,7 +1030,7 @@
       "paired_seed_group": "A_seed1",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -1056,10 +1040,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1077,7 +1060,7 @@
       "paired_seed_group": "A_seed0",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -1087,10 +1070,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1108,7 +1090,7 @@
       "paired_seed_group": "A_seed1",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -1118,10 +1100,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1139,7 +1120,7 @@
       "paired_seed_group": "A_seed0",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -1149,10 +1130,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1170,7 +1150,7 @@
       "paired_seed_group": "A_seed1",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "M_R70_seed2",
         "M_R70_seed3",
@@ -1180,10 +1160,9 @@
         "M_R30_seed3"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "prior_not_selected",
-        "compact_persistent_cell_control_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "prior_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_M",
       "launched": false,
@@ -1201,7 +1180,7 @@
       "paired_seed_group": "V_seed4",
       "gpu_hour_ceiling": 700,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "A_R_compressed_seed0",
         "A_R_compressed_seed1",
@@ -1213,8 +1192,8 @@
         "A_selected_persistent_cell_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "final_architecture_prior_pair_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_A",
@@ -1233,7 +1212,7 @@
       "paired_seed_group": "V_seed5",
       "gpu_hour_ceiling": 700,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "A_R_compressed_seed0",
         "A_R_compressed_seed1",
@@ -1245,8 +1224,8 @@
         "A_selected_persistent_cell_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "final_architecture_prior_pair_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_A",
@@ -1265,7 +1244,7 @@
       "paired_seed_group": "V_seed4",
       "gpu_hour_ceiling": 700,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "A_R_compressed_seed0",
         "A_R_compressed_seed1",
@@ -1277,8 +1256,8 @@
         "A_selected_persistent_cell_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "final_architecture_prior_pair_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_A",
@@ -1297,7 +1276,7 @@
       "paired_seed_group": "V_seed5",
       "gpu_hour_ceiling": 700,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "A_R_compressed_seed0",
         "A_R_compressed_seed1",
@@ -1309,8 +1288,8 @@
         "A_selected_persistent_cell_seed1"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
+        "full_schedule_horizon_requires_measured_stage_costs",
         "final_architecture_prior_pair_not_selected"
       ],
       "selection_gate": "review_and_freeze_after_A",
@@ -1329,7 +1308,7 @@
       "paired_seed_group": "F_seed6",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "V_R_seed4",
         "V_R_seed5",
@@ -1337,10 +1316,9 @@
         "V_final_candidate_seed5"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "shared_standard_parent_checkpoint_not_selected_or_trained",
-        "paired_finance_control_harness_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "shared_standard_parent_checkpoint_not_selected_or_trained"
       ],
       "selection_gate": "review_and_freeze_after_V",
       "launched": false,
@@ -1360,7 +1338,7 @@
       "paired_seed_group": "F_seed7",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "V_R_seed4",
         "V_R_seed5",
@@ -1368,10 +1346,9 @@
         "V_final_candidate_seed5"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "shared_standard_parent_checkpoint_not_selected_or_trained",
-        "paired_finance_control_harness_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "shared_standard_parent_checkpoint_not_selected_or_trained"
       ],
       "selection_gate": "review_and_freeze_after_V",
       "launched": false,
@@ -1391,7 +1368,7 @@
       "paired_seed_group": "F_seed6",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "V_R_seed4",
         "V_R_seed5",
@@ -1399,10 +1376,9 @@
         "V_final_candidate_seed5"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "shared_standard_parent_checkpoint_not_selected_or_trained",
-        "paired_finance_control_harness_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "shared_standard_parent_checkpoint_not_selected_or_trained"
       ],
       "selection_gate": "review_and_freeze_after_V",
       "launched": false,
@@ -1422,7 +1398,7 @@
       "paired_seed_group": "F_seed7",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "V_R_seed4",
         "V_R_seed5",
@@ -1430,10 +1406,9 @@
         "V_final_candidate_seed5"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "shared_standard_parent_checkpoint_not_selected_or_trained",
-        "paired_finance_control_harness_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "shared_standard_parent_checkpoint_not_selected_or_trained"
       ],
       "selection_gate": "review_and_freeze_after_V",
       "launched": false,
@@ -1453,7 +1428,7 @@
       "paired_seed_group": "F_seed6",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "V_R_seed4",
         "V_R_seed5",
@@ -1461,10 +1436,9 @@
         "V_final_candidate_seed5"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "shared_standard_parent_checkpoint_not_selected_or_trained",
-        "paired_finance_control_harness_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "shared_standard_parent_checkpoint_not_selected_or_trained"
       ],
       "selection_gate": "review_and_freeze_after_V",
       "launched": false,
@@ -1484,7 +1458,7 @@
       "paired_seed_group": "F_seed7",
       "gpu_hour_ceiling": 400,
       "status": "pending_selection",
-      "implementation_status": "specified_not_implemented",
+      "implementation_status": "implemented_cpu_validation_required_before_GPU_launch",
       "dependencies": [
         "V_R_seed4",
         "V_R_seed5",
@@ -1492,10 +1466,9 @@
         "V_final_candidate_seed5"
       ],
       "blockers": [
-        "shared_shape_law_and_paired_experiment_harness_not_implemented",
         "GPU_hardware_and_end_to_end_timings_unavailable",
-        "shared_standard_parent_checkpoint_not_selected_or_trained",
-        "paired_finance_control_harness_not_implemented"
+        "full_schedule_horizon_requires_measured_stage_costs",
+        "shared_standard_parent_checkpoint_not_selected_or_trained"
       ],
       "selection_gate": "review_and_freeze_after_V",
       "launched": false,
@@ -1758,8 +1731,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -2016,8 +1989,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -2274,8 +2247,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -2532,8 +2505,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -2790,8 +2763,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -3048,8 +3021,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -3306,8 +3279,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -3564,8 +3537,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -3822,8 +3795,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -4080,8 +4053,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -4338,8 +4311,8 @@
       "generation_or_training_gpu_hours": null,
       "assumptions": [
         "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
-        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
-        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "Hierarchy requires requested width >= 8. Other implemented families support every positive requested width.",
+        "The implementation samples this requested-shape law before the mechanism; diagnostic shape overrides change these expectations.",
         "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
         "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
         "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
@@ -4350,24 +4323,26 @@
   },
   "volume_note": "The episode target illustrates one future run under each fixed proposal; it is not a target for every screening trial or a claim that the target fits its GPU-hour ceiling.",
   "implementation_inventory": {
-    "R": "existing_pinned_reference_generator; shared_selection_harness_not_implemented",
-    "forest": "specified_not_implemented",
-    "hierarchy": "specified_hyperlaw_extension_not_implemented; existing_P1_is_only_a_control",
-    "smooth_local": "specified_not_implemented",
-    "sparse_interaction": "specified_not_implemented",
-    "observation_wrapper": "specified_not_implemented",
-    "common_shape_law": "specified_not_implemented",
-    "compact_persistent_cell": "specified_not_implemented"
+    "R": "implemented_pinned_reference_with_shared_selection_shape_law",
+    "forest": "implemented",
+    "hierarchy": "implemented_selection_hyperlaw",
+    "smooth_local": "implemented",
+    "sparse_interaction": "implemented",
+    "observation_wrapper": "implemented",
+    "common_shape_law": "implemented",
+    "compact_persistent_cell": "implemented_authored_inducing_attention_comparator",
+    "phase_materializer": "implemented_explicit_reviewed_decisions_required",
+    "slurm_submission": "implemented_scheduler_time_cap"
   },
   "paired_comparison_contract": [
     "Same seed index pairs initialization and task-shape schedules; mechanism-specific randomness is namespaced rather than falsely claiming identical tables.",
     "Fix architecture, optimizer, shape law, preprocessing and inference budget for P and M; record achieved exposure and compute as separate quantities.",
-    "A crosses R and the selected prior with the authored compressed and proposed compact persistent-cell architectures.",
+    "A crosses R and the selected prior with the authored compressed and compact persistent-cell inducing-attention architectures.",
     "M uses fresh seeds 2 and 3 rather than duplicating P's central mixture replicates; V uses fresh seeds 4 and 5, unseen during P/M/A, and a held-out confirmation panel.",
     "F starts all arms from the same selected standard checkpoint and compares standard replay, reservoir-plus-positive support, and the full finance selector.",
     "GPU-hour ceilings include charged generation, training and within-run validation overhead; no throughput or completion is inferred.",
     "Only explicit reviewed outcomes may unlock later phases; dependencies do not implement automatic selection."
   ],
   "source_spec": "research/specs/prior_selection_v1.json",
-  "source_spec_sha256": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f"
+  "source_spec_sha256": "854c124eb598917ab894378b53af162c890eea80e1beb8de1b9d0860991be7b1"
 }

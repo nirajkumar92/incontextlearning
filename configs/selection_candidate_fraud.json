@@ -1,0 +1,77 @@
+{
+  "model": "base",
+  "model_options": {
+    "categorical_encoding": "hash_bits",
+    "regression_head": "quantile",
+    "regression_bins": 1025,
+    "regression_quantiles": 999,
+    "length_scaling": "logarithmic",
+    "trunk_query_kv_heads": 2,
+    "hurdle_target_scale": "positive_support"
+  },
+  "device": "auto",
+  "cpu_threads": 1,
+  "seed": 1729,
+  "steps": 4000,
+  "global_batch": 256,
+  "finance_share": 1,
+  "finance_adapter": true,
+  "optimizer": "muon",
+  "adam_lr": 3e-05,
+  "muon_lr": 8e-05,
+  "weight_decay": 0.0,
+  "gradient_clip": 10,
+  "bf16": true,
+  "activation_checkpointing": true,
+  "checkpoint_every": 100,
+  "gpu_hour_cap": 3000,
+  "project_ledger": "runs/project_gpu_hours.json",
+  "stage_end_steps": [
+    3600,
+    3960,
+    4000
+  ],
+  "standard_prior": "selection",
+  "reference_task": "mixed",
+  "reference_envelope": {
+    "2": {
+      "max_features": 256,
+      "max_classes": 32
+    },
+    "3": {
+      "max_features": 512,
+      "max_classes": 256
+    }
+  },
+  "reference_envelope_probability": 0.2,
+  "producer_workers": 2,
+  "prefetch_tasks": 4,
+  "update_reserve_seconds": 300,
+  "allocated_gpus": 64,
+  "selection_options": {
+    "mechanism_weights": {
+      "R": 0.5,
+      "forest": 0.2,
+      "hierarchy": 0.15,
+      "smooth_local": 0.1,
+      "sparse_interaction": 0.05
+    },
+    "observation_weights": {
+      "identity": 0.5,
+      "mcar": 0.15,
+      "mar": 0.15,
+      "mnar": 0.1,
+      "coarsen": 0.1
+    },
+    "complexity_conditioned_probability": 0.8,
+    "namespace": "train"
+  },
+  "finance_task": "binary",
+  "finance_overrides": {
+    "mechanism_family": "risk_partition",
+    "feature_view": "hide_h",
+    "loss_normalization": "unit",
+    "prevalence": 0.0001
+  },
+  "initial_checkpoint_required": true
+}

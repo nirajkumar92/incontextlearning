@@ -1,7 +1,7 @@
 {
   "version": 1,
   "date": "2026-10-03",
-  "status": "Proposed standard challenger and selection design; new generators and observation wrapper are not integrated into the trainer. The planner and analytical diagnostics are executable.",
+  "status": "Implemented selection sampler, response/observation laws, compressed and persistent-cell models, trainer, phase materializer and paired real-data evaluator. CPU correctness/integration verified; accelerator cost calibration and competitive selection remain to be performed.",
   "purpose": "Select a transferable binary/multiclass/regression prior under fixed compute and inference budgets; no empirical SOTA result is claimed.",
   "reference": "Pinned, unmodified TabICLv2 R with native filtering. Existing R_P1_05 remains a runnable reference-derived pilot, not the selected final bank.",
   "mechanism_weights": {
@@ -49,7 +49,7 @@
     "numerical": "Independent Gaussian coordinates or four-coordinate equicorrelated blocks, rho in {0,.3,.8} with probabilities {.4,.4,.2}; common Student-t5 row scale with probability .2. Retain an invertible permutation/scale rendering, without treating category codes as ordered.",
     "categories": "Per-column cardinality from {2,3,5,10,32,128} with probabilities {.25,.15,.20,.20,.15,.05}; random-rank Zipf exponent Uniform(0,1.5); centered unit-variance random effect lookup for smooth mechanism coordinates.",
     "remaining_columns": "30% proxies of a randomly selected active column (numerical noise scale LogUniform(.01,.3), nominal replacement probability .05); 70% independent distractors from the same marginal factory. Append then permute all columns and type flags.",
-    "status": "Extends existing _Factory in static_prior.py; high-dimensional new family interface not yet implemented."
+    "status": "Implemented in challenger_prior.py using an explicit keyed feature factory; legacy authored generators remain separate controls."
   },
   "families": {
     "R": {
@@ -57,14 +57,14 @@
       "generator": "reference_prior.py + pinned third_party source, unchanged; numerical output remains numerical"
     },
     "forest": {
-      "implemented": false,
+      "implemented": true,
       "law": "Equal mixture of axis-aligned and sparse-oblique directly sampled forests. Trees T in {1,4,16,64} uniformly. Numerical split quantile Uniform(.1,.9) on calibration rows reaching node; categorical split is a nonempty proper uniformly sampled subset of levels, with explicitly recorded fallback for one-level nodes. Oblique splits use 2..min(4,d) latent mechanism coordinates and unit-normal Gaussian weights; at d=1 use axis-aligned.",
       "depth": "On conditioned draws choose nominal balanced-leaf occupancy m~LogUniform(8,128), D=clip(floor(log2(max(1,n_support/m))),1,10). On broad replay D~DiscreteUniform(1,10). Split only nodes with >=16 calibration rows; leaves smaller after stochastic support sampling remain valid.",
       "response": "Independent Normal(0,1) leaf scores per output coordinate, sum trees divided by sqrt(T), then independent-calibration centering/scaling and common response compiler. No fitted teacher labels enter the prediction targets.",
       "qualification": "These are directly sampled forests; Mitra's fitted ExtraTrees/boosted generators are evidence for testing tree complementarity, not evidence for these exact settings."
     },
     "hierarchy": {
-      "implemented": false,
+      "implemented": true,
       "starting_point": "Existing P1 equations, metadata, shared group effects, entity intercepts/slopes and reserved column types remain; this proposed variant changes the catalog law and uses the external observation wrapper only.",
       "catalog": "Half of worlds retain existing P1 catalog law. Half draw target mean occupancy m~LogUniform(.5,64), then E=clip(round(n_support/m),8,262144). Retain existing uniform/power-law frequencies and observable parent group/metadata. Do not force a fixed realized count per category. Use keyed lazy effects for encountered identities in the larger catalog; a fixed finite frequency law still determines exact sampling probabilities.",
       "transfer": "Unseen ID residual effects are unpredictable without observed group/metadata links; test warm IDs, rare IDs and unseen IDs separately.",
@@ -72,13 +72,13 @@
       "dimension": "Existing P1 base uses the F-4 remaining coordinates and its published active-dimension law; the F/S/I formula does not consume the four reserved metadata/ID columns."
     },
     "smooth_local": {
-      "implemented": false,
+      "implemented": true,
       "law": "Equal mixture of additive splines and local RBF functions. Per-output score is calibrated to zero mean/unit variance before response sampling.",
       "splines": "For every active numerical/latent category-effect coordinate, choose 4,8 or16 calibration-quantile knots uniformly. Piecewise-linear interpolation with Gaussian knot heights, endpoint-linear extrapolation. Sum with independent Gaussian coefficients normalized by their L2 norm. Deduplicate repeated quantile knots before assigning heights; one unique knot yields a constant function. Enforce minimum nonzero knot spacing1e-6 in standardized units.",
       "local": "Choose intrinsic rank r~DiscreteLogUniform(1,min(8,d)), project mechanism coordinates by a unit-column Gaussian matrix; choose J in {16,32,64,128} uniformly and J independent calibration anchors. RBF score sum a_j exp(-||z-c_j||^2/(2 ell^2))/sqrt(J), a_j~Normal(0,1). Choose intended neighbor count k~LogUniform(4,64); ell is median distance to rank clip(round(512*k/n_support),1,511) neighbor in an independent 512-row projected calibration subset (excluding self), with positive numerical floor. Log realized neighborhood occupancy; this is an approximate occupancy control, not an exact guarantee."
     },
     "sparse_interaction": {
-      "implemented": false,
+      "implemented": true,
       "law": "Choose interaction order k from {2,3,4,6} with probabilities {.45,.30,.20,.05}, capped at d. Draw 1..8 distinct subsets where available, otherwise exhaust the subset catalog. For each term choose equally between product of bounded tanh coordinates and parity of threshold/category-subset bits. Numerical thresholds are calibration quantiles Uniform(.2,.8); category subsets are random nonempty proper level subsets.",
       "score": "Combine calibrated interaction score h and independent additive score g as sqrt(alpha)*h+sqrt(1-alpha)*g, alpha~Uniform(.25,1); recalibrate the combined score. Include exact structured parity diagnostic tasks separately from independent lookup-table diagnostics.",
       "purpose": "Tests feature selection and joint inference; tiny mass limits allocation to hard special cases. No claim that general high-order Boolean functions are learnable from sparse context."
@@ -140,19 +140,59 @@
     "reserve": 3000
   },
   "selection": {
-    "fixed_controls": "Freeze architecture, optimizer, heads, task/shape law, augmentation seeds and inference policy during prior screens. All runs use equal total allocated GPU-hours including evaluation and idle data-generation time; also report accepted episodes and CPU costs.",
+    "fixed_controls": "Freeze architecture, optimizer, heads, task/shape law, augmentation seeds and inference policy during prior screens. Equal package GPU-hour ceilings include generation idle time and declared evaluation reserves. Use measured per-trial full-schedule horizons for equal-budget comparisons; common horizons are equal-episode diagnostics and need not consume equal time. Report actual allocated consumption, accepted episodes and CPU cost; reconcile separately scheduled evaluation allocations manually within each package.",
     "P": "R; R plus observation O; R/H15; R/forest20; R/smooth10; R/interaction05; full Q with identity; full Q with O. Individual mechanism arms use identity observation. Two seeds per arm;300 GPU-hours per seed package.",
     "M": "Graph anchors .70,.50,.30 with remaining4:3:2:1 mechanism ratios; same chosen observation mode. A predeclared dimension/filter intervention may replace one slot, never add an uncharged slot. Failed component exclusion changes candidate identity and must be recorded before launch. Use fresh seed indices2/3, rather than rerun the identical R50 seed0/1 endpoints from phaseP.",
-    "A": "R and selected challenger on authored compressed and compact persistent-cell backbones; identical output contracts. Two seeds per cell;400 hours each. Equal-cost system comparison, not topology-only attribution. Compact backbone remains unimplemented.",
+    "A": "R and selected challenger on authored compressed and compact persistent-cell backbones; identical output contracts. Two seeds per cell;400 hours each. Equal-cost system comparison, not topology-only attribution. Implemented persistent_small has41,089,248 parameters with candidate heads and finance adapter; compressed base has317,116,304. The comparator retains feature cells and uses support-derived inducing summaries.",
     "V": "Reference and complete finalist, two fresh seeds each;700 hours/run. Mixture hyperparameters frozen before confirmation data access. Include standard slices and prediction/setup latency. Use seed indices4/5, absent from P/M/A; these are new confirmation seeds.",
     "F": "Common chosen standard parent: continued standard replay, fraud reservoir+observed-positives, fraud full selector. Fresh optimizer, same peak LR convention and400 hour ceiling; two seeds. Both fraud arms hide H from model and selector and use correct population weights. This replaces the earlier six-finance-arm screen; it is not additional spending. Use seed indices6/7 with paired continuation initialization.",
     "scaling": "Existing10000-hour phase retained: two sizes x two seeds x500=2000; reference and challenger3k-hour bridges=6000; two1k confirmations=2000. Do not discard reference only because a short pilot ranked lower.",
     "deferred": "Old separate head, codec, optimizer, length and joint-versus-specialist screens are superseded/deferred in this allocation; fix existing choices. MoE, adaptive adversarial weights, contrastive/auxiliary losses, real-data continuation and count/severity branch remain unfunded.",
-    "implementation_gate": "Planner emits experiment instructions and blocking dependencies only; no new generator config is launchable until implementation, probability/independence tests and hardware cost calibration pass.",
+    "implementation_gate": "Implementation and local contracts are available. Freeze full phase configs with materialize_prior_selection.py only after reviewing dependencies and measuring stage costs on target hardware. Native-shape distribution audits and held-out transfer remain research measurements, not inferred from unit tests.",
     "failure_policy": "If both seeds are flat or disagree, retain uncertainty and use the funded confirmation/bridge; do not fabricate a selected winner. If budget cannot complete intended curriculum, reduce named arms before launching, never compare unequal partial schedules.",
     "objective": "Equal task-type mean of equal-dataset paired improvement (average folds and seeds within each dataset first) in classification log loss and support-standardized regression MSE, divided by max(1e-6, training constant-predictor loss). Classification constant uses Jeffreys-smoothed training counts. Raw metrics also reported. Confirmation:10k paired lineage bootstrap resamples,95% overall lower bound>0, each task-type lower bound>-.005; seed variability separately reported. Development>=20 and confirmation>=10 source-disjoint lineages per task type are coverage targets, not power guarantees."
   },
   "analytical_diagnostics": "research/probes/prior_information_analysis.py; exact toy Bayes risks, occupancy and information-loss checks only. These can falsify mechanisms or identify coverage gaps, not certify real benchmark superiority.",
   "reading": "docs/prior_selection.md and prior_bank_assessment.tex Section selecting the standard prior",
-  "foundation_model_pretraining_performed": false
+  "foundation_model_pretraining_performed": false,
+  "implementation": {
+    "sampler": "src/tabular_foundation/challenger_prior.py",
+    "response_and_observation": "src/tabular_foundation/selection_laws.py",
+    "trainer_prior_key": "standard_prior=selection",
+    "configs": [
+      "configs/smoke_selection.json",
+      "configs/selection_candidate_standard.json",
+      "configs/selection_candidate_fraud.json"
+    ],
+    "materializer": "scripts/materialize_prior_selection.py",
+    "submission": "scripts/submit_training.py",
+    "evaluation": "src/tabular_foundation/selection_evaluation.py",
+    "prior_audit": "scripts/audit_selection_priors.py",
+    "architecture": {
+      "name": "persistent_small",
+      "cell_width": 256,
+      "cell_heads": 8,
+      "cell_hidden": 1024,
+      "stages": 12,
+      "column_isab_per_stage": 1,
+      "row_mab_per_stage": 1,
+      "inducing": 128,
+      "summary_tokens": 8,
+      "readout_width": 512,
+      "row_trunk_layers": 0,
+      "parameters_with_candidate_options_and_finance": 41089248,
+      "cross_row": "Support-derived inducing summaries only. Cells persist until final readout. No full cell-to-cell cross-row attention; not a competitor reproduction."
+    },
+    "exact_conventions": {
+      "numerical_rendering": "Random sign times LogUniform(.1,10); no offset. Consistent feature permutation and nominal recoding. H keeps its legacy marginal factory, while F/S/I implement the rounded active nominal fraction and common t5 row scale.",
+      "forest_nominal_split": "Uniform among the 2^C-2 nonempty proper subsets of the observed levels reaching a node; a one-level node can remain a leaf.",
+      "spline_knots": "Equally spaced calibration quantiles including0 and1, then deduplicate with spacing1e-6.",
+      "rbf_calibration": "J independent anchor rows and512 independent density rows, in addition to4096 response-calibration rows.",
+      "interaction_additive": "Independent linear Gaussian coefficients, normalized to unit Euclidean norm.",
+      "heteroscedasticity": "Coordinate count uniformly1..min(4,d).",
+      "observation": "Half-column selections round upward; nominal MAR drivers use fixed Gaussian-effect lookups. Stable row_ids preserve stochastic-transform chunk/order equivalence."
+    },
+    "accounting": "scripts/record_allocation.py records scheduler-billed cumulative run/evaluation hours. No automatic evaluation charging or concurrent budget reservation.",
+    "horizons": "materialize_prior_selection.py accepts common --steps or exhaustive --horizons JSON; standard100-update blocks, finance400; optional per-trial evaluation reserve reduces training cap."
+  }
 }

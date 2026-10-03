@@ -1,6 +1,6 @@
 """Deterministic, ordered CPU task production with optional process prefetch.
 
-One persistent producer per training rank preserves finance-world reuse and
+Persistent processes per training rank cache finance worlds independently and
 isolates upstream global RNG use. Queue depth bounds task count, not bytes;
 this is a portable overlap path, not a GPU utilization guarantee.
 """
@@ -55,7 +55,7 @@ def prepare_task(config, entry, stage):
             if task == 'mixed':
                 task = ('classification' if np.random.default_rng(
                     seed_for(entry['world_seed'], 'reference_task')).random() < .5 else 'regression')
-            options = dict(arm=arm, task=task, stage=stage)
+            options = dict(task=task, stage=stage)
             if config.get('reference_shape'):
                 options['shape'] = ReferenceShape(**config['reference_shape'])
             envelope = config.get('reference_envelope')
@@ -64,7 +64,12 @@ def prepare_task(config, entry, stage):
             if envelope and np.random.default_rng(seed_for(
                     entry['world_seed'], 'reference_envelope')).random() < config.get('reference_envelope_probability', 1.):
                 options['envelope'] = envelope
-            episode = generate_reference_episode(entry['world_seed'], **options)
+            if arm == 'selection':
+                from .challenger_prior import generate_challenger_episode
+                options.update(config.get('selection_options', {}))
+                episode = generate_challenger_episode(entry['world_seed'], **options)
+            else:
+                episode = generate_reference_episode(entry['world_seed'], arm=arm, **options)
         routes, denominator, multiplier = [episode], len(episode.y_query), 1.
     return routes, denominator, multiplier, time.perf_counter() - start
 
@@ -74,9 +79,13 @@ class TaskProducer:
         self.config = config
         self.depth = config.get('prefetch_tasks', 2)
         workers = config.get('producer_workers', 0)
+        if isinstance(workers, bool) or not isinstance(workers, int) or workers < 0:
+            raise ValueError('producer_workers must be a nonnegative integer')
+        if isinstance(self.depth, bool) or not isinstance(self.depth, int) or self.depth < 1:
+            raise ValueError('prefetch_tasks must be a positive integer')
         if config.get('standard_prior', 'authored') != 'authored' and os.environ.get('PYTHONHASHSEED') != '0':
             raise ValueError('Start Python with PYTHONHASHSEED=0 for the pinned reference generator')
-        self.pool = (ProcessPoolExecutor(max_workers=1, mp_context=mp.get_context('spawn'),
+        self.pool = (ProcessPoolExecutor(max_workers=workers, mp_context=mp.get_context('spawn'),
                                         initializer=_initialize_worker) if workers else None)
 
     def ordered(self, entries, stage):
