@@ -1,0 +1,4373 @@
+{
+  "schema_version": 1,
+  "status": "unexecuted_research_plan_with_implementation_and_selection_gates",
+  "not_a_training_launch_config": true,
+  "performance_guarantee": false,
+  "runtime_candidate_configuration_changed": false,
+  "project_gpu_hour_ceiling": 50000.0,
+  "project_gpu_hour_budget": {
+    "systems": 5000,
+    "screening": 15000,
+    "scaling": 10000,
+    "final": 12000,
+    "evaluation": 5000,
+    "reserve": 3000
+  },
+  "screening_gpu_hour_ceiling": 15000.0,
+  "phase_gpu_hour_ceilings": {
+    "P": 4800,
+    "M": 1800,
+    "A": 3200,
+    "V": 2800,
+    "F": 2400
+  },
+  "run_count": 40,
+  "completed_run_count": 0,
+  "actual_gpu_hours": null,
+  "trials": [
+    {
+      "id": "P_R_seed0",
+      "phase": "P",
+      "arm": "R",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 1,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_seed1",
+      "phase": "P",
+      "arm": "R",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 1,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_O_seed0",
+      "phase": "P",
+      "arm": "R_O",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 1,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      }
+    },
+    {
+      "id": "P_R_O_seed1",
+      "phase": "P",
+      "arm": "R_O",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 1,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      }
+    },
+    {
+      "id": "P_R_H15_seed0",
+      "phase": "P",
+      "arm": "R_H15",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.85,
+        "forest": 0,
+        "hierarchy": 0.15,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_H15_seed1",
+      "phase": "P",
+      "arm": "R_H15",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.85,
+        "forest": 0,
+        "hierarchy": 0.15,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_F20_seed0",
+      "phase": "P",
+      "arm": "R_F20",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.8,
+        "forest": 0.2,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_F20_seed1",
+      "phase": "P",
+      "arm": "R_F20",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.8,
+        "forest": 0.2,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_S10_seed0",
+      "phase": "P",
+      "arm": "R_S10",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.9,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_S10_seed1",
+      "phase": "P",
+      "arm": "R_S10",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.9,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_I05_seed0",
+      "phase": "P",
+      "arm": "R_I05",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.95,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_R_I05_seed1",
+      "phase": "P",
+      "arm": "R_I05",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.95,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_Q_clean_seed0",
+      "phase": "P",
+      "arm": "Q_clean",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_Q_clean_seed1",
+      "phase": "P",
+      "arm": "Q_clean",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 1,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      }
+    },
+    {
+      "id": "P_Q_observed_seed0",
+      "phase": "P",
+      "arm": "Q_observed",
+      "seed": 0,
+      "paired_seed_group": "P_seed0",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      }
+    },
+    {
+      "id": "P_Q_observed_seed1",
+      "phase": "P",
+      "arm": "Q_observed",
+      "seed": 1,
+      "paired_seed_group": "P_seed1",
+      "gpu_hour_ceiling": 300,
+      "status": "blocked_unimplemented",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "specified_generator_or_observation_extension_not_implemented"
+      ],
+      "selection_gate": null,
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      }
+    },
+    {
+      "id": "M_R70_seed2",
+      "phase": "M",
+      "arm": "R70",
+      "seed": 2,
+      "paired_seed_group": "M_seed2",
+      "gpu_hour_ceiling": 300,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "P_R_seed0",
+        "P_R_seed1",
+        "P_R_O_seed0",
+        "P_R_O_seed1",
+        "P_R_H15_seed0",
+        "P_R_H15_seed1",
+        "P_R_F20_seed0",
+        "P_R_F20_seed1",
+        "P_R_S10_seed0",
+        "P_R_S10_seed1",
+        "P_R_I05_seed0",
+        "P_R_I05_seed1",
+        "P_Q_clean_seed0",
+        "P_Q_clean_seed1",
+        "P_Q_observed_seed0",
+        "P_Q_observed_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "surviving_mechanisms_and_observation_policy_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_P",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "proposed_mechanism_weights": {
+        "R": 0.7,
+        "forest": 0.12000000000000002,
+        "hierarchy": 0.09000000000000001,
+        "smooth_local": 0.06000000000000001,
+        "sparse_interaction": 0.030000000000000006
+      },
+      "proposed_observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "weights_status": "proposal_pending_P_selection; do_not_launch_automatically"
+    },
+    {
+      "id": "M_R70_seed3",
+      "phase": "M",
+      "arm": "R70",
+      "seed": 3,
+      "paired_seed_group": "M_seed3",
+      "gpu_hour_ceiling": 300,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "P_R_seed0",
+        "P_R_seed1",
+        "P_R_O_seed0",
+        "P_R_O_seed1",
+        "P_R_H15_seed0",
+        "P_R_H15_seed1",
+        "P_R_F20_seed0",
+        "P_R_F20_seed1",
+        "P_R_S10_seed0",
+        "P_R_S10_seed1",
+        "P_R_I05_seed0",
+        "P_R_I05_seed1",
+        "P_Q_clean_seed0",
+        "P_Q_clean_seed1",
+        "P_Q_observed_seed0",
+        "P_Q_observed_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "surviving_mechanisms_and_observation_policy_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_P",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "proposed_mechanism_weights": {
+        "R": 0.7,
+        "forest": 0.12000000000000002,
+        "hierarchy": 0.09000000000000001,
+        "smooth_local": 0.06000000000000001,
+        "sparse_interaction": 0.030000000000000006
+      },
+      "proposed_observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "weights_status": "proposal_pending_P_selection; do_not_launch_automatically"
+    },
+    {
+      "id": "M_R50_seed2",
+      "phase": "M",
+      "arm": "R50",
+      "seed": 2,
+      "paired_seed_group": "M_seed2",
+      "gpu_hour_ceiling": 300,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "P_R_seed0",
+        "P_R_seed1",
+        "P_R_O_seed0",
+        "P_R_O_seed1",
+        "P_R_H15_seed0",
+        "P_R_H15_seed1",
+        "P_R_F20_seed0",
+        "P_R_F20_seed1",
+        "P_R_S10_seed0",
+        "P_R_S10_seed1",
+        "P_R_I05_seed0",
+        "P_R_I05_seed1",
+        "P_Q_clean_seed0",
+        "P_Q_clean_seed1",
+        "P_Q_observed_seed0",
+        "P_Q_observed_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "surviving_mechanisms_and_observation_policy_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_P",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "proposed_mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "proposed_observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "weights_status": "proposal_pending_P_selection; do_not_launch_automatically"
+    },
+    {
+      "id": "M_R50_seed3",
+      "phase": "M",
+      "arm": "R50",
+      "seed": 3,
+      "paired_seed_group": "M_seed3",
+      "gpu_hour_ceiling": 300,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "P_R_seed0",
+        "P_R_seed1",
+        "P_R_O_seed0",
+        "P_R_O_seed1",
+        "P_R_H15_seed0",
+        "P_R_H15_seed1",
+        "P_R_F20_seed0",
+        "P_R_F20_seed1",
+        "P_R_S10_seed0",
+        "P_R_S10_seed1",
+        "P_R_I05_seed0",
+        "P_R_I05_seed1",
+        "P_Q_clean_seed0",
+        "P_Q_clean_seed1",
+        "P_Q_observed_seed0",
+        "P_Q_observed_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "surviving_mechanisms_and_observation_policy_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_P",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "proposed_mechanism_weights": {
+        "R": 0.5,
+        "forest": 0.2,
+        "hierarchy": 0.15,
+        "smooth_local": 0.1,
+        "sparse_interaction": 0.05
+      },
+      "proposed_observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "weights_status": "proposal_pending_P_selection; do_not_launch_automatically"
+    },
+    {
+      "id": "M_R30_seed2",
+      "phase": "M",
+      "arm": "R30",
+      "seed": 2,
+      "paired_seed_group": "M_seed2",
+      "gpu_hour_ceiling": 300,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "P_R_seed0",
+        "P_R_seed1",
+        "P_R_O_seed0",
+        "P_R_O_seed1",
+        "P_R_H15_seed0",
+        "P_R_H15_seed1",
+        "P_R_F20_seed0",
+        "P_R_F20_seed1",
+        "P_R_S10_seed0",
+        "P_R_S10_seed1",
+        "P_R_I05_seed0",
+        "P_R_I05_seed1",
+        "P_Q_clean_seed0",
+        "P_Q_clean_seed1",
+        "P_Q_observed_seed0",
+        "P_Q_observed_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "surviving_mechanisms_and_observation_policy_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_P",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "proposed_mechanism_weights": {
+        "R": 0.3,
+        "forest": 0.27999999999999997,
+        "hierarchy": 0.21,
+        "smooth_local": 0.13999999999999999,
+        "sparse_interaction": 0.06999999999999999
+      },
+      "proposed_observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "weights_status": "proposal_pending_P_selection; do_not_launch_automatically"
+    },
+    {
+      "id": "M_R30_seed3",
+      "phase": "M",
+      "arm": "R30",
+      "seed": 3,
+      "paired_seed_group": "M_seed3",
+      "gpu_hour_ceiling": 300,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "P_R_seed0",
+        "P_R_seed1",
+        "P_R_O_seed0",
+        "P_R_O_seed1",
+        "P_R_H15_seed0",
+        "P_R_H15_seed1",
+        "P_R_F20_seed0",
+        "P_R_F20_seed1",
+        "P_R_S10_seed0",
+        "P_R_S10_seed1",
+        "P_R_I05_seed0",
+        "P_R_I05_seed1",
+        "P_Q_clean_seed0",
+        "P_Q_clean_seed1",
+        "P_Q_observed_seed0",
+        "P_Q_observed_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "surviving_mechanisms_and_observation_policy_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_P",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "proposed_mechanism_weights": {
+        "R": 0.3,
+        "forest": 0.27999999999999997,
+        "hierarchy": 0.21,
+        "smooth_local": 0.13999999999999999,
+        "sparse_interaction": 0.06999999999999999
+      },
+      "proposed_observation_weights": {
+        "identity": 0.5,
+        "mcar": 0.15,
+        "mar": 0.15,
+        "mnar": 0.1,
+        "coarsen": 0.1
+      },
+      "weights_status": "proposal_pending_P_selection; do_not_launch_automatically"
+    },
+    {
+      "id": "A_R_compressed_seed0",
+      "phase": "A",
+      "arm": "R_compressed",
+      "seed": 0,
+      "paired_seed_group": "A_seed0",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_R_compressed_seed1",
+      "phase": "A",
+      "arm": "R_compressed",
+      "seed": 1,
+      "paired_seed_group": "A_seed1",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_selected_compressed_seed0",
+      "phase": "A",
+      "arm": "selected_compressed",
+      "seed": 0,
+      "paired_seed_group": "A_seed0",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_selected_compressed_seed1",
+      "phase": "A",
+      "arm": "selected_compressed",
+      "seed": 1,
+      "paired_seed_group": "A_seed1",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_R_persistent_cell_seed0",
+      "phase": "A",
+      "arm": "R_persistent_cell",
+      "seed": 0,
+      "paired_seed_group": "A_seed0",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_R_persistent_cell_seed1",
+      "phase": "A",
+      "arm": "R_persistent_cell",
+      "seed": 1,
+      "paired_seed_group": "A_seed1",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_selected_persistent_cell_seed0",
+      "phase": "A",
+      "arm": "selected_persistent_cell",
+      "seed": 0,
+      "paired_seed_group": "A_seed0",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "A_selected_persistent_cell_seed1",
+      "phase": "A",
+      "arm": "selected_persistent_cell",
+      "seed": 1,
+      "paired_seed_group": "A_seed1",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "M_R70_seed2",
+        "M_R70_seed3",
+        "M_R50_seed2",
+        "M_R50_seed3",
+        "M_R30_seed2",
+        "M_R30_seed3"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "prior_not_selected",
+        "compact_persistent_cell_control_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_M",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "V_R_seed4",
+      "phase": "V",
+      "arm": "R",
+      "seed": 4,
+      "paired_seed_group": "V_seed4",
+      "gpu_hour_ceiling": 700,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "A_R_compressed_seed0",
+        "A_R_compressed_seed1",
+        "A_selected_compressed_seed0",
+        "A_selected_compressed_seed1",
+        "A_R_persistent_cell_seed0",
+        "A_R_persistent_cell_seed1",
+        "A_selected_persistent_cell_seed0",
+        "A_selected_persistent_cell_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "final_architecture_prior_pair_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_A",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "V_R_seed5",
+      "phase": "V",
+      "arm": "R",
+      "seed": 5,
+      "paired_seed_group": "V_seed5",
+      "gpu_hour_ceiling": 700,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "A_R_compressed_seed0",
+        "A_R_compressed_seed1",
+        "A_selected_compressed_seed0",
+        "A_selected_compressed_seed1",
+        "A_R_persistent_cell_seed0",
+        "A_R_persistent_cell_seed1",
+        "A_selected_persistent_cell_seed0",
+        "A_selected_persistent_cell_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "final_architecture_prior_pair_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_A",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "V_final_candidate_seed4",
+      "phase": "V",
+      "arm": "final_candidate",
+      "seed": 4,
+      "paired_seed_group": "V_seed4",
+      "gpu_hour_ceiling": 700,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "A_R_compressed_seed0",
+        "A_R_compressed_seed1",
+        "A_selected_compressed_seed0",
+        "A_selected_compressed_seed1",
+        "A_R_persistent_cell_seed0",
+        "A_R_persistent_cell_seed1",
+        "A_selected_persistent_cell_seed0",
+        "A_selected_persistent_cell_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "final_architecture_prior_pair_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_A",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "V_final_candidate_seed5",
+      "phase": "V",
+      "arm": "final_candidate",
+      "seed": 5,
+      "paired_seed_group": "V_seed5",
+      "gpu_hour_ceiling": 700,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "A_R_compressed_seed0",
+        "A_R_compressed_seed1",
+        "A_selected_compressed_seed0",
+        "A_selected_compressed_seed1",
+        "A_R_persistent_cell_seed0",
+        "A_R_persistent_cell_seed1",
+        "A_selected_persistent_cell_seed0",
+        "A_selected_persistent_cell_seed1"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "final_architecture_prior_pair_not_selected"
+      ],
+      "selection_gate": "review_and_freeze_after_A",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null
+    },
+    {
+      "id": "F_standard_replay_seed6",
+      "phase": "F",
+      "arm": "standard_replay",
+      "seed": 6,
+      "paired_seed_group": "F_seed6",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "V_R_seed4",
+        "V_R_seed5",
+        "V_final_candidate_seed4",
+        "V_final_candidate_seed5"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "shared_standard_parent_checkpoint_not_selected_or_trained",
+        "paired_finance_control_harness_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_V",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "shared_parent_checkpoint": "same_selected_standard_checkpoint_for_all_F_arms",
+      "parent_checkpoint_path": null
+    },
+    {
+      "id": "F_standard_replay_seed7",
+      "phase": "F",
+      "arm": "standard_replay",
+      "seed": 7,
+      "paired_seed_group": "F_seed7",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "V_R_seed4",
+        "V_R_seed5",
+        "V_final_candidate_seed4",
+        "V_final_candidate_seed5"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "shared_standard_parent_checkpoint_not_selected_or_trained",
+        "paired_finance_control_harness_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_V",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "shared_parent_checkpoint": "same_selected_standard_checkpoint_for_all_F_arms",
+      "parent_checkpoint_path": null
+    },
+    {
+      "id": "F_fraud_reservoir_positives_seed6",
+      "phase": "F",
+      "arm": "fraud_reservoir_positives",
+      "seed": 6,
+      "paired_seed_group": "F_seed6",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "V_R_seed4",
+        "V_R_seed5",
+        "V_final_candidate_seed4",
+        "V_final_candidate_seed5"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "shared_standard_parent_checkpoint_not_selected_or_trained",
+        "paired_finance_control_harness_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_V",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "shared_parent_checkpoint": "same_selected_standard_checkpoint_for_all_F_arms",
+      "parent_checkpoint_path": null
+    },
+    {
+      "id": "F_fraud_reservoir_positives_seed7",
+      "phase": "F",
+      "arm": "fraud_reservoir_positives",
+      "seed": 7,
+      "paired_seed_group": "F_seed7",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "V_R_seed4",
+        "V_R_seed5",
+        "V_final_candidate_seed4",
+        "V_final_candidate_seed5"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "shared_standard_parent_checkpoint_not_selected_or_trained",
+        "paired_finance_control_harness_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_V",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "shared_parent_checkpoint": "same_selected_standard_checkpoint_for_all_F_arms",
+      "parent_checkpoint_path": null
+    },
+    {
+      "id": "F_fraud_full_selector_seed6",
+      "phase": "F",
+      "arm": "fraud_full_selector",
+      "seed": 6,
+      "paired_seed_group": "F_seed6",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "V_R_seed4",
+        "V_R_seed5",
+        "V_final_candidate_seed4",
+        "V_final_candidate_seed5"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "shared_standard_parent_checkpoint_not_selected_or_trained",
+        "paired_finance_control_harness_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_V",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "shared_parent_checkpoint": "same_selected_standard_checkpoint_for_all_F_arms",
+      "parent_checkpoint_path": null
+    },
+    {
+      "id": "F_fraud_full_selector_seed7",
+      "phase": "F",
+      "arm": "fraud_full_selector",
+      "seed": 7,
+      "paired_seed_group": "F_seed7",
+      "gpu_hour_ceiling": 400,
+      "status": "pending_selection",
+      "implementation_status": "specified_not_implemented",
+      "dependencies": [
+        "V_R_seed4",
+        "V_R_seed5",
+        "V_final_candidate_seed4",
+        "V_final_candidate_seed5"
+      ],
+      "blockers": [
+        "shared_shape_law_and_paired_experiment_harness_not_implemented",
+        "GPU_hardware_and_end_to_end_timings_unavailable",
+        "shared_standard_parent_checkpoint_not_selected_or_trained",
+        "paired_finance_control_harness_not_implemented"
+      ],
+      "selection_gate": "review_and_freeze_after_V",
+      "launched": false,
+      "completed": false,
+      "actual_gpu_hours": null,
+      "accepted_training_episodes": null,
+      "benchmark_scores": null,
+      "training_command": null,
+      "shared_parent_checkpoint": "same_selected_standard_checkpoint_for_all_F_arms",
+      "parent_checkpoint_path": null
+    }
+  ],
+  "conditional_volume_examples": {
+    "R": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 57600000,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 57600000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 57600000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 5760000,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 5760000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 5760000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 640000,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 640000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 640000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 64000000,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "after_eligibility": {
+        "R": 64000000.0,
+        "forest": 0.0,
+        "hierarchy": 0.0,
+        "smooth_local": 0.0,
+        "sparse_interaction": 0.0
+      },
+      "hierarchy_fallback_to_R": 0.0,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 64000000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "forest": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 64000000,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "R_O": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 57600000,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 57600000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 28800000.0,
+              "mcar": 8640000.0,
+              "mar": 8640000.0,
+              "mnar": 5760000.0,
+              "coarsen": 5760000.0
+            },
+            "forest": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 5760000,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 5760000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 2880000.0,
+              "mcar": 864000.0,
+              "mar": 864000.0,
+              "mnar": 576000.0,
+              "coarsen": 576000.0
+            },
+            "forest": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 640000,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 640000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 320000.0,
+              "mcar": 96000.0,
+              "mar": 96000.0,
+              "mnar": 64000.0,
+              "coarsen": 64000.0
+            },
+            "forest": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 64000000,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "after_eligibility": {
+        "R": 64000000.0,
+        "forest": 0.0,
+        "hierarchy": 0.0,
+        "smooth_local": 0.0,
+        "sparse_interaction": 0.0
+      },
+      "hierarchy_fallback_to_R": 0.0,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 32000000.0,
+          "mcar": 9600000.0,
+          "mar": 9600000.0,
+          "mnar": 6400000.0,
+          "coarsen": 6400000.0
+        },
+        "forest": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 32000000.0,
+        "mcar": 9600000.0,
+        "mar": 9600000.0,
+        "mnar": 6400000.0,
+        "coarsen": 6400000.0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "R_H15": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 48960000.0,
+            "forest": 0,
+            "hierarchy": 8640000.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 49527272.72727273,
+            "forest": 0,
+            "hierarchy": 8072727.2727272725,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 567272.7272727271,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 49527272.72727273,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 8072727.2727272725,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 4896000.0,
+            "forest": 0,
+            "hierarchy": 864000.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 4945786.524064171,
+            "forest": 0,
+            "hierarchy": 814213.475935829,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 49786.524064171055,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 4945786.524064171,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 814213.475935829,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 544000.0,
+            "forest": 0,
+            "hierarchy": 96000.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 552404.0550892602,
+            "forest": 0,
+            "hierarchy": 87595.94491073982,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 8404.055089260168,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 552404.0550892602,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 87595.94491073982,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 54400000.0,
+        "forest": 0,
+        "hierarchy": 9600000.0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "after_eligibility": {
+        "R": 55025463.30642616,
+        "forest": 0.0,
+        "hierarchy": 8974536.693573842,
+        "smooth_local": 0.0,
+        "sparse_interaction": 0.0
+      },
+      "hierarchy_fallback_to_R": 625463.3064261583,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 55025463.30642616,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "forest": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 8974536.693573842,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 64000000,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "R_F20": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 46080000.0,
+            "forest": 11520000.0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 46080000.0,
+            "forest": 11520000.0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 46080000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 11520000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 4608000.0,
+            "forest": 1152000.0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 4608000.0,
+            "forest": 1152000.0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 4608000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 1152000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 512000.0,
+            "forest": 128000.0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 512000.0,
+            "forest": 128000.0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 512000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 128000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 51200000.0,
+        "forest": 12800000.0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 0
+      },
+      "after_eligibility": {
+        "R": 51200000.0,
+        "forest": 12800000.0,
+        "hierarchy": 0.0,
+        "smooth_local": 0.0,
+        "sparse_interaction": 0.0
+      },
+      "hierarchy_fallback_to_R": 0.0,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 51200000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "forest": {
+          "identity": 12800000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 64000000,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "R_S10": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 51840000.0,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 51840000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 51840000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 5760000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 5184000.0,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 5184000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 5184000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 576000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 576000.0,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 0
+          },
+          "after_eligibility": {
+            "R": 576000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 576000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 64000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 57600000.0,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 0
+      },
+      "after_eligibility": {
+        "R": 57600000.0,
+        "forest": 0.0,
+        "hierarchy": 0.0,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 0.0
+      },
+      "hierarchy_fallback_to_R": 0.0,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 57600000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "forest": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 6400000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 64000000,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "R_I05": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 54720000.0,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 2880000.0
+          },
+          "after_eligibility": {
+            "R": 54720000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 2880000.0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 54720000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 2880000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 5472000.0,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 288000.0
+          },
+          "after_eligibility": {
+            "R": 5472000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 288000.0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 5472000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 288000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 608000.0,
+            "forest": 0,
+            "hierarchy": 0,
+            "smooth_local": 0,
+            "sparse_interaction": 32000.0
+          },
+          "after_eligibility": {
+            "R": 608000.0,
+            "forest": 0,
+            "hierarchy": 0.0,
+            "smooth_local": 0,
+            "sparse_interaction": 32000.0
+          },
+          "hierarchy_fallback_to_R": 0.0,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 608000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "hierarchy": {
+              "identity": 0.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 0,
+              "mcar": 0,
+              "mar": 0,
+              "mnar": 0,
+              "coarsen": 0
+            },
+            "sparse_interaction": {
+              "identity": 32000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 60800000.0,
+        "forest": 0,
+        "hierarchy": 0,
+        "smooth_local": 0,
+        "sparse_interaction": 3200000.0
+      },
+      "after_eligibility": {
+        "R": 60800000.0,
+        "forest": 0.0,
+        "hierarchy": 0.0,
+        "smooth_local": 0.0,
+        "sparse_interaction": 3200000.0
+      },
+      "hierarchy_fallback_to_R": 0.0,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 60800000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "forest": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 0.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 3200000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 64000000,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "Q_clean": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 28800000.0,
+            "forest": 11520000.0,
+            "hierarchy": 8640000.0,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 2880000.0
+          },
+          "after_eligibility": {
+            "R": 29367272.727272727,
+            "forest": 11520000.0,
+            "hierarchy": 8072727.2727272725,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 2880000.0
+          },
+          "hierarchy_fallback_to_R": 567272.7272727271,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 29367272.727272727,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 11520000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 8072727.2727272725,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 5760000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 2880000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 2880000.0,
+            "forest": 1152000.0,
+            "hierarchy": 864000.0,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 288000.0
+          },
+          "after_eligibility": {
+            "R": 2929786.524064171,
+            "forest": 1152000.0,
+            "hierarchy": 814213.475935829,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 288000.0
+          },
+          "hierarchy_fallback_to_R": 49786.524064171055,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 2929786.524064171,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 1152000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 814213.475935829,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 576000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 288000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 320000.0,
+            "forest": 128000.0,
+            "hierarchy": 96000.0,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 32000.0
+          },
+          "after_eligibility": {
+            "R": 328404.05508926016,
+            "forest": 128000.0,
+            "hierarchy": 87595.94491073982,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 32000.0
+          },
+          "hierarchy_fallback_to_R": 8404.055089260168,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 328404.05508926016,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "forest": {
+              "identity": 128000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "hierarchy": {
+              "identity": 87595.94491073982,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "smooth_local": {
+              "identity": 64000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            },
+            "sparse_interaction": {
+              "identity": 32000.0,
+              "mcar": 0.0,
+              "mar": 0.0,
+              "mnar": 0.0,
+              "coarsen": 0.0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 32000000.0,
+        "forest": 12800000.0,
+        "hierarchy": 9600000.0,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 3200000.0
+      },
+      "after_eligibility": {
+        "R": 32625463.306426156,
+        "forest": 12800000.0,
+        "hierarchy": 8974536.693573842,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 3200000.0
+      },
+      "hierarchy_fallback_to_R": 625463.3064261583,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 32625463.306426156,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "forest": {
+          "identity": 12800000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "hierarchy": {
+          "identity": 8974536.693573842,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "smooth_local": {
+          "identity": 6400000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        },
+        "sparse_interaction": {
+          "identity": 3200000.0,
+          "mcar": 0.0,
+          "mar": 0.0,
+          "mnar": 0.0,
+          "coarsen": 0.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 64000000,
+        "mcar": 0,
+        "mar": 0,
+        "mnar": 0,
+        "coarsen": 0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "Q_observed": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 28800000.0,
+            "forest": 11520000.0,
+            "hierarchy": 8640000.0,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 2880000.0
+          },
+          "after_eligibility": {
+            "R": 29367272.727272727,
+            "forest": 11520000.0,
+            "hierarchy": 8072727.2727272725,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 2880000.0
+          },
+          "hierarchy_fallback_to_R": 567272.7272727271,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 14683636.363636363,
+              "mcar": 4405090.909090909,
+              "mar": 4405090.909090909,
+              "mnar": 2936727.272727273,
+              "coarsen": 2936727.272727273
+            },
+            "forest": {
+              "identity": 5760000.0,
+              "mcar": 1728000.0,
+              "mar": 1728000.0,
+              "mnar": 1152000.0,
+              "coarsen": 1152000.0
+            },
+            "hierarchy": {
+              "identity": 4036363.6363636362,
+              "mcar": 1210909.0909090908,
+              "mar": 1210909.0909090908,
+              "mnar": 807272.7272727273,
+              "coarsen": 807272.7272727273
+            },
+            "smooth_local": {
+              "identity": 2880000.0,
+              "mcar": 864000.0,
+              "mar": 864000.0,
+              "mnar": 576000.0,
+              "coarsen": 576000.0
+            },
+            "sparse_interaction": {
+              "identity": 1440000.0,
+              "mcar": 432000.0,
+              "mar": 432000.0,
+              "mnar": 288000.0,
+              "coarsen": 288000.0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 2880000.0,
+            "forest": 1152000.0,
+            "hierarchy": 864000.0,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 288000.0
+          },
+          "after_eligibility": {
+            "R": 2929786.524064171,
+            "forest": 1152000.0,
+            "hierarchy": 814213.475935829,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 288000.0
+          },
+          "hierarchy_fallback_to_R": 49786.524064171055,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 1464893.2620320856,
+              "mcar": 439467.97860962566,
+              "mar": 439467.97860962566,
+              "mnar": 292978.6524064171,
+              "coarsen": 292978.6524064171
+            },
+            "forest": {
+              "identity": 576000.0,
+              "mcar": 172800.0,
+              "mar": 172800.0,
+              "mnar": 115200.0,
+              "coarsen": 115200.0
+            },
+            "hierarchy": {
+              "identity": 407106.7379679145,
+              "mcar": 122132.02139037434,
+              "mar": 122132.02139037434,
+              "mnar": 81421.3475935829,
+              "coarsen": 81421.3475935829
+            },
+            "smooth_local": {
+              "identity": 288000.0,
+              "mcar": 86400.0,
+              "mar": 86400.0,
+              "mnar": 57600.0,
+              "coarsen": 57600.0
+            },
+            "sparse_interaction": {
+              "identity": 144000.0,
+              "mcar": 43200.0,
+              "mar": 43200.0,
+              "mnar": 28800.0,
+              "coarsen": 28800.0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 320000.0,
+            "forest": 128000.0,
+            "hierarchy": 96000.0,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 32000.0
+          },
+          "after_eligibility": {
+            "R": 328404.05508926016,
+            "forest": 128000.0,
+            "hierarchy": 87595.94491073982,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 32000.0
+          },
+          "hierarchy_fallback_to_R": 8404.055089260168,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 164202.02754463008,
+              "mcar": 49260.608263389026,
+              "mar": 49260.608263389026,
+              "mnar": 32840.405508926015,
+              "coarsen": 32840.405508926015
+            },
+            "forest": {
+              "identity": 64000.0,
+              "mcar": 19200.0,
+              "mar": 19200.0,
+              "mnar": 12800.0,
+              "coarsen": 12800.0
+            },
+            "hierarchy": {
+              "identity": 43797.97245536991,
+              "mcar": 13139.391736610973,
+              "mar": 13139.391736610973,
+              "mnar": 8759.594491073984,
+              "coarsen": 8759.594491073984
+            },
+            "smooth_local": {
+              "identity": 32000.0,
+              "mcar": 9600.0,
+              "mar": 9600.0,
+              "mnar": 6400.0,
+              "coarsen": 6400.0
+            },
+            "sparse_interaction": {
+              "identity": 16000.0,
+              "mcar": 4800.0,
+              "mar": 4800.0,
+              "mnar": 3200.0,
+              "coarsen": 3200.0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 32000000.0,
+        "forest": 12800000.0,
+        "hierarchy": 9600000.0,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 3200000.0
+      },
+      "after_eligibility": {
+        "R": 32625463.306426156,
+        "forest": 12800000.0,
+        "hierarchy": 8974536.693573842,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 3200000.0
+      },
+      "hierarchy_fallback_to_R": 625463.3064261583,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 16312731.653213078,
+          "mcar": 4893819.495963924,
+          "mar": 4893819.495963924,
+          "mnar": 3262546.330642616,
+          "coarsen": 3262546.330642616
+        },
+        "forest": {
+          "identity": 6400000.0,
+          "mcar": 1920000.0,
+          "mar": 1920000.0,
+          "mnar": 1280000.0,
+          "coarsen": 1280000.0
+        },
+        "hierarchy": {
+          "identity": 4487268.346786921,
+          "mcar": 1346180.5040360761,
+          "mar": 1346180.5040360761,
+          "mnar": 897453.6693573842,
+          "coarsen": 897453.6693573842
+        },
+        "smooth_local": {
+          "identity": 3200000.0,
+          "mcar": 960000.0,
+          "mar": 960000.0,
+          "mnar": 640000.0,
+          "coarsen": 640000.0
+        },
+        "sparse_interaction": {
+          "identity": 1600000.0,
+          "mcar": 480000.0,
+          "mar": 480000.0,
+          "mnar": 320000.0,
+          "coarsen": 320000.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 32000000.0,
+        "mcar": 9600000.0,
+        "mar": 9600000.0,
+        "mnar": 6400000.0,
+        "coarsen": 6400000.0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "M_R70": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 40320000.0,
+            "forest": 6912000.000000001,
+            "hierarchy": 5184000.000000001,
+            "smooth_local": 3456000.0000000005,
+            "sparse_interaction": 1728000.0000000002
+          },
+          "after_eligibility": {
+            "R": 40660363.63636363,
+            "forest": 6912000.000000001,
+            "hierarchy": 4843636.363636364,
+            "smooth_local": 3456000.0000000005,
+            "sparse_interaction": 1728000.0000000002
+          },
+          "hierarchy_fallback_to_R": 340363.6363636363,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 20330181.818181816,
+              "mcar": 6099054.545454545,
+              "mar": 6099054.545454545,
+              "mnar": 4066036.3636363633,
+              "coarsen": 4066036.3636363633
+            },
+            "forest": {
+              "identity": 3456000.0000000005,
+              "mcar": 1036800.0000000001,
+              "mar": 1036800.0000000001,
+              "mnar": 691200.0000000001,
+              "coarsen": 691200.0000000001
+            },
+            "hierarchy": {
+              "identity": 2421818.181818182,
+              "mcar": 726545.4545454546,
+              "mar": 726545.4545454546,
+              "mnar": 484363.63636363647,
+              "coarsen": 484363.63636363647
+            },
+            "smooth_local": {
+              "identity": 1728000.0000000002,
+              "mcar": 518400.00000000006,
+              "mar": 518400.00000000006,
+              "mnar": 345600.00000000006,
+              "coarsen": 345600.00000000006
+            },
+            "sparse_interaction": {
+              "identity": 864000.0000000001,
+              "mcar": 259200.00000000003,
+              "mar": 259200.00000000003,
+              "mnar": 172800.00000000003,
+              "coarsen": 172800.00000000003
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 4031999.9999999995,
+            "forest": 691200.0000000001,
+            "hierarchy": 518400.00000000006,
+            "smooth_local": 345600.00000000006,
+            "sparse_interaction": 172800.00000000003
+          },
+          "after_eligibility": {
+            "R": 4061871.9144385024,
+            "forest": 691200.0000000001,
+            "hierarchy": 488528.0855614974,
+            "smooth_local": 345600.00000000006,
+            "sparse_interaction": 172800.00000000003
+          },
+          "hierarchy_fallback_to_R": 29871.914438502637,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 2030935.9572192512,
+              "mcar": 609280.7871657753,
+              "mar": 609280.7871657753,
+              "mnar": 406187.1914438503,
+              "coarsen": 406187.1914438503
+            },
+            "forest": {
+              "identity": 345600.00000000006,
+              "mcar": 103680.00000000001,
+              "mar": 103680.00000000001,
+              "mnar": 69120.00000000001,
+              "coarsen": 69120.00000000001
+            },
+            "hierarchy": {
+              "identity": 244264.0427807487,
+              "mcar": 73279.21283422461,
+              "mar": 73279.21283422461,
+              "mnar": 48852.80855614974,
+              "coarsen": 48852.80855614974
+            },
+            "smooth_local": {
+              "identity": 172800.00000000003,
+              "mcar": 51840.00000000001,
+              "mar": 51840.00000000001,
+              "mnar": 34560.00000000001,
+              "coarsen": 34560.00000000001
+            },
+            "sparse_interaction": {
+              "identity": 86400.00000000001,
+              "mcar": 25920.000000000004,
+              "mar": 25920.000000000004,
+              "mnar": 17280.000000000004,
+              "coarsen": 17280.000000000004
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 448000.0,
+            "forest": 76800.00000000001,
+            "hierarchy": 57600.00000000001,
+            "smooth_local": 38400.00000000001,
+            "sparse_interaction": 19200.000000000004
+          },
+          "after_eligibility": {
+            "R": 453042.43305355613,
+            "forest": 76800.00000000001,
+            "hierarchy": 52557.566946443905,
+            "smooth_local": 38400.00000000001,
+            "sparse_interaction": 19200.000000000004
+          },
+          "hierarchy_fallback_to_R": 5042.433053556102,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 226521.21652677807,
+              "mcar": 67956.36495803342,
+              "mar": 67956.36495803342,
+              "mnar": 45304.243305355616,
+              "coarsen": 45304.243305355616
+            },
+            "forest": {
+              "identity": 38400.00000000001,
+              "mcar": 11520.000000000002,
+              "mar": 11520.000000000002,
+              "mnar": 7680.000000000002,
+              "coarsen": 7680.000000000002
+            },
+            "hierarchy": {
+              "identity": 26278.783473221953,
+              "mcar": 7883.635041966585,
+              "mar": 7883.635041966585,
+              "mnar": 5255.756694644391,
+              "coarsen": 5255.756694644391
+            },
+            "smooth_local": {
+              "identity": 19200.000000000004,
+              "mcar": 5760.000000000001,
+              "mar": 5760.000000000001,
+              "mnar": 3840.000000000001,
+              "coarsen": 3840.000000000001
+            },
+            "sparse_interaction": {
+              "identity": 9600.000000000002,
+              "mcar": 2880.0000000000005,
+              "mar": 2880.0000000000005,
+              "mnar": 1920.0000000000005,
+              "coarsen": 1920.0000000000005
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 44800000.0,
+        "forest": 7680000.000000002,
+        "hierarchy": 5760000.000000001,
+        "smooth_local": 3840000.000000001,
+        "sparse_interaction": 1920000.0000000005
+      },
+      "after_eligibility": {
+        "R": 45175277.983855695,
+        "forest": 7680000.000000001,
+        "hierarchy": 5384722.0161443055,
+        "smooth_local": 3840000.0000000005,
+        "sparse_interaction": 1920000.0000000002
+      },
+      "hierarchy_fallback_to_R": 375277.98385569506,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 22587638.991927847,
+          "mcar": 6776291.697578354,
+          "mar": 6776291.697578354,
+          "mnar": 4517527.79838557,
+          "coarsen": 4517527.79838557
+        },
+        "forest": {
+          "identity": 3840000.0000000005,
+          "mcar": 1152000.0,
+          "mar": 1152000.0,
+          "mnar": 768000.0000000001,
+          "coarsen": 768000.0000000001
+        },
+        "hierarchy": {
+          "identity": 2692361.0080721527,
+          "mcar": 807708.3024216458,
+          "mar": 807708.3024216458,
+          "mnar": 538472.2016144305,
+          "coarsen": 538472.2016144305
+        },
+        "smooth_local": {
+          "identity": 1920000.0000000002,
+          "mcar": 576000.0,
+          "mar": 576000.0,
+          "mnar": 384000.00000000006,
+          "coarsen": 384000.00000000006
+        },
+        "sparse_interaction": {
+          "identity": 960000.0000000001,
+          "mcar": 288000.0,
+          "mar": 288000.0,
+          "mnar": 192000.00000000003,
+          "coarsen": 192000.00000000003
+        }
+      },
+      "observation_marginals": {
+        "identity": 32000000.0,
+        "mcar": 9600000.0,
+        "mar": 9600000.0,
+        "mnar": 6400000.0,
+        "coarsen": 6400000.0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "M_R50": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 28800000.0,
+            "forest": 11520000.0,
+            "hierarchy": 8640000.0,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 2880000.0
+          },
+          "after_eligibility": {
+            "R": 29367272.727272727,
+            "forest": 11520000.0,
+            "hierarchy": 8072727.2727272725,
+            "smooth_local": 5760000.0,
+            "sparse_interaction": 2880000.0
+          },
+          "hierarchy_fallback_to_R": 567272.7272727271,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 14683636.363636363,
+              "mcar": 4405090.909090909,
+              "mar": 4405090.909090909,
+              "mnar": 2936727.272727273,
+              "coarsen": 2936727.272727273
+            },
+            "forest": {
+              "identity": 5760000.0,
+              "mcar": 1728000.0,
+              "mar": 1728000.0,
+              "mnar": 1152000.0,
+              "coarsen": 1152000.0
+            },
+            "hierarchy": {
+              "identity": 4036363.6363636362,
+              "mcar": 1210909.0909090908,
+              "mar": 1210909.0909090908,
+              "mnar": 807272.7272727273,
+              "coarsen": 807272.7272727273
+            },
+            "smooth_local": {
+              "identity": 2880000.0,
+              "mcar": 864000.0,
+              "mar": 864000.0,
+              "mnar": 576000.0,
+              "coarsen": 576000.0
+            },
+            "sparse_interaction": {
+              "identity": 1440000.0,
+              "mcar": 432000.0,
+              "mar": 432000.0,
+              "mnar": 288000.0,
+              "coarsen": 288000.0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 2880000.0,
+            "forest": 1152000.0,
+            "hierarchy": 864000.0,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 288000.0
+          },
+          "after_eligibility": {
+            "R": 2929786.524064171,
+            "forest": 1152000.0,
+            "hierarchy": 814213.475935829,
+            "smooth_local": 576000.0,
+            "sparse_interaction": 288000.0
+          },
+          "hierarchy_fallback_to_R": 49786.524064171055,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 1464893.2620320856,
+              "mcar": 439467.97860962566,
+              "mar": 439467.97860962566,
+              "mnar": 292978.6524064171,
+              "coarsen": 292978.6524064171
+            },
+            "forest": {
+              "identity": 576000.0,
+              "mcar": 172800.0,
+              "mar": 172800.0,
+              "mnar": 115200.0,
+              "coarsen": 115200.0
+            },
+            "hierarchy": {
+              "identity": 407106.7379679145,
+              "mcar": 122132.02139037434,
+              "mar": 122132.02139037434,
+              "mnar": 81421.3475935829,
+              "coarsen": 81421.3475935829
+            },
+            "smooth_local": {
+              "identity": 288000.0,
+              "mcar": 86400.0,
+              "mar": 86400.0,
+              "mnar": 57600.0,
+              "coarsen": 57600.0
+            },
+            "sparse_interaction": {
+              "identity": 144000.0,
+              "mcar": 43200.0,
+              "mar": 43200.0,
+              "mnar": 28800.0,
+              "coarsen": 28800.0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 320000.0,
+            "forest": 128000.0,
+            "hierarchy": 96000.0,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 32000.0
+          },
+          "after_eligibility": {
+            "R": 328404.05508926016,
+            "forest": 128000.0,
+            "hierarchy": 87595.94491073982,
+            "smooth_local": 64000.0,
+            "sparse_interaction": 32000.0
+          },
+          "hierarchy_fallback_to_R": 8404.055089260168,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 164202.02754463008,
+              "mcar": 49260.608263389026,
+              "mar": 49260.608263389026,
+              "mnar": 32840.405508926015,
+              "coarsen": 32840.405508926015
+            },
+            "forest": {
+              "identity": 64000.0,
+              "mcar": 19200.0,
+              "mar": 19200.0,
+              "mnar": 12800.0,
+              "coarsen": 12800.0
+            },
+            "hierarchy": {
+              "identity": 43797.97245536991,
+              "mcar": 13139.391736610973,
+              "mar": 13139.391736610973,
+              "mnar": 8759.594491073984,
+              "coarsen": 8759.594491073984
+            },
+            "smooth_local": {
+              "identity": 32000.0,
+              "mcar": 9600.0,
+              "mar": 9600.0,
+              "mnar": 6400.0,
+              "coarsen": 6400.0
+            },
+            "sparse_interaction": {
+              "identity": 16000.0,
+              "mcar": 4800.0,
+              "mar": 4800.0,
+              "mnar": 3200.0,
+              "coarsen": 3200.0
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 32000000.0,
+        "forest": 12800000.0,
+        "hierarchy": 9600000.0,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 3200000.0
+      },
+      "after_eligibility": {
+        "R": 32625463.306426156,
+        "forest": 12800000.0,
+        "hierarchy": 8974536.693573842,
+        "smooth_local": 6400000.0,
+        "sparse_interaction": 3200000.0
+      },
+      "hierarchy_fallback_to_R": 625463.3064261583,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 16312731.653213078,
+          "mcar": 4893819.495963924,
+          "mar": 4893819.495963924,
+          "mnar": 3262546.330642616,
+          "coarsen": 3262546.330642616
+        },
+        "forest": {
+          "identity": 6400000.0,
+          "mcar": 1920000.0,
+          "mar": 1920000.0,
+          "mnar": 1280000.0,
+          "coarsen": 1280000.0
+        },
+        "hierarchy": {
+          "identity": 4487268.346786921,
+          "mcar": 1346180.5040360761,
+          "mar": 1346180.5040360761,
+          "mnar": 897453.6693573842,
+          "coarsen": 897453.6693573842
+        },
+        "smooth_local": {
+          "identity": 3200000.0,
+          "mcar": 960000.0,
+          "mar": 960000.0,
+          "mnar": 640000.0,
+          "coarsen": 640000.0
+        },
+        "sparse_interaction": {
+          "identity": 1600000.0,
+          "mcar": 480000.0,
+          "mar": 480000.0,
+          "mnar": 320000.0,
+          "coarsen": 320000.0
+        }
+      },
+      "observation_marginals": {
+        "identity": 32000000.0,
+        "mcar": 9600000.0,
+        "mar": 9600000.0,
+        "mnar": 6400000.0,
+        "coarsen": 6400000.0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    },
+    "M_R30": {
+      "status": "analytic_expectation_conditional_on_specified_shape_law",
+      "conditional_accepted_episode_target": 64000000,
+      "stage_episode_fractions": [
+        0.9,
+        0.09,
+        0.01
+      ],
+      "stages": [
+        {
+          "stage": 1,
+          "conditional_episode_target": 57600000,
+          "hierarchy_requested_width_eligibility": 0.9343434343434344,
+          "before_eligibility": {
+            "R": 17280000.0,
+            "forest": 16127999.999999998,
+            "hierarchy": 12096000.0,
+            "smooth_local": 8063999.999999999,
+            "sparse_interaction": 4031999.9999999995
+          },
+          "after_eligibility": {
+            "R": 18074181.818181816,
+            "forest": 16127999.999999998,
+            "hierarchy": 11301818.181818182,
+            "smooth_local": 8063999.999999999,
+            "sparse_interaction": 4031999.9999999995
+          },
+          "hierarchy_fallback_to_R": 794181.8181818179,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 9037090.909090908,
+              "mcar": 2711127.2727272725,
+              "mar": 2711127.2727272725,
+              "mnar": 1807418.1818181816,
+              "coarsen": 1807418.1818181816
+            },
+            "forest": {
+              "identity": 8063999.999999999,
+              "mcar": 2419199.9999999995,
+              "mar": 2419199.9999999995,
+              "mnar": 1612800.0,
+              "coarsen": 1612800.0
+            },
+            "hierarchy": {
+              "identity": 5650909.090909091,
+              "mcar": 1695272.7272727273,
+              "mar": 1695272.7272727273,
+              "mnar": 1130181.8181818181,
+              "coarsen": 1130181.8181818181
+            },
+            "smooth_local": {
+              "identity": 4031999.9999999995,
+              "mcar": 1209599.9999999998,
+              "mar": 1209599.9999999998,
+              "mnar": 806400.0,
+              "coarsen": 806400.0
+            },
+            "sparse_interaction": {
+              "identity": 2015999.9999999998,
+              "mcar": 604799.9999999999,
+              "mar": 604799.9999999999,
+              "mnar": 403200.0,
+              "coarsen": 403200.0
+            }
+          }
+        },
+        {
+          "stage": 2,
+          "conditional_episode_target": 5760000,
+          "hierarchy_requested_width_eligibility": 0.9423767082590613,
+          "before_eligibility": {
+            "R": 1728000.0,
+            "forest": 1612799.9999999998,
+            "hierarchy": 1209600.0,
+            "smooth_local": 806399.9999999999,
+            "sparse_interaction": 403199.99999999994
+          },
+          "after_eligibility": {
+            "R": 1797701.1336898394,
+            "forest": 1612799.9999999998,
+            "hierarchy": 1139898.8663101606,
+            "smooth_local": 806399.9999999999,
+            "sparse_interaction": 403199.99999999994
+          },
+          "hierarchy_fallback_to_R": 69701.13368983948,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 898850.5668449197,
+              "mcar": 269655.1700534759,
+              "mar": 269655.1700534759,
+              "mnar": 179770.11336898396,
+              "coarsen": 179770.11336898396
+            },
+            "forest": {
+              "identity": 806399.9999999999,
+              "mcar": 241919.99999999994,
+              "mar": 241919.99999999994,
+              "mnar": 161280.0,
+              "coarsen": 161280.0
+            },
+            "hierarchy": {
+              "identity": 569949.4331550803,
+              "mcar": 170984.82994652409,
+              "mar": 170984.82994652409,
+              "mnar": 113989.88663101607,
+              "coarsen": 113989.88663101607
+            },
+            "smooth_local": {
+              "identity": 403199.99999999994,
+              "mcar": 120959.99999999997,
+              "mar": 120959.99999999997,
+              "mnar": 80640.0,
+              "coarsen": 80640.0
+            },
+            "sparse_interaction": {
+              "identity": 201599.99999999997,
+              "mcar": 60479.999999999985,
+              "mar": 60479.999999999985,
+              "mnar": 40320.0,
+              "coarsen": 40320.0
+            }
+          }
+        },
+        {
+          "stage": 3,
+          "conditional_episode_target": 640000,
+          "hierarchy_requested_width_eligibility": 0.9124577594868732,
+          "before_eligibility": {
+            "R": 192000.0,
+            "forest": 179199.99999999997,
+            "hierarchy": 134400.0,
+            "smooth_local": 89599.99999999999,
+            "sparse_interaction": 44799.99999999999
+          },
+          "after_eligibility": {
+            "R": 203765.67712496425,
+            "forest": 179199.99999999997,
+            "hierarchy": 122634.32287503577,
+            "smooth_local": 89599.99999999999,
+            "sparse_interaction": 44799.99999999999
+          },
+          "hierarchy_fallback_to_R": 11765.677124964237,
+          "mechanism_observation_crossproduct": {
+            "R": {
+              "identity": 101882.83856248212,
+              "mcar": 30564.851568744634,
+              "mar": 30564.851568744634,
+              "mnar": 20376.567712496428,
+              "coarsen": 20376.567712496428
+            },
+            "forest": {
+              "identity": 89599.99999999999,
+              "mcar": 26879.999999999996,
+              "mar": 26879.999999999996,
+              "mnar": 17919.999999999996,
+              "coarsen": 17919.999999999996
+            },
+            "hierarchy": {
+              "identity": 61317.16143751788,
+              "mcar": 18395.148431255366,
+              "mar": 18395.148431255366,
+              "mnar": 12263.432287503578,
+              "coarsen": 12263.432287503578
+            },
+            "smooth_local": {
+              "identity": 44799.99999999999,
+              "mcar": 13439.999999999998,
+              "mar": 13439.999999999998,
+              "mnar": 8959.999999999998,
+              "coarsen": 8959.999999999998
+            },
+            "sparse_interaction": {
+              "identity": 22399.999999999996,
+              "mcar": 6719.999999999999,
+              "mar": 6719.999999999999,
+              "mnar": 4479.999999999999,
+              "coarsen": 4479.999999999999
+            }
+          }
+        }
+      ],
+      "before_eligibility": {
+        "R": 19200000.0,
+        "forest": 17920000.0,
+        "hierarchy": 13440000.0,
+        "smooth_local": 8960000.0,
+        "sparse_interaction": 4480000.0
+      },
+      "after_eligibility": {
+        "R": 20075648.62899662,
+        "forest": 17919999.999999996,
+        "hierarchy": 12564351.371003378,
+        "smooth_local": 8959999.999999998,
+        "sparse_interaction": 4479999.999999999
+      },
+      "hierarchy_fallback_to_R": 875648.6289966216,
+      "mechanism_observation_crossproduct": {
+        "R": {
+          "identity": 10037824.31449831,
+          "mcar": 3011347.294349493,
+          "mar": 3011347.294349493,
+          "mnar": 2007564.8628996622,
+          "coarsen": 2007564.8628996622
+        },
+        "forest": {
+          "identity": 8959999.999999998,
+          "mcar": 2687999.9999999995,
+          "mar": 2687999.9999999995,
+          "mnar": 1791999.9999999998,
+          "coarsen": 1791999.9999999998
+        },
+        "hierarchy": {
+          "identity": 6282175.685501689,
+          "mcar": 1884652.7056505068,
+          "mar": 1884652.7056505068,
+          "mnar": 1256435.1371003378,
+          "coarsen": 1256435.1371003378
+        },
+        "smooth_local": {
+          "identity": 4479999.999999999,
+          "mcar": 1343999.9999999998,
+          "mar": 1343999.9999999998,
+          "mnar": 895999.9999999999,
+          "coarsen": 895999.9999999999
+        },
+        "sparse_interaction": {
+          "identity": 2239999.9999999995,
+          "mcar": 671999.9999999999,
+          "mar": 671999.9999999999,
+          "mnar": 447999.99999999994,
+          "coarsen": 447999.99999999994
+        }
+      },
+      "observation_marginals": {
+        "identity": 32000000.0,
+        "mcar": 9600000.0,
+        "mar": 9600000.0,
+        "mnar": 6400000.0,
+        "coarsen": 6400000.0
+      },
+      "observation_counts_are_requested_modes_before_shape_fallback": true,
+      "effective_observation_marginals": null,
+      "realized_accepted_episodes": null,
+      "raw_generation_attempts": null,
+      "realized_binary_episodes": null,
+      "realized_multiclass_episodes": null,
+      "generation_or_training_gpu_hours": null,
+      "assumptions": [
+        "Requested-width law is stage_p1_eligibility() in plan_prior_volume.py, with 90/9/1 accepted-episode stages.",
+        "Hierarchy requires requested width >= 8. Other families are assumed eligible at every shape; their proposed generators are not yet implemented.",
+        "This shape law must be implemented and verified before these expectations describe a training run.",
+        "No rejection-induced source substitution, failed updates, replay, or diagnostic shape overrides are included.",
+        "Observation modes are mutually exclusive branches independent of mechanism and eligibility; identity means no additional observation transformation.",
+        "Observation counts name requested modes. Effective mode counts are unknown here: the specified MAR branch falls back to MCAR at F=1, and a requested coarsening need not alter every selected column.",
+        "R retains its native numerical encoding; an observation wrapper does not recover native categorical identities.",
+        "All counts are expectations, not guaranteed realized counts, independently sampled worlds, or performance estimates."
+      ]
+    }
+  },
+  "volume_note": "The episode target illustrates one future run under each fixed proposal; it is not a target for every screening trial or a claim that the target fits its GPU-hour ceiling.",
+  "implementation_inventory": {
+    "R": "existing_pinned_reference_generator; shared_selection_harness_not_implemented",
+    "forest": "specified_not_implemented",
+    "hierarchy": "specified_hyperlaw_extension_not_implemented; existing_P1_is_only_a_control",
+    "smooth_local": "specified_not_implemented",
+    "sparse_interaction": "specified_not_implemented",
+    "observation_wrapper": "specified_not_implemented",
+    "common_shape_law": "specified_not_implemented",
+    "compact_persistent_cell": "specified_not_implemented"
+  },
+  "paired_comparison_contract": [
+    "Same seed index pairs initialization and task-shape schedules; mechanism-specific randomness is namespaced rather than falsely claiming identical tables.",
+    "Fix architecture, optimizer, shape law, preprocessing and inference budget for P and M; record achieved exposure and compute as separate quantities.",
+    "A crosses R and the selected prior with the authored compressed and proposed compact persistent-cell architectures.",
+    "M uses fresh seeds 2 and 3 rather than duplicating P's central mixture replicates; V uses fresh seeds 4 and 5, unseen during P/M/A, and a held-out confirmation panel.",
+    "F starts all arms from the same selected standard checkpoint and compares standard replay, reservoir-plus-positive support, and the full finance selector.",
+    "GPU-hour ceilings include charged generation, training and within-run validation overhead; no throughput or completion is inferred.",
+    "Only explicit reviewed outcomes may unlock later phases; dependencies do not implement automatic selection."
+  ],
+  "source_spec": "research/specs/prior_selection_v1.json",
+  "source_spec_sha256": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f"
+}

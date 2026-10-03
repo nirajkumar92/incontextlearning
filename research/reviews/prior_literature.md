@@ -86,7 +86,7 @@ The concrete parameter distributions live in `research/specs/static_recipe_v3.js
 
 ### Static prediction mechanisms
 
-The selected standard profile uses P0/P1/P4 episode mass .85/.10/.05. P0 supplies linear/GAM, tree, heterogeneous SCM, local and regime mechanisms; P1 supplies hierarchical categorical effects; P4 supplies count and compound-severity structure. Those family names are established statistical tools. The research question is whether their implementation, effective complexity and allocation produce better transferable inference than strong existing synthetic generators.
+The historical authored control uses P0/P1/P4 episode mass .85/.10/.05; the current selection proposal is specified in `prior_selection_v1.json`. P0 supplies linear/GAM, tree, heterogeneous SCM, local and regime mechanisms; P1 supplies hierarchical categorical effects; P4 supplies count and compound-severity structure. Those family names are established statistical tools. The research question is whether their implementation, effective complexity and allocation produce better transferable inference than strong existing synthetic generators.
 
 Keep the following distinctions explicit:
 
@@ -100,7 +100,7 @@ O'Prior's negative combinations and Mitra-v2's weak response to coarse weight tu
 
 ### Finance as a selected-support prediction problem
 
-The joint pilot emits 80% standard and 20% finance macroepisodes, alongside an unchanged pure-standard control. The finance prior is centered on the user's corrected fraud rate of 1e-4. Histories can contain a few million rows, while the model receives a bounded union of representative rows, available verified positives and feature-selected negative examples. This is an information-selection problem as well as a modeling problem.
+The historical joint-training control emits 80% standard and 20% finance macroepisodes, alongside an unchanged pure-standard control. The finance prior is centered on the user's corrected fraud rate of 1e-4. Histories can contain a few million rows, while the model receives a bounded union of representative rows, available verified positives and feature-selected negative examples. This is an information-selection problem as well as a modeling problem.
 
 Preserve finite row identities and actual revealed-label counts. Unknown or unreported outcomes are not negative labels. Historical labels enter context only after availability time; recurring categories/entities may have stable or changing effects. Arrival bursts, fraud campaigns and missingness mechanisms are separate draws, so increased transaction volume does not automatically imply increased fraud prevalence. Full transaction amount and realized fraud loss are separate regression targets, with the latter requiring a zero atom plus a positive conditional distribution.
 

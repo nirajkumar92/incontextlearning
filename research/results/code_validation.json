@@ -1458,5 +1458,34 @@
       "Company fraud evaluation"
     ],
     "counter_scope": "Completed-attempt metrics include consumed tasks in skipped updates; replay adds presentations. Fatal partial attempts require exception and scheduler reconciliation."
+  },
+  "prior_selection_followup": {
+    "date": "2026-10-03",
+    "scope": "CPU analytical diagnostics and unexecuted trial/exposure planner; runtime source and candidate configs unchanged",
+    "targeted_tests_passed": 45,
+    "warnings_as_errors": true,
+    "command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -W error -p no:cacheprovider tests/test_prior_selection_plan.py tests/test_prior_information_analysis.py tests/test_prior_volume_plan.py tests/test_compute_plan.py",
+    "new_tests": 26,
+    "source_sha256": {
+      "scripts/plan_prior_selection.py": "c4618e99f00bb1716281a6eb3e35206e3e3635c35024d9863e0861edd39571a5",
+      "tests/test_prior_selection_plan.py": "23b73c59a4683b6fef83976e9d0b575eb56a1e285c739dbbf834e664bfa82c40",
+      "research/probes/prior_information_analysis.py": "4cffcce3699f8bf37dcfb761031657a92b186e96b1ecf0af233f19202e88976f",
+      "tests/test_prior_information_analysis.py": "14ab79dc316343a343e423d4e858fa0bf161a0b797a029a805d7cb44cfe6e798"
+    },
+    "prior_source_files_reverified": 52,
+    "prior_source_changes": [],
+    "independent_audit_fixes": [
+      "Formatted mixture-name collision rejected; generated budget/run-count invariant enforced",
+      "Mixture search uses fresh seeds to avoid identical repeat trials",
+      "Observation calibration source respects unchanged R interface",
+      "H target transform avoids infinite-MSE heavy-tail case",
+      "Repeated spline/quantizer knots and no-signal worlds have explicit fallbacks",
+      "Latent soft-label supervision distinguished from observable-input posterior",
+      "H disables legacy observation corruption before common wrapper",
+      "Aligned selection objective to equal-dataset weighting; source-lineage bootstrap is the uncertainty procedure"
+    ],
+    "pretraining_performed": false,
+    "benchmark_performance_measured": false,
+    "gpu_latency_measured": false
   }
 }

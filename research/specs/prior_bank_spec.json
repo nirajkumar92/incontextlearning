@@ -211,6 +211,58 @@
     "throughput": "CPU smoke measured only; no MI355X profile or learning curve. Full index/generation and routed prefills must be charged.",
     "screening_detail": {
       "total": 15000,
+      "allocation": [
+        {
+          "id": "P",
+          "description": "R; R plus observation O; R/H15; R/forest20; R/smooth10; R/interaction05; full Q with identity; full Q with O. Individual mechanism arms use identity observation. Two seeds per arm;300 GPU-hours per seed package.",
+          "arms": 8,
+          "seeds": 2,
+          "hours_per_arm_seed": 300,
+          "total": 4800
+        },
+        {
+          "id": "M",
+          "description": "Graph anchors .70,.50,.30 with remaining4:3:2:1 mechanism ratios; same chosen observation mode. A predeclared dimension/filter intervention may replace one slot, never add an uncharged slot. Failed component exclusion changes candidate identity and must be recorded before launch. Use fresh seed indices2/3, rather than rerun the identical R50 seed0/1 endpoints from phaseP.",
+          "arms": 3,
+          "seeds": 2,
+          "hours_per_arm_seed": 300,
+          "total": 1800
+        },
+        {
+          "id": "A",
+          "description": "R and selected challenger on authored compressed and compact persistent-cell backbones; identical output contracts. Two seeds per cell;400 hours each. Equal-cost system comparison, not topology-only attribution. Compact backbone remains unimplemented.",
+          "arms": 4,
+          "seeds": 2,
+          "hours_per_arm_seed": 400,
+          "total": 3200
+        },
+        {
+          "id": "V",
+          "description": "Reference and complete finalist, two fresh seeds each;700 hours/run. Mixture hyperparameters frozen before confirmation data access. Include standard slices and prediction/setup latency. Use seed indices4/5, absent from P/M/A; these are new confirmation seeds.",
+          "arms": 2,
+          "seeds": 2,
+          "hours_per_arm_seed": 700,
+          "total": 2800
+        },
+        {
+          "id": "F",
+          "description": "Common chosen standard parent: continued standard replay, fraud reservoir+observed-positives, fraud full selector. Fresh optimizer, same peak LR convention and400 hour ceiling; two seeds. Both fraud arms hide H from model and selector and use correct population weights. This replaces the earlier six-finance-arm screen; it is not additional spending. Use seed indices6/7 with paired continuation initialization.",
+          "arms": 3,
+          "seeds": 2,
+          "hours_per_arm_seed": 400,
+          "total": 2400
+        }
+      ],
+      "status": "Current planned allocation; dependencies/implementation gates in prior_selection_v1.json",
+      "deferred": "Old separate head, codec, optimizer, length and joint-versus-specialist screens are superseded/deferred in this allocation; fix existing choices. MoE, adaptive adversarial weights, contrastive/auxiliary losses, real-data continuation and count/severity branch remain unfunded."
+    },
+    "final_release_gate": "At most12000GPUh total across all final checkpoints, only after faithful reference, repaired precision, funded controls, independent confirmation and two3000h bridges. Start a new declared horizon; exact-config resume cannot change recipe/horizon. Reserve3000 only by logged reassignment.",
+    "final_package_split_gpu_hours": {
+      "standard": 9000,
+      "fraud_specialist": 3000
+    },
+    "previous_screening_detail": {
+      "total": 15000,
       "package_definition": "Total GPU-hours of classifier and regressor checkpoints combined; 50/50 initial split fixed before runs, including classification task mix",
       "allocation": [
         {
@@ -308,12 +360,8 @@
       ],
       "fresh_control_policy": "Funded pairs use completed matched horizons, not partial checkpoints from longer decays.",
       "confirmation_policy": "At most two complete configurations, INCLUDING the necessary paired control, each with two new seeds. All standard and finance panels; gains not assumed additive; no third uncharged control.",
-      "family_comparison_scope": "Different family parameter counts allowed for equal-cost system comparison; not pure topology attribution."
-    },
-    "final_release_gate": "At most12000GPUh total across all final checkpoints, only after faithful reference, repaired precision, funded controls, independent confirmation and two3000h bridges. Start a new declared horizon; exact-config resume cannot change recipe/horizon. Reserve3000 only by logged reassignment.",
-    "final_package_split_gpu_hours": {
-      "standard": 9000,
-      "fraud_specialist": 3000
+      "family_comparison_scope": "Different family parameter counts allowed for equal-cost system comparison; not pure topology attribution.",
+      "status": "Superseded; retained historical design, not additional budget."
     }
   },
   "evaluation": {
@@ -363,7 +411,7 @@
     "runtime_configs": "configs/",
     "documentation": "README.md"
   },
-  "initial_family_probabilities_scope": "Within authored standard control only; main candidate is R_P1_05",
+  "initial_family_probabilities_scope": "Within authored standard control only; R_P1_05 is the executable pilot; prior_selection_v1.json specifies the challenger selection program.",
   "profile_mixture": {
     "standard": 0.8,
     "finance": 0.2,
@@ -502,6 +550,12 @@
       "research/results/representation_candidate_probes.json",
       "research/results/learned_regression_head_probe.json",
       "research/results/code_validation.json"
-    ]
+    ],
+    "status": "Executable reference-derived pilot; superseded as a final-bank recommendation by prior_selection_v1.json; runtime configs unchanged."
+  },
+  "prior_selection": {
+    "spec": "prior_selection_v1.json",
+    "guide": "../../docs/prior_selection.md",
+    "status": "Current research recommendation: specified challenger and costed selection, not implemented new sampler or demonstrated winner."
   }
 }

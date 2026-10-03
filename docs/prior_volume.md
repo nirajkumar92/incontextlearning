@@ -1,4 +1,6 @@
-# Provisional sample volumes for the final candidate
+# Provisional sample volumes for the executable reference pilot
+
+The [prior-selection recipe](prior_selection.md) supersedes this pilot as the research recommendation. This page preserves its runnable volume arithmetic; new mixture exposures are emitted by `scripts/plan_prior_selection.py`.
 
 Plan for **64,000,000 accepted standard macroepisodes** and **1,024,000 finance
 macroepisodes**. A macroepisode is a generated tabular prediction task, not one
@@ -8,11 +10,11 @@ takes precedence if measured costs cannot fit them. This preserves the condition
 12,000-hour final allocation inside the unchanged 50,000-hour research program.
 No MI355X throughput measurement currently establishes that these targets fit.
 
-The standard candidate is `R_P1_05`: unchanged pinned reference mechanisms with
+The executable standard pilot is `R_P1_05`: unchanged pinned reference mechanisms with
 an eligible 5% P1 branch, plus an explicitly labeled shape/class extension in
 20% of stage-two and stage-three slots. The finance continuation is a separate
 binary fraud population at prevalence 1e-4. P4 receives **zero episodes in this
-provisional main candidate**; its separately funded prior-control screen is not
+provisional reference pilot**; its earlier prior-control screen is deferred and not
 part of this final-run volume.
 
 ## Standard tasks

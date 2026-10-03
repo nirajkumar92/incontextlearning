@@ -1,0 +1,674 @@
+{
+  "schema_version": 1,
+  "status": "Exact toy Bayes calculations and executed CPU Monte Carlo checks; no trained model or benchmark results.",
+  "seed": 20261003,
+  "rng": "NumPy PCG64; SeedSequence(seed).spawn(4) in section order",
+  "numpy_version": "1.26.4",
+  "claim_limits": [
+    "These calculations constrain generator design; they do not identify optimal mixture weights or predict a SOTA win.",
+    "Bayes risks assume the explicitly specified generative law, noise, and latent-parameter prior are correct.",
+    "Low synthetic Bayes risk does not establish useful real-data transfer or neural optimization efficiency.",
+    "No fixed predictive-mixture regret bound is asserted for a posterior mixture of task-generating priors; posterior component weights depend on context evidence."
+  ],
+  "normal_random_effects": {
+    "tau_squared": 1.0,
+    "sigma_squared": 4.0,
+    "assumptions": "Known zero population mean and known variances; one category effect. Hyperparameter estimation and category hierarchy are not simulated.",
+    "rows": [
+      {
+        "support_count": 0,
+        "shrinkage_toward_sample_mean": 0.0,
+        "posterior_theta_variance": 1.0,
+        "bayes_theta_mse": 1.0,
+        "bayes_new_response_mse": 5.0,
+        "unpooled_sample_mean_theta_mse": null,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 1.0006777747208662,
+          "monte_carlo_standard_error": 0.006273333476987925
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.982523643385016,
+          "monte_carlo_standard_error": 0.03155076216569844
+        }
+      },
+      {
+        "support_count": 1,
+        "shrinkage_toward_sample_mean": 0.2,
+        "posterior_theta_variance": 0.8,
+        "bayes_theta_mse": 0.8,
+        "bayes_new_response_mse": 4.8,
+        "unpooled_sample_mean_theta_mse": 4.0,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 0.8026814369355185,
+          "monte_carlo_standard_error": 0.005061303985718322
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.814176280660405,
+          "monte_carlo_standard_error": 0.03056425299206096
+        }
+      },
+      {
+        "support_count": 2,
+        "shrinkage_toward_sample_mean": 0.3333333333333333,
+        "posterior_theta_variance": 0.6666666666666666,
+        "bayes_theta_mse": 0.6666666666666666,
+        "bayes_new_response_mse": 4.666666666666667,
+        "unpooled_sample_mean_theta_mse": 2.0,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 0.673466064481557,
+          "monte_carlo_standard_error": 0.004260354853860611
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.661758924429664,
+          "monte_carlo_standard_error": 0.02991118327994348
+        }
+      },
+      {
+        "support_count": 4,
+        "shrinkage_toward_sample_mean": 0.5,
+        "posterior_theta_variance": 0.5,
+        "bayes_theta_mse": 0.5,
+        "bayes_new_response_mse": 4.5,
+        "unpooled_sample_mean_theta_mse": 1.0,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 0.5048195930874855,
+          "monte_carlo_standard_error": 0.0032070827249653594
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.490464076425178,
+          "monte_carlo_standard_error": 0.02825386857139415
+        }
+      },
+      {
+        "support_count": 16,
+        "shrinkage_toward_sample_mean": 0.8,
+        "posterior_theta_variance": 0.2,
+        "bayes_theta_mse": 0.2,
+        "bayes_new_response_mse": 4.2,
+        "unpooled_sample_mean_theta_mse": 0.25,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 0.19982558281260618,
+          "monte_carlo_standard_error": 0.0012516808088116772
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.220060753176179,
+          "monte_carlo_standard_error": 0.026637705840850744
+        }
+      },
+      {
+        "support_count": 64,
+        "shrinkage_toward_sample_mean": 0.9411764705882353,
+        "posterior_theta_variance": 0.058823529411764705,
+        "bayes_theta_mse": 0.058823529411764705,
+        "bayes_new_response_mse": 4.0588235294117645,
+        "unpooled_sample_mean_theta_mse": 0.0625,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 0.05866392018029095,
+          "monte_carlo_standard_error": 0.0003709146157006564
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.071676281541042,
+          "monte_carlo_standard_error": 0.02577179595697328
+        }
+      },
+      {
+        "support_count": 256,
+        "shrinkage_toward_sample_mean": 0.9846153846153847,
+        "posterior_theta_variance": 0.015384615384615385,
+        "bayes_theta_mse": 0.015384615384615385,
+        "bayes_new_response_mse": 4.015384615384615,
+        "unpooled_sample_mean_theta_mse": 0.015625,
+        "prior_mean_theta_mse": 1.0,
+        "simulated_theta_mse": {
+          "independent_replicates": 50000,
+          "mean": 0.015257020786620137,
+          "monte_carlo_standard_error": 9.745485002802246e-05
+        },
+        "simulated_response_mse": {
+          "independent_replicates": 50000,
+          "mean": 4.037188030931891,
+          "monte_carlo_standard_error": 0.025671565834231743
+        }
+      }
+    ]
+  },
+  "category_occupancy": {
+    "assumptions": "Independent support/query categories from the same fixed frequency law. Occupancy alone says nothing about cross-category sharing or target mechanism.",
+    "rows": [
+      {
+        "frequency_law": "uniform",
+        "support_count": 32,
+        "category_count": 128,
+        "expected_unseen_query_mass": 0.7780366260297105,
+        "expected_distinct_observed_categories": 28.411311868197,
+        "expected_fraction_of_identities_unseen": 0.7780366260297112,
+        "simulated_unseen_query_mass": {
+          "independent_replicates": 4000,
+          "mean": 0.77771875,
+          "monte_carlo_standard_error": 0.00019721082191648736
+        },
+        "simulated_distinct_observed_categories": {
+          "independent_replicates": 4000,
+          "mean": 28.452,
+          "monte_carlo_standard_error": 0.025242985205310382
+        }
+      },
+      {
+        "frequency_law": "uniform",
+        "support_count": 128,
+        "category_count": 128,
+        "expected_unseen_query_mass": 0.36643771592203694,
+        "expected_distinct_observed_categories": 81.09597236197921,
+        "expected_fraction_of_identities_unseen": 0.36643771592203733,
+        "simulated_unseen_query_mass": {
+          "independent_replicates": 4000,
+          "mean": 0.366376953125,
+          "monte_carlo_standard_error": 0.00042656835181022906
+        },
+        "simulated_distinct_observed_categories": {
+          "independent_replicates": 4000,
+          "mean": 81.10375,
+          "monte_carlo_standard_error": 0.05460074903170932
+        }
+      },
+      {
+        "frequency_law": "uniform",
+        "support_count": 512,
+        "category_count": 128,
+        "expected_unseen_query_mass": 0.01803020521360923,
+        "expected_distinct_observed_categories": 125.69213373265802,
+        "expected_fraction_of_identities_unseen": 0.018030205213609263,
+        "simulated_unseen_query_mass": {
+          "independent_replicates": 4000,
+          "mean": 0.017912109375,
+          "monte_carlo_standard_error": 0.00017856176877116032
+        },
+        "simulated_distinct_observed_categories": {
+          "independent_replicates": 4000,
+          "mean": 125.70725,
+          "monte_carlo_standard_error": 0.02285590640270852
+        }
+      },
+      {
+        "frequency_law": "zipf_exponent_1.25",
+        "support_count": 32,
+        "category_count": 128,
+        "expected_unseen_query_mass": 0.33874533968287757,
+        "expected_distinct_observed_categories": 15.97927682900157,
+        "expected_fraction_of_identities_unseen": 0.8751618997734252,
+        "simulated_unseen_query_mass": {
+          "independent_replicates": 4000,
+          "mean": 0.33974602291800493,
+          "monte_carlo_standard_error": 0.0006671673957660594
+        },
+        "simulated_distinct_observed_categories": {
+          "independent_replicates": 4000,
+          "mean": 15.92775,
+          "monte_carlo_standard_error": 0.03773742853922599
+        }
+      },
+      {
+        "frequency_law": "zipf_exponent_1.25",
+        "support_count": 128,
+        "category_count": 128,
+        "expected_unseen_query_mass": 0.1776996308240547,
+        "expected_distinct_observed_categories": 38.7474517264085,
+        "expected_fraction_of_identities_unseen": 0.6972855333874335,
+        "simulated_unseen_query_mass": {
+          "independent_replicates": 4000,
+          "mean": 0.17774463383549183,
+          "monte_carlo_standard_error": 0.0003052938192790002
+        },
+        "simulated_distinct_observed_categories": {
+          "independent_replicates": 4000,
+          "mean": 38.70525,
+          "monte_carlo_standard_error": 0.059584861318119846
+        }
+      },
+      {
+        "frequency_law": "zipf_exponent_1.25",
+        "support_count": 512,
+        "category_count": 128,
+        "expected_unseen_query_mass": 0.0651966889239318,
+        "expected_distinct_observed_categories": 79.02130924813818,
+        "expected_fraction_of_identities_unseen": 0.38264602149892035,
+        "simulated_unseen_query_mass": {
+          "independent_replicates": 4000,
+          "mean": 0.06549381704821013,
+          "monte_carlo_standard_error": 0.00013493078758361558
+        },
+        "simulated_distinct_observed_categories": {
+          "independent_replicates": 4000,
+          "mean": 78.9575,
+          "monte_carlo_standard_error": 0.07082674314399962
+        }
+      }
+    ]
+  },
+  "coarsened_observation": {
+    "z_values": [
+      -2,
+      -1,
+      1,
+      2
+    ],
+    "z_probabilities": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "noise_values": [
+      -2,
+      0,
+      2
+    ],
+    "noise_probabilities": [
+      0.2,
+      0.6,
+      0.2
+    ],
+    "quantizer": "0 if W < -1; 1 if -1 <= W <= 1; 2 if W > 1",
+    "joint_X_Y": [
+      [
+        0.25,
+        0.0
+      ],
+      [
+        0.25,
+        0.25
+      ],
+      [
+        0.0,
+        0.25
+      ]
+    ],
+    "observed_X_probabilities": [
+      0.25,
+      0.5,
+      0.25
+    ],
+    "positive_probability_given_observed_X": [
+      0.0,
+      0.5,
+      1.0
+    ],
+    "bayes_classification_error": 0.25,
+    "bayes_binary_brier_risk": 0.125,
+    "bayes_log_loss_nats": 0.34657359027997264,
+    "bayes_log_loss_observing_noisy_unquantized_W_nats": 0.2942487759035179,
+    "clairvoyant_latent_Z_log_loss_nats": 0.0,
+    "limitation": "Known generative law, not an unknown-law PFN. Latent-conditioned certainty is not the observed-input predictive posterior. Latent soft labels can still be an unbiased loss-only target when correctly averaged over latent states.",
+    "simulated_brier_risk": {
+      "independent_replicates": 50000,
+      "mean": 0.12573,
+      "monte_carlo_standard_error": 0.0005590130516471311
+    },
+    "simulated_log_loss_nats": {
+      "independent_replicates": 50000,
+      "mean": 0.34859758004720764,
+      "monte_carlo_standard_error": 0.0015499132825816803
+    },
+    "simulated_classification_error": {
+      "independent_replicates": 50000,
+      "mean": 0.25374,
+      "monte_carlo_standard_error": 0.0019460719390402396,
+      "wilson_95_percent_interval": [
+        0.24994482532270143,
+        0.25757301167628044
+      ]
+    }
+  },
+  "interaction_mechanism_counterexample": {
+    "assumptions": "Uniform iid binary features, noiseless labels; uniform prior on affine-parity coefficients versus independent fair lookup labels. Both observe all feature bits.",
+    "interpretation": "At fixed input occupancy, shared algebraic structure can make an interaction family learnable with far less support than an unstructured lookup family.",
+    "rows": [
+      {
+        "feature_bits": 12,
+        "support_count": 0,
+        "augmented_rank_probabilities": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "affine_parity_query_unidentified_probability": 1.0,
+        "affine_parity_bayes_classification_error": 0.5,
+        "independent_truth_table_bayes_classification_error": 0.5,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 1.0,
+          "monte_carlo_standard_error": 0.0,
+          "wilson_95_percent_interval": [
+            0.9990405567102987,
+            1.0
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 1.0,
+          "monte_carlo_standard_error": 0.0,
+          "wilson_95_percent_interval": [
+            0.9990405567102987,
+            1.0
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 1,
+        "augmented_rank_probabilities": [
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "affine_parity_query_unidentified_probability": 0.999755859375,
+        "affine_parity_bayes_classification_error": 0.4998779296875,
+        "independent_truth_table_bayes_classification_error": 0.4998779296875,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 1.0,
+          "monte_carlo_standard_error": 0.0,
+          "wilson_95_percent_interval": [
+            0.9990405567102987,
+            1.0
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 1.0,
+          "monte_carlo_standard_error": 0.0,
+          "wilson_95_percent_interval": [
+            0.9990405567102987,
+            1.0
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 4,
+        "augmented_rank_probabilities": [
+          0.0,
+          1.4551915228366852e-11,
+          4.171306500211358e-07,
+          0.00170773288118653,
+          0.9982918499736115,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "affine_parity_query_unidentified_probability": 0.9980485433189479,
+        "affine_parity_bayes_classification_error": 0.49902427165947394,
+        "independent_truth_table_bayes_classification_error": 0.49951189753483227,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 0.99825,
+          "monte_carlo_standard_error": 0.0006609414390825214,
+          "wilson_95_percent_interval": [
+            0.9963918804962462,
+            0.9991520342655662
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 0.99925,
+          "monte_carlo_standard_error": 0.0004329044081048831,
+          "wilson_95_percent_interval": [
+            0.997797095603605,
+            0.9997449002716282
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 8,
+        "augmented_rank_probabilities": [
+          0.0,
+          5.169878828456423e-26,
+          2.6886730329211896e-20,
+          2.3115597533236636e-15,
+          4.1889425404087624e-11,
+          1.712439710519102e-07,
+          0.000157765413330405,
+          0.03053136379879838,
+          0.9693106995020084,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "affine_parity_query_unidentified_probability": 0.9692307548699107,
+        "affine_parity_bayes_classification_error": 0.48461537743495536,
+        "independent_truth_table_bayes_classification_error": 0.4990242715576976,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 0.968,
+          "monte_carlo_standard_error": 0.0027831522567263603,
+          "wilson_95_percent_interval": [
+            0.9620809408863701,
+            0.9730210201944692
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 0.99875,
+          "monte_carlo_standard_error": 0.0005587373460360996,
+          "wilson_95_percent_interval": [
+            0.9970769950881988,
+            0.9994659602303242
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 12,
+        "augmented_rank_probabilities": [
+          0.0,
+          1.8367099231598242e-40,
+          1.5396156646039916e-33,
+          2.149386607033061e-27,
+          6.420561697064878e-22,
+          4.462033556992207e-17,
+          7.458217122229299e-13,
+          3.0310194384739863e-09,
+          2.9830959185333903e-06,
+          0.0006962896826317938,
+          0.03662674494939846,
+          0.384956756301009,
+          0.5777172229392769,
+          0.0
+        ],
+        "affine_parity_query_unidentified_probability": 0.610280244962157,
+        "affine_parity_bayes_classification_error": 0.3051401224810785,
+        "independent_truth_table_bayes_classification_error": 0.4985371216034459,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 0.596,
+          "monte_carlo_standard_error": 0.007759578130490782,
+          "wilson_95_percent_interval": [
+            0.580708318559176,
+            0.6111074683292012
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 0.998,
+          "monte_carlo_standard_error": 0.0007064876369727208,
+          "wilson_95_percent_interval": [
+            0.9960581807520483,
+            0.998986213731409
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 16,
+        "augmented_rank_probabilities": [
+          0.0,
+          6.525304467998525e-55,
+          8.755709979044068e-47,
+          1.9575433240862124e-39,
+          9.373157044025565e-33,
+          1.0460668216901585e-26,
+          2.818225496360968e-21,
+          1.8597926334614005e-16,
+          3.0171869857775307e-12,
+          1.1972197959565243e-08,
+          1.1425834639766687e-05,
+          0.002521859291282698,
+          0.11732374402903463,
+          0.8801429588698275
+        ],
+        "affine_parity_query_unidentified_probability": 0.0605632753151478,
+        "affine_parity_bayes_classification_error": 0.0302816376575739,
+        "independent_truth_table_bayes_classification_error": 0.49805044720738134,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 0.0685,
+          "monte_carlo_standard_error": 0.003994487011071685,
+          "wilson_95_percent_interval": [
+            0.06107873887856096,
+            0.07674926068045144
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 0.99525,
+          "monte_carlo_standard_error": 0.001087269476132036,
+          "wilson_95_percent_interval": [
+            0.9925927520073825,
+            0.9969569194141681
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 32,
+        "augmented_rank_probabilities": [
+          0.0,
+          1.03954097656449e-112,
+          9.141666728752681e-100,
+          1.3395281281608267e-87,
+          4.2039669786558394e-76,
+          3.07552173885948e-65,
+          5.432842940275913e-55,
+          2.3519071947985102e-45,
+          2.5054564707956005e-36,
+          6.54091062409562e-28,
+          4.1232378474956056e-20,
+          6.058854956255748e-13,
+          1.9068811538684165e-06,
+          0.9999980931182402
+        ],
+        "affine_parity_query_unidentified_probability": 9.53441031348366e-07,
+        "affine_parity_bayes_classification_error": 4.76720515674183e-07,
+        "independent_truth_table_bayes_classification_error": 0.49610849592694506,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 0.0,
+          "monte_carlo_standard_error": 0.0,
+          "wilson_95_percent_interval": [
+            5.421010862427522e-20,
+            0.0009594432897014865
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 0.99225,
+          "monte_carlo_standard_error": 0.0013867101774628575,
+          "wilson_95_percent_interval": [
+            0.9890207024411035,
+            0.9945347256401853
+          ]
+        }
+      },
+      {
+        "feature_bits": 12,
+        "support_count": 128,
+        "augmented_rank_probabilities": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.980989320249448e-296,
+          2.772490521912803e-257,
+          9.509171738644387e-219,
+          8.025811748073513e-181,
+          1.6600452698232595e-143,
+          8.290863017779351e-107,
+          9.652317419623966e-71,
+          2.4068246833086331e-35,
+          0.9999999999999999
+        ],
+        "affine_parity_query_unidentified_probability": 1.2034123416543166e-35,
+        "affine_parity_bayes_classification_error": 6.017061708271583e-36,
+        "independent_truth_table_bayes_classification_error": 0.4846147682750699,
+        "simulated_affine_query_unidentified": {
+          "independent_replicates": 4000,
+          "mean": 0.0,
+          "monte_carlo_standard_error": 0.0,
+          "wilson_95_percent_interval": [
+            5.421010862427522e-20,
+            0.0009594432897014865
+          ]
+        },
+        "simulated_lookup_query_unseen": {
+          "independent_replicates": 4000,
+          "mean": 0.97,
+          "monte_carlo_standard_error": 0.0026975580076805026,
+          "wilson_95_percent_interval": [
+            0.9642459356773666,
+            0.9748521876303141
+          ]
+        }
+      }
+    ]
+  }
+}

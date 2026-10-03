@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "date": "2026-10-03",
+  "status": "Proposed standard challenger and selection design; new generators and observation wrapper are not integrated into the trainer. The planner and analytical diagnostics are executable.",
+  "purpose": "Select a transferable binary/multiclass/regression prior under fixed compute and inference budgets; no empirical SOTA result is claimed.",
+  "reference": "Pinned, unmodified TabICLv2 R with native filtering. Existing R_P1_05 remains a runnable reference-derived pilot, not the selected final bank.",
+  "mechanism_weights": {
+    "R": 0.5,
+    "forest": 0.2,
+    "hierarchy": 0.15,
+    "smooth_local": 0.1,
+    "sparse_interaction": 0.05
+  },
+  "observation_weights": {
+    "identity": 0.5,
+    "mcar": 0.15,
+    "mar": 0.15,
+    "mnar": 0.1,
+    "coarsen": 0.1
+  },
+  "mixture_anchor_grid": [
+    0.7,
+    0.5,
+    0.3
+  ],
+  "weight_interpretation": "Requested episode probabilities, not GPU time, gradient share, posterior model probability or experimentally estimated optimum. The four added mechanisms retain relative weights 4:3:2:1 in the anchor sweep.",
+  "sampling_contract": {
+    "task_shape": "Use the existing reference classification/regression 50/50 law, native requested shapes, stage proportions 90/9/1 and declared later-stage width/class envelopes in docs/reference_prior.md. Match this law across every standard comparison.",
+    "eligibility": "Draw task and shape first. Hierarchy requests with F<8 return to R. Other new families support F>=1. Observation branch is drawn independently after this fallback.",
+    "retry": "Keep task, shape and chosen source fixed on numerical-invalidity retries. Abort and diagnose after 100 attempts; never silently replace a difficult source. R retains its existing native attempt limit and filters.",
+    "calibration_rows": 4096,
+    "calibration": "Use independent world-calibration rows for generator scaling, thresholds, category catalogs and response conversion. These are never model context. Support-only learned preprocessing remains a separate operation. For unchanged R, no independent same-world calibration pool is exposed: observation parameters use clean support X only, without labels. Do not generate extra native rows as calibration, since that changes the native shape/filter law.",
+    "ordering": "Draw world -> complete latent covariates -> label outcomes -> measurement/coarsening/mask -> codec. No post-observation tree predictability filter. No label-dependent support/query repair on new branches.",
+    "nominal_types": "R keeps its actual numerical adapter output. New branches carry explicit nominal type masks and independently permuted category IDs shared by support/query. Never infer type from cardinality.",
+    "vocabulary": "Use the existing legal class vocabulary contract. Retain absent support classes and noisy/constant-label realizations; do not guarantee every class is observed by resampling labels. Audit label coverage and use matching legal interface for controls.",
+    "seeds": "Independent keyed streams for world, calibration, support, query, observation, category relabeling and audit teachers; separate training/development/confirmation/test namespaces. Query labels and teacher outputs are loss/audit only."
+  },
+  "complexity": {
+    "applies_to": "New families only; R is unchanged. Hierarchy uses its separate catalog rule.",
+    "context_conditioned_probability": 0.8,
+    "context_conditioned_dimension": "rho~LogUniform(8,128); d=min(F,max(1,floor(n_support/rho))).",
+    "broad_replay_probability": 0.2,
+    "broad_replay_dimension": "d~DiscreteLogUniform(1,F); no universal 16-informative-feature cap.",
+    "comparison": "Off arm uses DiscreteLogUniform(1,F) throughout. Complexity-on/off is one predeclared replacement slot in the mixture phase if occupancy audits show it dominates the uncertainty; not an additional funded run.",
+    "limitation": "Occupancy is a diagnostic, not a universal sufficient statistic for hardness. Structured parity and random truth tables have different learnability at identical coverage."
+  },
+  "new_feature_factory": {
+    "categorical_fraction": "Choose 0,.25,.5,1 with probabilities .35,.30,.25,.10; round fraction*d and randomly choose active nominal columns.",
+    "numerical": "Independent Gaussian coordinates or four-coordinate equicorrelated blocks, rho in {0,.3,.8} with probabilities {.4,.4,.2}; common Student-t5 row scale with probability .2. Retain an invertible permutation/scale rendering, without treating category codes as ordered.",
+    "categories": "Per-column cardinality from {2,3,5,10,32,128} with probabilities {.25,.15,.20,.20,.15,.05}; random-rank Zipf exponent Uniform(0,1.5); centered unit-variance random effect lookup for smooth mechanism coordinates.",
+    "remaining_columns": "30% proxies of a randomly selected active column (numerical noise scale LogUniform(.01,.3), nominal replacement probability .05); 70% independent distractors from the same marginal factory. Append then permute all columns and type flags.",
+    "status": "Extends existing _Factory in static_prior.py; high-dimensional new family interface not yet implemented."
+  },
+  "families": {
+    "R": {
+      "implemented": true,
+      "generator": "reference_prior.py + pinned third_party source, unchanged; numerical output remains numerical"
+    },
+    "forest": {
+      "implemented": false,
+      "law": "Equal mixture of axis-aligned and sparse-oblique directly sampled forests. Trees T in {1,4,16,64} uniformly. Numerical split quantile Uniform(.1,.9) on calibration rows reaching node; categorical split is a nonempty proper uniformly sampled subset of levels, with explicitly recorded fallback for one-level nodes. Oblique splits use 2..min(4,d) latent mechanism coordinates and unit-normal Gaussian weights; at d=1 use axis-aligned.",
+      "depth": "On conditioned draws choose nominal balanced-leaf occupancy m~LogUniform(8,128), D=clip(floor(log2(max(1,n_support/m))),1,10). On broad replay D~DiscreteUniform(1,10). Split only nodes with >=16 calibration rows; leaves smaller after stochastic support sampling remain valid.",
+      "response": "Independent Normal(0,1) leaf scores per output coordinate, sum trees divided by sqrt(T), then independent-calibration centering/scaling and common response compiler. No fitted teacher labels enter the prediction targets.",
+      "qualification": "These are directly sampled forests; Mitra's fitted ExtraTrees/boosted generators are evidence for testing tree complementarity, not evidence for these exact settings."
+    },
+    "hierarchy": {
+      "implemented": false,
+      "starting_point": "Existing P1 equations, metadata, shared group effects, entity intercepts/slopes and reserved column types remain; this proposed variant changes the catalog law and uses the external observation wrapper only.",
+      "catalog": "Half of worlds retain existing P1 catalog law. Half draw target mean occupancy m~LogUniform(.5,64), then E=clip(round(n_support/m),8,262144). Retain existing uniform/power-law frequencies and observable parent group/metadata. Do not force a fixed realized count per category. Use keyed lazy effects for encountered identities in the larger catalog; a fixed finite frequency law still determines exact sampling probabilities.",
+      "transfer": "Unseen ID residual effects are unpredictable without observed group/metadata links; test warm IDs, rare IDs and unseen IDs separately.",
+      "old_mask": "Disable all legacy information-losing rendering as well as MCAR: no grid rounding or clipped exponential warps. Retain only declared invertible scale/permutation and category relabeling before the single common observation wrapper. This avoids hidden coarsening or double corruption.",
+      "dimension": "Existing P1 base uses the F-4 remaining coordinates and its published active-dimension law; the F/S/I formula does not consume the four reserved metadata/ID columns."
+    },
+    "smooth_local": {
+      "implemented": false,
+      "law": "Equal mixture of additive splines and local RBF functions. Per-output score is calibrated to zero mean/unit variance before response sampling.",
+      "splines": "For every active numerical/latent category-effect coordinate, choose 4,8 or16 calibration-quantile knots uniformly. Piecewise-linear interpolation with Gaussian knot heights, endpoint-linear extrapolation. Sum with independent Gaussian coefficients normalized by their L2 norm. Deduplicate repeated quantile knots before assigning heights; one unique knot yields a constant function. Enforce minimum nonzero knot spacing1e-6 in standardized units.",
+      "local": "Choose intrinsic rank r~DiscreteLogUniform(1,min(8,d)), project mechanism coordinates by a unit-column Gaussian matrix; choose J in {16,32,64,128} uniformly and J independent calibration anchors. RBF score sum a_j exp(-||z-c_j||^2/(2 ell^2))/sqrt(J), a_j~Normal(0,1). Choose intended neighbor count k~LogUniform(4,64); ell is median distance to rank clip(round(512*k/n_support),1,511) neighbor in an independent 512-row projected calibration subset (excluding self), with positive numerical floor. Log realized neighborhood occupancy; this is an approximate occupancy control, not an exact guarantee."
+    },
+    "sparse_interaction": {
+      "implemented": false,
+      "law": "Choose interaction order k from {2,3,4,6} with probabilities {.45,.30,.20,.05}, capped at d. Draw 1..8 distinct subsets where available, otherwise exhaust the subset catalog. For each term choose equally between product of bounded tanh coordinates and parity of threshold/category-subset bits. Numerical thresholds are calibration quantiles Uniform(.2,.8); category subsets are random nonempty proper level subsets.",
+      "score": "Combine calibrated interaction score h and independent additive score g as sqrt(alpha)*h+sqrt(1-alpha)*g, alpha~Uniform(.25,1); recalibrate the combined score. Include exact structured parity diagnostic tasks separately from independent lookup-table diagnostics.",
+      "purpose": "Tests feature selection and joint inference; tiny mass limits allocation to hard special cases. No claim that general high-order Boolean functions are learnable from sparse context."
+    }
+  },
+  "response_compiler": {
+    "reference": "R retains its complete native response law, split repair and filtering.",
+    "classification": "Generate one independent score coordinate per requested class K. Sample target class masses from Dirichlet(alpha*ones(K)), alpha~LogUniform(.2,5). Temperature T~LogUniform(.25,4). Fit K intercepts (sum zero) on the independent 4096 calibration rows so mean softmax(score/T+b) matches masses within1e-3 absolute, max200 Newton/damped iterations; failed convergence aborts that world, counted. Draw each row label independently from its softmax probabilities; no empirical class-floor repair. Category relabeling is independent. Keep actual realized class counts. Report maximum absolute calibration error and total variation as well as requested/achieved masses; tolerance1e-3 does not promise small relative error for rare classes.",
+    "regression": "Calibrated scalar score plus noise with scale LogUniform(.03,1). Noise: Gaussian .6, Student-t5 .3, centered lognormal (log sigma1) .1, each standardized to unit variance. Half homoscedastic; half scale exp(clip(a^T z,-2,2)) normalized by calibration RMS, with unit-normal a on up to4 mechanism coordinates. Render target by identity/asinh/signed-square with probabilities .6/.2/.2, fit support-only target normalization at model boundary. Report realized tails and moments; no truncation of legitimate finite tail draws. Exception for H: identity/asinh with probabilities .75/.25; no signed-square transform on the unbounded P1 interacting score. Its shared Student-t5 pair terms can lack a finite fourth moment before target rendering.",
+    "conditional_supervision": "Hard sampled labels initially. Latent softmax probabilities generally differ from the observed-input posterior after masking/coarsening, but remain unbiased loss-only CE targets when sampled under the correct latent law and averaged. Such supervision is disabled as an experimental choice, not declared invalid.",
+    "constant_scores": "If calibration standard deviation is below1e-6, retain that output as a zero score with a no-signal flag. Do not reject on query outcomes. All scale denominators have a1e-6 floor."
+  },
+  "observation": {
+    "common": "One exclusive observation mode per episode; parameters fixed across support/query, realizations independent by row. No future/query label dependence. Identity disables additional observation corruption, not the inherent noise of a mechanism. New families use independent world calibration; R uses label-blind clean support X for scales, quantiles, mask-rate intercepts and observed category levels. Parameters then remain fixed for query batches.",
+    "mcar": "Select a nonempty random half of columns; cell mask probability r~Uniform(.01,.30), independent within selected columns. Preserve explicit numerical/nominal missing flags.",
+    "mar": "Choose1..min(3,F-1) always-observed drivers; for F=1 use MCAR and log mode fallback. Target half of remaining columns. p_missing=sigmoid(b+a^T standardized_driver), a unit-normal; calibrate b to r~Uniform(.01,.30) on the declared calibration source (independent world rows for new families; clean support X for R). Drivers cannot be targets.",
+    "mnar": "Choose a nonempty random half of columns. p_missing=sigmoid(b+s*v), s sampled from{-2,-1,1,2}, v the complete standardized numerical value or fixed nominal effect lookup. Calibrate b on the declared calibration source (independent world rows for new families; clean support X for R) to r~Uniform(.01,.30); mask only after sampling all outcomes.",
+    "coarsen": "Choose a nonempty random half of columns. Numerical values map to2,4,8,16 or32 bins uniformly selected, with calibration-quantile edges and calibration median representative (outer bins same rule). Nominal levels merge through a random mapping to max(2,ceil(C/2)) groups when C>2. Outcome remains the pre-coarsening draw; conflicting labels are allowed. Tied numerical edges are deduplicated; one value is a constant column. R quantizer bin representatives are support medians, with nearest existing representative for an empty requested bin; no query-dependent fitting.",
+    "scope": "No combined corruption or deliberate support-query distribution shift in the initial standard challenger. Finance retains its own observation process; future shift tests require separately costed comparisons."
+  },
+  "screening_allocations": [
+    {
+      "id": "P",
+      "arms": 8,
+      "seeds": 2,
+      "gpu_hours_per_run": 300
+    },
+    {
+      "id": "M",
+      "arms": 3,
+      "seeds": 2,
+      "gpu_hours_per_run": 300
+    },
+    {
+      "id": "A",
+      "arms": 4,
+      "seeds": 2,
+      "gpu_hours_per_run": 400
+    },
+    {
+      "id": "V",
+      "arms": 2,
+      "seeds": 2,
+      "gpu_hours_per_run": 700
+    },
+    {
+      "id": "F",
+      "arms": 3,
+      "seeds": 2,
+      "gpu_hours_per_run": 400
+    }
+  ],
+  "project_gpu_hour_budget": {
+    "systems": 5000,
+    "screening": 15000,
+    "scaling": 10000,
+    "final": 12000,
+    "evaluation": 5000,
+    "reserve": 3000
+  },
+  "selection": {
+    "fixed_controls": "Freeze architecture, optimizer, heads, task/shape law, augmentation seeds and inference policy during prior screens. All runs use equal total allocated GPU-hours including evaluation and idle data-generation time; also report accepted episodes and CPU costs.",
+    "P": "R; R plus observation O; R/H15; R/forest20; R/smooth10; R/interaction05; full Q with identity; full Q with O. Individual mechanism arms use identity observation. Two seeds per arm;300 GPU-hours per seed package.",
+    "M": "Graph anchors .70,.50,.30 with remaining4:3:2:1 mechanism ratios; same chosen observation mode. A predeclared dimension/filter intervention may replace one slot, never add an uncharged slot. Failed component exclusion changes candidate identity and must be recorded before launch. Use fresh seed indices2/3, rather than rerun the identical R50 seed0/1 endpoints from phaseP.",
+    "A": "R and selected challenger on authored compressed and compact persistent-cell backbones; identical output contracts. Two seeds per cell;400 hours each. Equal-cost system comparison, not topology-only attribution. Compact backbone remains unimplemented.",
+    "V": "Reference and complete finalist, two fresh seeds each;700 hours/run. Mixture hyperparameters frozen before confirmation data access. Include standard slices and prediction/setup latency. Use seed indices4/5, absent from P/M/A; these are new confirmation seeds.",
+    "F": "Common chosen standard parent: continued standard replay, fraud reservoir+observed-positives, fraud full selector. Fresh optimizer, same peak LR convention and400 hour ceiling; two seeds. Both fraud arms hide H from model and selector and use correct population weights. This replaces the earlier six-finance-arm screen; it is not additional spending. Use seed indices6/7 with paired continuation initialization.",
+    "scaling": "Existing10000-hour phase retained: two sizes x two seeds x500=2000; reference and challenger3k-hour bridges=6000; two1k confirmations=2000. Do not discard reference only because a short pilot ranked lower.",
+    "deferred": "Old separate head, codec, optimizer, length and joint-versus-specialist screens are superseded/deferred in this allocation; fix existing choices. MoE, adaptive adversarial weights, contrastive/auxiliary losses, real-data continuation and count/severity branch remain unfunded.",
+    "implementation_gate": "Planner emits experiment instructions and blocking dependencies only; no new generator config is launchable until implementation, probability/independence tests and hardware cost calibration pass.",
+    "failure_policy": "If both seeds are flat or disagree, retain uncertainty and use the funded confirmation/bridge; do not fabricate a selected winner. If budget cannot complete intended curriculum, reduce named arms before launching, never compare unequal partial schedules.",
+    "objective": "Equal task-type mean of equal-dataset paired improvement (average folds and seeds within each dataset first) in classification log loss and support-standardized regression MSE, divided by max(1e-6, training constant-predictor loss). Classification constant uses Jeffreys-smoothed training counts. Raw metrics also reported. Confirmation:10k paired lineage bootstrap resamples,95% overall lower bound>0, each task-type lower bound>-.005; seed variability separately reported. Development>=20 and confirmation>=10 source-disjoint lineages per task type are coverage targets, not power guarantees."
+  },
+  "analytical_diagnostics": "research/probes/prior_information_analysis.py; exact toy Bayes risks, occupancy and information-loss checks only. These can falsify mechanisms or identify coverage gaps, not certify real benchmark superiority.",
+  "reading": "docs/prior_selection.md and prior_bank_assessment.tex Section selecting the standard prior",
+  "foundation_model_pretraining_performed": false
+}

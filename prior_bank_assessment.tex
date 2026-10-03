@@ -55,12 +55,14 @@
 \begin{abstract}
 \noindent Prior-fitted tabular models learn a prediction procedure from synthetic tasks and apply it to new tables through in-context learning. Their performance depends jointly on the training distribution, the representation of features and targets, and the use of labeled context. This report develops a pretraining proposal for binary classification, multiclass classification and regression, with an additional emphasis on large financial tables containing missing values and fraud rates near $10^{-4}$.
 
-The proposed model combines a dense 317M-parameter backbone with categorical hash-bit inputs, a quantile regression head and shared query KV heads. Standard pretraining uses the released TabICLv2 graph generator with a small hierarchical-category extension. A separate continuation trains a fraud specialist on finite populations with delayed labels and the same context-selection policy used at inference. The design is motivated by a review of recent tabular foundation models and by analyses of finite-context information, loss estimation and representation precision. The report specifies the generators, architecture, optimization, curriculum and evaluation protocol within a 50,000 GPU-hour budget. Local tests verify implementation properties and reproduce diagnostic counterexamples; benchmark accuracy, optimal training scale and GPU latency remain to be established.
+The proposed model uses a dense 317M-parameter backbone, categorical hash-bit inputs, a quantile regression head and shared query KV heads. Its executable reference pilot combines the released TabICLv2 graph generator with a small hierarchical-category extension. We propose a broader challenger that allocates 50/20/15/10/5 percent of requested tasks to graph, direct-forest, hierarchical-category, smooth/local and sparse-interaction mechanisms, each subject to an explicit observation law. Staged comparisons will select the weights and architecture; the challenger sampler still needs implementation. A separate fraud continuation uses finite populations with delayed labels and the context-selection policy intended for deployment.
+
+The proposal draws on recent tabular foundation models and analyses of finite-context information, loss estimation and representation precision. It specifies the generators, architecture, optimization, curriculum and evaluation within a 50,000 GPU-hour budget. Local tests verify implementation properties and reproduce diagnostic counterexamples. Benchmark accuracy, optimal training scale and GPU latency remain to be established.
 \end{abstract}
 
 \begin{center}
 \fbox{\begin{minipage}{0.93\linewidth}
-\textbf{Proposed training sequence.} Pretrain the 317M dense model on 64 million standard tasks, then retain that checkpoint and initialize a fraud specialist for 1.024 million finance macroepisodes. These planning targets are subject to measured throughput and the respective 9,000 and 3,000 GPU-hour ceilings.
+\textbf{Research and training sequence.} Select the standard prior using the costed comparisons in Section~\ref{sec:prior-selection}, then train the chosen prior--architecture pair and retain a separate fraud specialist. The existing 64M standard-task and 1.024M finance-task targets are provisional ceilings for planning, not evidence selecting the R/P1 pilot as the final bank.
 \end{minipage}}
 \end{center}
 \clearpage
@@ -77,20 +79,20 @@ Two settings motivate the design. Standard tabular benchmarks test whether the l
 The proposed training sequence retains a general tabular checkpoint and initializes a second checkpoint for binary fraud detection. An 80\% standard and 20\% finance mixture is retained as a comparison for parameter sharing. A \emph{macroepisode} denotes one supervised prediction task from a sampled world; in finance, its queries may be divided among several selected contexts.
 
 
-The design follows the path from a synthetic mechanism to a prediction. The prior determines which relationships occur and whether a finite context contains enough evidence to identify them. The representation determines whether that evidence survives numerical encoding, category encoding and row compression. Optimization then allocates finite model capacity and compute across these tasks. We consequently treat the prior, architecture and training distribution as coupled choices. The 317M model combines a broad reference prior with category occupancy, finer target representation and context selection matched to deployment. The unchanged reference and smaller architectures establish whether these additions justify their cost.
+The design links the generated task to the evidence the predictor can use. The prior determines which relationships occur and whether the available context can identify them. Numerical and category encoding, followed by row compression, determine how much of that evidence reaches the transformer. Optimization determines how the model spends its finite capacity and compute. These choices must therefore be studied together. The 317M model combines a broad reference prior with category occupancy, finer target representation and context selection matched to deployment. Comparisons with the unchanged reference and smaller architectures will test whether the additions justify their cost.
 
 The report follows the same progression. Section~\ref{sec:prior-philosophy} explains how a distribution of synthetic tasks can teach inference from context. The literature review and analysis then motivate the generator and model specifications. Sections~\ref{sec:compute} and~\ref{sec:evaluation} give the compute allocation and empirical comparison; Section~\ref{sec:experiments} maps the method to executable code and records the completed checks.
 
-The main recipe and its alternatives are distinguished throughout. A \emph{control} is a specified comparison, such as the original authored prior or coarse regression head. An \emph{extension} is a separate experiment whose implementation status is stated where it is introduced. Their full parameters are retained so that the comparisons are reproducible, but they are not additional components to turn on in the main run.
+The executable reference pilot and the proposed selection experiment are distinguished throughout. Section~\ref{sec:prior-selection} gives the current recommendation for choosing a stronger bank; earlier R/P1 volumes describe the runnable pilot, not a scientifically selected winner. A \emph{control} is a specified comparison, such as the original authored prior or coarse regression head. An \emph{extension} is a separate experiment whose implementation status is stated where it is introduced. Their full parameters are retained so that the comparisons are reproducible, but they are not additional components to turn on in the main run.
 
-\subsection{Proposed model and training sequence}
+\subsection{Executable model and reference pilot}
 \label{sec:main-candidate}
 
 The model first represents individual cells, then forms row representations that can interact through labeled context. Two cell-encoding stages feed a 24-layer, width-1,024 row transformer. Categorical inputs use \texttt{hash\_bits}, ordinary regression uses 999 quantiles, and logarithmic length scaling adjusts attention with context size. The query path shares two KV heads, while support processing retains full-head attention. Section~\ref{sec:architecture-terms} explains these three architectural choices before their detailed specifications.
 
 The resulting model has \textbf{317,116,304 parameters}. This count includes an optional realized-loss head with a zero atom and a 1,025-bin positive density, reserved for a separate finance-regression experiment. The 94M model and released compact architectures provide lower-cost comparisons. Section~\ref{sec:compute} describes the experiments that will determine whether the additional capacity is useful.
 
-For standard tasks, the starting distribution is the released TabICLv2 graph generator, denoted R. Hierarchical category tasks, denoted P1, add repeated identities and shared effects that can be studied through category occupancy. The sampler fixes the task and table shape before choosing P1 with probability .05 when the requested width is at least eight; the remaining draws use R. Classification and regression each receive half the task mass in expectation.
+For the executable standard pilot, the starting distribution is the released TabICLv2 graph generator, denoted R. Hierarchical category tasks, denoted P1, add repeated identities and shared effects that can be studied through category occupancy. The sampler fixes the task and table shape before choosing P1 with probability .05 when the requested width is at least eight; the remaining draws use R. Classification and regression each receive half the task mass in expectation.
 
 R keeps its native filters. P1 uses validity checks without teacher filtering, keeping the acceptance law explicit for each source. In stages two and three, 20\% of requests use expanded feature and class limits. Together with the new model representation, these choices define an extension of the released system.
 
@@ -139,7 +141,7 @@ These mechanisms are implemented in \path{codec.py}, \path{model.py} and \path{d
 
 \subsection{Scope of the empirical claims}
 
-The mathematical arguments establish properties of particular estimators, representations and attention patterns. Predictive performance requires a different form of evidence: trained checkpoints compared with current methods on the same splits and within declared inference budgets. Binary classification, multiclass classification, regression and financial detection therefore have separate results, accompanied by uncertainty, failure coverage and latency.
+The mathematical arguments describe particular estimators, representations and attention patterns. To assess predictive performance, we need trained checkpoints compared with current methods on the same splits and within declared inference budgets. Binary classification, multiclass classification, regression and financial detection must therefore be reported separately, with uncertainty, failure coverage and latency.
 
 A component is first compared on a matched backbone, then confirmed with independent seeds and dataset lineages. The complete configuration is subsequently tested across model sizes and training horizons. This sequence addresses two sources of uncertainty: a component can behave differently at larger scale, and improvements measured separately may fail to combine. The final comparison evaluates the resulting system rather than attributing its entire gain to any one component.
 
@@ -175,25 +177,80 @@ Sharing a world does not imply independent rows. Finite populations, time effect
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\node[pfnhidden,text width=3cm,minimum height=18mm] (world) at (0,0)
-  {\textbf{1. Sample rules}\\World parameters\\$\phi\sim p(\phi)$};
-\node[pfndata,text width=3cm,minimum height=18mm] (table) at (4,0)
-  {\textbf{2. Draw records}\\Shared mechanism\\Features and labels};
-\node[pfndata,text width=3cm,minimum height=18mm] (episode) at (8,0)
-  {\textbf{3. Split the table}\\Support $(X_s,y_s)$\\Query features $X_q$};
-\node[pfnbox,text width=3cm,minimum height=18mm] (predict) at (12,0)
-  {\textbf{4. Predict}\\$f_\theta(X_s,y_s,X_q)$\\Labels hidden};
-\node[pfnhidden,text width=3cm,below=10mm of predict] (loss)
-  {\textbf{Compute loss}\\Predictions and $y_q$};
-\draw[pfnarrow] (world) -- (table);
-\draw[pfnarrow] (table) -- (episode);
-\draw[pfnarrow] (episode) -- (predict);
-\draw[pfnarrow] (predict) -- (loss);
-\draw[pfnloss] (table.south) |- node[pos=.7,above,font=\small]
-  {Withheld query targets} (loss.west);
+\begin{tikzpicture}[x=1cm,y=1cm,
+  font=\small,
+  panel/.style={draw=pfnblue!20,line width=.5pt,rounded corners=2pt,fill=white},
+  title/.style={font=\small\bfseries,text=pfnblue,anchor=west},
+  note/.style={font=\footnotesize,align=center,text=black!75},
+  process/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!5,rounded corners=2pt,align=center,inner sep=5pt},
+  support/.style={font=\footnotesize,draw=pfngreen!75,fill=pfngreen!9,align=center,inner sep=4pt},
+  query/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!8,align=center,inner sep=4pt},
+  hidden/.style={font=\footnotesize,draw=pfnamber!80,fill=pfnamber!8,align=center,inner sep=4pt,dashed},
+  flow/.style={-{Latex[length=2mm]},draw=pfnblue!85,line width=.8pt},
+  target/.style={-{Latex[length=2mm]},draw=pfnamber!90,line width=.8pt,dashed},
+  reuse/.style={-{Latex[length=2mm]},draw=pfngreen!90,line width=.8pt,dashed}]
+
+\path[use as bounding box] (0,.2) rectangle (16.2,-7.25);
+\node[title] at (.05,-.15) {(a) Draw one world};
+\node[title] at (5.45,-.15) {(b) Form an episode};
+\node[title] at (11.15,-.15) {(c) Learn to predict};
+\draw[pfnblue!25] (.05,-.5)--(4.75,-.5);
+\draw[pfnblue!25] (5.45,-.5)--(10.45,-.5);
+\draw[pfnblue!25] (11.15,-.5)--(15.9,-.5);
+\node[hidden,text width=3.9cm] (phi) at (2.4,-1.1)
+  {$\phi\sim p(\phi)$\\Graph, functions and noise law};
+\node[support,circle,minimum size=7mm] (x) at (.6,-2.7) {$x$};
+\node[process,text width=1.55cm,minimum height=9mm] (fun) at (2.4,-2.7) {$f_\phi$};
+\node[query,circle,minimum size=7mm] (y) at (4.2,-2.7) {$y$};
+\draw[flow] (x)--(fun);
+\draw[flow] (fun)--(y);
+\draw[target] (phi)--(fun);
+\node[note,text width=4.5cm] at (2.4,-3.65)
+  {One mechanism is shared by all records in this episode.};
+\draw[-{Latex[length=1.5mm]},black!40] (.65,-5.85)--(4.3,-5.85);
+\draw[-{Latex[length=1.5mm]},black!40] (.85,-6.05)--(.85,-4.45);
+\draw[pfnblue,line width=.8pt] (1.1,-5.6)--(3.95,-4.65);
+\foreach \xx/\yy in {1.2/-5.57,1.75/-5.32,2.3/-5.23,3/-4.95,3.7/-4.79}
+  \fill[pfngreen] (\xx,\yy) circle (1.8pt);
+\node[note,text width=4.5cm] at (2.4,-6.65)
+  {New world: redraw $\phi$.\\New row: retain $\phi$, draw a record.};
+\draw[flow] (4.55,-2.7)--(5.55,-2.7);
+\node[font=\footnotesize\bfseries,text=pfngreen] at (8,-1) {Labeled support};
+\foreach \xx/\lab in {6.45/$x_1$,7.75/$x_2$,9.05/$y$}
+  \node at (\xx,-1.55) {\lab};
+\foreach \rr in {0,1,2}{
+  \foreach \cc in {0,1,2}{
+    \draw[draw=pfngreen!35,fill=pfngreen!8] (5.8+1.3*\cc,-1.85-.58*\rr)
+      rectangle ++(1.3,-.58);
+  }
+}
+\foreach \xx/\yy/\val in {6.45/-2.14/-1,7.75/-2.14/1,9.05/-2.14/0,6.45/-2.72/-.5,7.75/-2.72/.25,9.05/-2.72/0,6.45/-3.30/1,7.75/-3.30/1,9.05/-3.30/1}
+  \node at (\xx,\yy) {$\val$};
+\node[font=\footnotesize\bfseries,text=pfnblue] at (8,-4.05) {Query row};
+\foreach \cc in {0,1,2}
+  \draw[draw=pfnblue!35,fill=pfnblue!7] (5.8+1.3*\cc,-4.4) rectangle ++(1.3,-.65);
+\node at (6.45,-4.725) {$+.5$};
+\node at (7.75,-4.725) {$ .25$};
+\node[text=pfnblue,font=\bfseries] at (9.05,-4.725) {?};
+\node[note,text width=4.6cm] at (8,-5.7)
+  {The model sees $X_s,y_s,X_q$.\\The query target is held separately.};
+\node[hidden,text width=3.4cm] (truth) at (8,-6.6) {Withheld outcome $y_q$};
+\node[process,text width=3.5cm,minimum height=13mm] (model) at (13.4,-2.7)
+  {\textbf{Shared predictor}\\$f_\theta(X_s,y_s,X_q)$};
+\draw[flow] (9.85,-2.7)--(model.west);
+\node[query,text width=3.5cm] (pred) at (13.4,-4.5)
+  {Predictive distribution\\$p_\theta(y_q\mid D_s,X_q)$};
+\node[hidden,text width=3.5cm] (loss) at (13.4,-6.6)
+  {\textbf{Prediction loss}\\$\ell(\hat p_q,y_q)$};
+\draw[flow] (model)--(pred);
+\draw[flow] (pred)--(loss);
+\draw[target] (truth)--(loss);
+\draw[target] (loss.east)--(16,-6.6)--(16,-2.7)--(model.east);
+\node[note,text=pfnamber,anchor=east,align=right] at (15.8,-1.05)
+  {Training updates $\theta$;\\deployment fixes $\theta$.};
+
 \end{tikzpicture}
-\caption{Synthetic pretraining episode. A sampled mechanism generates both support and query records. The predictor receives support labels and query features; withheld query outcomes supply the loss. Outcomes may also enter the declared acceptance or query-sampling procedure. Pretraining updates $\theta$, whereas deployment follows the prediction path with fixed weights.}
+\caption{Synthetic pretraining episode. A sampled mechanism generates both support and query records. The predictor receives support labels and query features; withheld query outcomes supply the loss. Outcomes may also enter the declared acceptance or query-sampling procedure. Pretraining updates $\theta$, whereas deployment follows the prediction path with fixed weights. The miniature table and line are illustrative, not outputs of a particular generator.}
 \label{fig:episode-generation}
 \end{figure}
 
@@ -239,7 +296,7 @@ A retry leaves the outer sampling probability of $c$ unchanged. Low-acceptance c
 
 The finance setting adds evidence selection. Enriching support with known fraud can make a bounded context more useful, but its event fraction no longer estimates the population rate. The generator must therefore preserve the relationship among selected support, any valid historical reference and naturally rare future outcomes. Population-weighted query losses target that future population despite oversampling rare training queries. The observation and selection mechanisms are thus as consequential as the response equation.
 
-\subsection{The role of each selected generator}
+\subsection{The role of each implemented starting generator}
 
 \begin{table}[ht]
 \centering\small
@@ -251,7 +308,7 @@ P1 & Entity frequencies, shared group effects, entity-specific effects and their
 Finance & Finite risk regions, temporal populations, event counts, missingness, delayed labels and selected contexts & Predicting rare future events from the evidence actually available at a cutoff.\\
 \bottomrule
 \end{tabularx}
-\caption{The main package uses R/P1 for the standard checkpoint and the finance law for a separate binary specialist. P0 and P4 remain comparison controls; they do not add hidden extra sample quotas to the main plan.}
+\caption{The executable pilot uses R/P1 for the standard checkpoint and the finance law for a separate binary specialist. P0 and P4 remain comparison controls; they do not add hidden extra sample quotas to the main plan.}
 \end{table}
 
 The proposed sources cover three related inference problems. R supplies broad compositional structure. P1 adds repeated category identities and partial pooling under controlled occupancy. The finance generator makes rare outcomes inseparable from the way historical evidence becomes available. Their value depends on preserving the resulting information through representation and context selection, which motivates evaluating prior and architecture changes together.
@@ -284,7 +341,7 @@ Kumo Tabular & Mixed SCMs, missingness, coarsening, conflicting labels, high car
 
 Mitra-v2 combines base/hybrid SCMs with five tree generators. Its negative-results appendix reports limited gains from changing outer mixture weights and losses from some correlation-matched continuation settings \cite{mitra2}. O'Prior reaches a similar caution at a smaller scale: in its nanoPFN experiment, Table 2 reports TabArena AUC 0.8194 for the full G4 composition and 0.8335 for hybrid G1b \cite{oprior}. These experiments are specific to their models and training conditions, but both motivate testing additions individually before combining them.
 
-A second line of work examines what makes a useful prior. ``Mind the Gap?'' and controlled prior comparisons find that measured similarity between real and synthetic tables explains only part of downstream transfer \cite{mindgap,prioreval}. Structural coverage provides another diagnostic, while leaving some relevant structure unmeasured \cite{structuralcoverage}. These results direct attention toward the conditional prediction problem at the available context length. A generator's function names, marginal histograms or total number of synthetic tables alone provide an incomplete description of that problem.
+Other studies ask what makes a prior useful. ``Mind the Gap?'' and controlled prior comparisons find that measured real--synthetic similarity explains only part of downstream transfer \cite{mindgap,prioreval}. Structural coverage is another useful diagnostic, although it too leaves relevant structure unmeasured \cite{structuralcoverage}. Together, these findings suggest examining the prediction problem presented by a finite context. Function names, marginal histograms and the number of generated tables do not fully describe that problem.
 
 \subsection{Implications for experimental design}
 
@@ -292,7 +349,7 @@ Separate reviews examined priors, architecture, and training and evaluation acro
 
 TabICLv2 gives a direct example of interaction between a prior and a backbone. In Section 7 and Appendix C, the new prior on the older architecture only matches the older system, while the newer architecture trained with the older prior degrades \cite{tabicl2}. A prior that improves a small proxy therefore need not be the best prior for another architecture.
 
-The funded screen addresses this by crossing two priors with three architectures. Heads, optimizer, shape schedule and total cost remain fixed within each causal comparison. The reference protocol uses separate classification and regression runs; checkpoint sharing is evaluated separately because changing it within the same comparison would add another factor.
+The current screen crosses two priors with two architectures: compressed rows and persistent cells. Heads, optimizer, shape schedule and total cost remain fixed within each causal comparison. The prior screen keeps the current shared checkpoint and head conventions fixed. A separately trained classifier/regressor package remains an available control, but its dedicated sharing study is deferred in the revised allocation.
 
 Several mechanisms of interest here already appear in competitive systems. Kumo includes coarsened observations, conflicting duplicates, structured missingness, high-cardinality categories and heavy-tailed regression \cite{kumo}; TabPFN-3/3.5 extends composition, shifts, high-dimensional structure and categorical coverage \cite{tabpfn3,tabpfn35}. At the same time, O'Prior's hybrid-only generator beats its full composition on TabArena AUC/F1 in the reported nano-scale setting, and Mitra-v2's mixture adjustments have relatively small effects within its complete training and adaptation system \cite{oprior,mitra2}. The proposal therefore starts with a strong reference and studies controlled extensions, with realism assessed by its effect on transfer.
 
@@ -358,7 +415,7 @@ The reported regression prediction time is 3.12 seconds per 1,000 rows for Xiaom
 \section{Research hypotheses and supporting analysis}
 \label{sec:edge}
 
-The preceding evidence suggests that a useful prior must generate relationships that can be inferred from context and retained by the model. Four aspects deserve separate study: mechanism complexity relative to support size, hierarchical category effects, conditional-label supervision, and feature information lost through row compression. The main configuration prioritizes the reference-prior extension and representation changes. Complexity caps and additional objectives remain separate comparisons. The analysis below gives the mechanism behind each experiment before specifying its implementation.
+The evidence points to two requirements: the context must contain useful information about the sampled relationship, and the model must retain that information. We study four aspects of these requirements: mechanism complexity relative to support size, hierarchical category effects, conditional-label supervision and information lost through row compression. The main configuration prioritizes the reference-prior extension and representation changes. Complexity caps and additional objectives remain separate comparisons. The following analysis explains the proposed mechanisms before giving their implementations.
 
 \subsection{Context size and learnable mechanism complexity}
 \label{sec:learnability}
@@ -411,7 +468,7 @@ The numerical result agrees with the conditional variance identity in this toy s
 
 \subsection{Adaptive sampling as a controlled hypothesis}
 
-The initial reference uses a fixed bank. An optional later sampler emphasizes mechanisms for which a fixed teacher portfolio identifies a reproducible prediction gap, while keeping broad replay. High loss alone is insufficient: it may reflect irreducible noise, hidden information or a weak teacher rather than transferable learning opportunity. Section~\ref{sec:adaptive-training} gives a policy based on independent diagnostic worlds. It remains outside the selected executable baseline.
+The reference uses a fixed bank. An optional later sampler would give more weight to mechanisms for which a fixed portfolio of teachers finds a reproducible prediction gap, while retaining broad replay. This requires more than a large loss: noise, hidden information or a weak teacher can all produce high loss without identifying a useful training opportunity. Section~\ref{sec:adaptive-training} specifies a policy using independent diagnostic worlds. The sampler remains outside the selected executable baseline.
 
 Calibration and scored worlds remain separate under this policy. The realized label or loss of an emitted query does not determine task admission to the nominal prior. Changes in sampling weights are evaluated on development tasks with disjoint source lineages and against the unchanged mixture.
 
@@ -422,10 +479,251 @@ Row compression makes a wide contextual transformer affordable, but the summary 
 Auxiliary losses have coefficient zero in the main recipe. A consistency objective is considered for feature-order changes and nominal recodings that preserve the prediction problem. Feature deletion, arbitrary monotone transformations and additional observations can change available information or useful metric structure, so invariance to these operations is not assumed. Similarly, rows from different simulated worlds do not automatically form valid contrastive negatives. Section~\ref{sec:auxiliary-training} specifies the limited consistency and masked-conditional experiments.
 
 
-\section{Prior bank for standard tabular tasks}
+\section{Selecting a stronger standard prior}
+\label{sec:prior-selection}
+
+The R/P1 recipe gives us a reproducible baseline, but the evidence reviewed so far does not establish it as the best distribution for the final model. We therefore propose a broader candidate bank and an experiment to decide which additions are useful. The existing generators, configurations and volume calculations remain the controls for that experiment. The new sampler is specified below; its planner and analytical checks are executable, while the full generator interface remains to be implemented.
+
+\subsection{What the evidence supports}
+
+The case for extending R rests on complementary inference problems. In Mitra's prior ablation, SCM plus ExtraTrees scores 1063 Elo against 1000 for SCM alone; adding gradient boosting reaches 1076, while the full bank scores 1062 \cite{mitra}. This motivates testing a direct-tree prior, although it does not show that another tree generator will improve R, which already contains tree mechanisms. O'Prior gives a similar reason to test additions selectively: its hybrid-only configuration scores .8335 AUC in the small TabArena experiment, compared with .8194 for the full composition \cite{oprior}. Increasing diversity can spread a fixed training budget too thinly. Mitra-v2 also reports limited benefit from coarse outer-mixture reweighting \cite{mitra2}.
+
+The leading models suggest several gaps to address. Kumo includes structured missingness, coarsened observations, high-cardinality categories and heavy-tailed targets. TabPFN-3.5 emphasizes categorical, wide and grouped data while also changing its representation and architecture \cite{kumo,tabpfn35}. Their descriptions identify useful coverage, but do not reveal an optimal allocation of tasks. We address these properties within ordinary single-table classification and regression. Financial label delay and support acquisition remain part of the separate specialist.
+
+We expect the most useful additions to teach the model when to favor a simple rule, how strongly to pool rare category effects, and how much uncertainty to retain after information is lost. Direct trees and smooth functions make these questions easier to control than they are inside a randomly composed graph. Sparse interactions add a test of feature selection when individual features have little predictive value. The encoder must preserve the information needed to solve these tasks. TabICLv2's ablations show why this matters: gains from changing the prior and architecture need not be independent \cite{tabicl2}.
+
+\subsection{A specified starting mixture}
+
+Let Q denote the challenger. Its requested mechanism probabilities are
+\[
+ (w_R,w_F,w_H,w_S,w_I)=(.50,.20,.15,.10,.05).
+\]
+Half the draws retain the broad reference, leaving half for additions whose behavior we can examine directly. Forests receive the largest added share because controlled experiments support testing tree complementarity. Hierarchical tasks receive enough mass to train the nominal representation on repeated and rare identities. Smooth/local functions and sparse interactions receive smaller shares because R already includes related mechanisms. These coarse weights define the starting experiment; they were not recovered from competitor checkpoints and have not been estimated as optimal.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}p{.10\linewidth}p{.12\linewidth}Y@{}}
+\toprule Source & Requested share & Inference problem emphasized\\\midrule
+R & 50\% & Broad vector-valued graph composition, with the native response and filtering laws.\\
+F & 20\% & Direct axis-aligned or oblique piecewise rules, beyond their occurrence inside a random DAG.\\
+H & 15\% & Repeated, rare and unseen category identities with observable metadata and group structure.\\
+S & 10\% & Additive smooth responses and local functions with controlled intrinsic dimension.\\
+I & 5\% & Sparse feature interactions, including cases with little marginal feature signal.\\\bottomrule
+\end{tabularx}
+\caption{Proposed exploration mixture. F, H, S and I denote the versions specified in this section; similarly named authored controls do not implement all these laws.}
+\end{table}
+
+The task and requested shape are drawn first, using the same reference law in every comparison. Classification and regression retain equal package probability; class budgets, row ranges and the declared later-stage width envelopes remain fixed. An H request with fewer than eight columns returns to R. F, S and I support any positive width. If $e$ is the probability of H eligibility, the realized source probabilities in expectation become
+\[
+ w'_H=.15e,\qquad w'_R=.50+.15(1-e),
+ \qquad (w'_F,w'_S,w'_I)=(.20,.10,.05).
+\]
+The fallback changes the number of tasks contributed by each source. The planner therefore integrates the stage-specific width law and reports both requested and eligibility-adjusted exposure. With a provisional total of 64M tasks, the requests are 32M R, 12.8M F, 9.6M H, 6.4M S and 3.2M I; the fallback changes only the R/H counts. These figures describe an allocation, while hardware measurements determine whether that total volume fits the budget.
+
+Independently of the mechanism, we draw an observation mode: identity with probability .50, MCAR .15, MAR .15, MNAR .10 and coarsening .10. Identity adds no measurement corruption, although the mechanism can still contain noise and hidden variables. Before the eligibility fallback, 25\% of all tasks are therefore unchanged R with identity observation. The reference control uses R with identity probability one. This gives the experiment an unchanged baseline against which both new mechanisms and observation changes can be assessed.
+
+The mixture is over learning problems, not over fixed prediction-time votes. Conditional on a requested contract $c$, let $q_j$ be a component's joint law and $w_j(c)$ its eligibility-adjusted probability. Its ideal Bayesian predictive weights depend on the evidence:
+\[
+ q_w(y\mid I,c)=\sum_j
+ \frac{w_j(c)q_j(I\mid c)}{\sum_k w_k(c)q_k(I\mid c)}
+ q_j(y\mid I,c).
+\]
+Consequently, allocating half the episodes to R does not guarantee half of every prediction comes from R, or bound the loss relative to R on arbitrary real tables. The reference mass provides training coverage. The empirical comparison must establish whether the resulting inference procedure transfers better.
+
+\subsection{Generating the proposed mechanisms}
+
+Each new family has separate keyed random streams for world parameters, 4,096 calibration rows, support rows, query rows, measurements and category relabeling. The calibration rows are independent observations from the same world. They determine generator scales and thresholds and never enter the model context. R requires a different treatment because its unchanged adapter does not expose an independent same-world pool. For R, the observation wrapper fits scales, quantiles and mask-rate intercepts to clean support X without labels, then freezes them for queries. Appending native rows as calibration would change R's shape and filter law. The input codec remains fitted on the observed support alone.
+
+Numerically invalid worlds are retried within the same source, task and shape, with an abort after 100 attempts. R keeps its existing native attempt limit and acceptance rules. The new families retain valid realizations with missing classes, noisy labels or constant outcomes.
+
+\paragraph{Features and effective dimension.}
+For F, S and I, 80\% of worlds draw $\rho\sim\operatorname{LogUniform}(8,128)$ and set
+\[
+ d=\min\{F,\max(1,\lfloor n_s/\rho\rfloor)\}.
+\]
+The other 20\% draw $d$ discrete-log-uniformly from one through $F$. These draws preserve exposure to difficult or weakly determined problems and remove the universal sixteen-feature cap of the older authored bank. The relation between dimension and context size is a sampling hypothesis, not a sample-complexity theorem. A matched complexity-off alternative uses the latter dimension law for every draw.
+
+Draw the active categorical fraction from $\{0,.25,.5,1\}$. Its probabilities are $\{.35,.30,.25,.10\}$. Round this fraction to a count and select the coordinates at random. Numerical coordinates use four-coordinate equicorrelated Gaussian blocks, with correlation $0,.3,.8$ at probabilities $.4,.4,.2$; a common Student-$t_5$ row scale is enabled with probability .2.
+
+For categorical coordinates, the cardinality is drawn from $2,3,5,10,32,128$. The respective probabilities are $.25,.15,.20,.20,.15,.05$. Frequencies follow a randomly ranked power law with exponent $U(0,1.5)$. A centered, unit-variance random lookup supplies a category's latent mechanism coordinate. Its numerical effect is not supplied to the model in place of the category ID.
+
+Each remaining column is a proxy for a sampled active coordinate with probability 30\% and an independent distractor with probability 70\%, giving $F-d$ such columns in total. Numerical proxies add noise of scale $\operatorname{LogUniform}(.01,.3)$; categorical proxies replace the value with probability .05 under the same marginal law. Columns and type flags are then permuted together. Category names are recoded independently by column and world, with a consistent map across support and query. R continues to expose numerical columns: applying an observation wrapper cannot recover the nominal types discarded by its adapter.
+
+\paragraph{F: directly sampled forests.}
+The forest family assigns equal probability to axis-aligned and sparse-oblique forests and draws the number of trees uniformly from $\{1,4,16,64\}$. In the context-conditioned branch, nominal support occupancy $m\sim\operatorname{LogUniform}(8,128)$ determines the depth
+\[
+ D=\operatorname{clip}\bigl(\lfloor\log_2\max(1,n_s/m)\rfloor,1,10\bigr).
+\]
+Broad replay draws depth uniformly from one through ten. The conditioned rule describes a balanced tree; random thresholds generally produce unequal leaf masses. We therefore measure actual occupancy rather than treating the depth rule as a guarantee.
+
+A numerical split uses a calibration quantile drawn from $U(.1,.9)$ among records reaching the node. A categorical split uses a uniformly sampled nonempty proper subset of its levels, so category IDs carry no ordering. If only one level is present, the generator chooses another splittable coordinate or leaves the node unsplit. Oblique splits combine two through $\min(4,d)$ latent mechanism coordinates with unit-normalized Gaussian weights; width one uses an axis-aligned split. A node with fewer than sixteen calibration rows is left unsplit. Each leaf receives independent Gaussian scores for every output coordinate. The sum across trees is divided by $\sqrt{T}$, then each coordinate is calibrated to zero mean and unit variance. This defines a directly sampled forest prior, rather than a reproduction of Mitra's fitted ExtraTrees or gradient-boosting generators.
+
+\paragraph{H: support-dependent categorical hierarchy.}
+The hierarchy family retains P1's observable entity ID, parent-group ID and two metadata coordinates, together with the shared group effects, entity intercepts and optional slopes described in Section~\ref{sec:p1-full}. Half the worlds use the existing catalog-size law. The other half draw target mean occupancy $m\sim\operatorname{LogUniform}(.5,64)$ and use a catalog of size $\operatorname{clip}(\operatorname{round}(n_s/m),8,262144)$. The uniform/power-law frequency mixture and effect scales are unchanged. Large catalogs use effects generated lazily from a deterministic world/identity key, while the frequency law remains fixed and finite.
+
+P1's base mechanism uses the remaining $F-4$ coordinates; the dimension rule for F/S/I does not consume its four reserved columns. Category counts and class coverage fluctuate naturally. This variant bypasses all information-losing parts of the legacy P1 renderer, including its masking branch, grid rounding and clipped exponential warping. Only invertible feature rendering and consistent category relabeling are retained before the common observation draw. Consequently, identity has no hidden legacy corruption, and the other modes are applied once.
+
+An unseen identity separates two kinds of uncertainty. Its observed metadata and parent group may predict shared effects, but its independent residual remains unknown. An arbitrary category name supplies no additional similarity information. Evaluation therefore distinguishes warm, rare and unseen identities and includes worlds in which metadata carries little signal.
+
+\paragraph{S: smooth and local responses.}
+Half the smooth/local worlds use additive piecewise-linear splines. For each active mechanism coordinate, the generator chooses four, eight or sixteen calibration-quantile knots uniformly, assigns Gaussian heights and extrapolates linearly at the endpoints. Tied knots are deduplicated before heights are assigned, with a minimum spacing of $10^{-6}$ in standardized units. One remaining knot gives a constant function. Independent Gaussian coefficients, normalized by their joint Euclidean norm, combine the coordinate functions.
+
+The other half uses local RBF functions. An intrinsic rank $r$ is drawn discrete-log-uniformly from one through $\min(8,d)$, and a Gaussian matrix with unit-norm columns projects the mechanism coordinates. The generator draws $J\in\{16,32,64,128\}$ uniformly and takes $J$ independent calibration anchors. With independent $a_j\sim N(0,1)$, the score is
+\[
+ f(z)=J^{-1/2}\sum_{j=1}^{J}a_j
+             \exp\{-\|z-c_j\|^2/(2\ell^2)\}.
+\]
+The length scale is tied approximately to context density. Draw intended neighbor count $k\sim\operatorname{LogUniform}(4,64)$ and an independent projected calibration sample of 512 rows. Excluding each row itself, find its neighbor at rank $\operatorname{clip}(\operatorname{round}(512k/n_s),1,511)$; the median of those distances sets $\ell$, subject to a positive numerical floor. Actual neighbor counts are recorded because this rule only approximates the intended occupancy. The final score is calibrated before the response is sampled.
+
+\paragraph{I: sparse interactions.}
+The interaction family draws order from $\{2,3,4,6\}$ with probabilities $.45,.30,.20,.05$, capped by $d$. It requests uniformly between one and eight distinct coordinate subsets, using all available subsets when fewer exist. Each term has equal probability of being a product of bounded $\tanh$ coordinates or a parity function of threshold/category-subset bits. Numerical thresholds are independent calibration quantiles in $U(.2,.8)$, while categorical subsets are nonempty proper subsets. The final column permutation allows predictive coordinates to appear anywhere in the table.
+
+Let $h$ denote the calibrated interaction score and $g$ an independently drawn additive score. With $\alpha\sim U(.25,1)$, the combined score is $\sqrt\alpha h+\sqrt{1-\alpha}g$ and is recalibrated before response sampling. Exact pure parity and independent random truth tables are kept as diagnostics rather than given large ordinary pretraining shares. They help distinguish high interaction order from the absence of learnable structure.
+
+\paragraph{Responses.}
+R retains its native response law. For each new classification world, the generator draws one score coordinate per requested class $K$, temperature $T\sim\operatorname{LogUniform}(.25,4)$ and target masses from a symmetric Dirichlet distribution with concentration $a\sim\operatorname{LogUniform}(.2,5)$. Sum-zero intercepts are fitted on the independent calibration pool so that the mean softmax of $s/T+b$ matches the target masses to absolute tolerance $10^{-3}$, using at most 200 damped Newton iterations. The audit records requested and achieved masses, maximum absolute error, total variation and solver failures. The absolute tolerance does not imply small relative error for rare classes. A failed solve aborts that world; a successful solve is followed by independent support and query label draws, without resampling to enforce class coverage.
+
+New regression worlds add standardized noise at scale $\operatorname{LogUniform}(.03,1)$. The noise is Gaussian, Student-$t_5$ or centered lognormal with probabilities $.6,.3,.1$; the lognormal log-scale is one. Half the worlds have constant noise variance. In the other half, noise is multiplied by $\exp\{\operatorname{clip}(a^Tz,-2,2)\}$ and normalized by its calibration RMS, where $a$ is a unit-normalized Gaussian vector on up to four coordinates.
+
+The target is then rendered by identity, asinh or signed-square with probabilities $.6,.2,.2$. H uses identity/asinh with probabilities $.75/.25$ instead. Its unbounded pair interactions can have an infinite fourth moment under shared Student-$t_5$ features, so signed-square rendering could give an infinite MSE. Target standardization at the model interface uses support only. A calibration standard deviation below $10^{-6}$ produces a retained zero score and a no-signal flag, and every scale denominator has a $10^{-6}$ floor. Finite tail draws are retained without clipping. Initial training uses sampled-label supervised losses; conditional supervision remains a separately justified estimator.
+
+\subsection{Observation law and information boundaries}
+
+The observation process acts after labels have been drawn from the complete world. This ordering matters: recomputing labels from damaged inputs would remove the uncertainty that the model is meant to learn. Each episode receives one observation mode. Its parameters are shared across support and query, while row-level realizations are independent. The initial challenger introduces neither additional support/query shift nor compounded corruption.
+
+Under MCAR, a nonempty random half of the columns has cells masked independently at rate $r\sim U(.01,.30)$. MAR instead reserves one through $\min(3,F-1)$ driver columns that remain observed and targets half the remaining columns. Mask probabilities are a sigmoid of a unit-normalized linear combination of standardized drivers. The intercept is fitted to the sampled rate using independent same-world calibration rows for new families and clean support X for R. At $F=1$, MAR falls back to MCAR and the decision is recorded.
+
+MNAR uses a random half of the columns and makes masking depend on each column's own complete standardized value or nominal effect. Its slope is drawn from $\{-2,-1,1,2\}$ and its intercept is calibrated using the same source rule as MAR. Missingness can therefore carry information about the outcome through the covariates without consulting a query label.
+
+Coarsening also selects a nonempty random half of the columns. A numerical column is divided into two, four, eight, sixteen or thirty-two equiprobable calibration bins, with the bin count chosen uniformly. Each bin is represented by its calibration median, using support medians for R. Tied edges are deduplicated, a single observed value remains constant, and an empty requested bin takes the nearest existing representative. Nominal columns with more than two levels are merged through a random map to $\max(2,\lceil C/2\rceil)$ groups.
+
+This can give distinct latent records identical visible features but different outcomes. Those contradictions, and explicit missing-value flags, are retained. No ExtraTrees filter is applied after observation. R's native filtering occurs earlier, while the new families use numerical validity checks alone. Any gain from the proposed bank must therefore be attributed to the specified distribution as a whole unless an additional comparison isolates function choice from filtering.
+
+\subsection{What can be established without pretraining}
+
+Without pretraining, we can still ask whether a generator contains the intended information and whether a proposed learning problem has a solution. Four calculations address those questions. The executable script \path{research/probes/prior_information_analysis.py} reports exact values and checks them with independent Monte Carlo simulation; seeds, uncertainty and results are recorded in \path{research/results/prior_information_analysis.json}. These calculations constrain the design, but cannot determine real-data mixture weights.
+
+For a category effect $\theta\sim N(0,\tau^2)$ and observations $y_i\mid\theta\sim N(\theta,\sigma^2)$, with known mean and variances,
+\[
+ \E[\theta\mid D]=\frac{n\tau^2}{\sigma^2+n\tau^2}\bar y,
+ \qquad R_\theta(n)=\frac{\tau^2\sigma^2}{\sigma^2+n\tau^2}.
+\]
+At $\tau^2=1,\sigma^2=4$, the latent-effect Bayes MSE is .8 for one observation, .2 for sixteen and .05882 for sixty-four. The useful amount of pooling changes with both the number of observations and the ratio of noise to effect variance. This motivates varying those quantities jointly. The calculation assumes known hyperparameters and does not determine how many hierarchical tasks the training mixture should contain.
+
+For category probabilities $p_j$, the probability that an independent query belongs to a category absent from $n$ independent support draws is
+\[
+ U(n)=\sum_j p_j(1-p_j)^n.
+\]
+With 128 categories and 128 support rows, uniform frequencies give $U=.36644$, whereas a Zipf exponent of 1.25 gives $U=.17770$, despite 69.73\% of category identities remaining unseen. At 512 support rows, the ordering reverses: .01803 for uniform and .06520 for Zipf. Cardinality and the fraction of unseen identities therefore cannot replace query-mass coverage.
+
+An exactly enumerated measurement example takes $Z$ uniform on $\{-2,-1,1,2\}$, $Y=\ind[Z>0]$, independent sensor error $E\in\{-2,0,2\}$ with probabilities $.2,.6,.2$, and $W=Z+E$. Quantize $W$ into $X=0$ below $-1$, $X=1$ on $[-1,1]$ and $X=2$ above one. Even with the mechanism known, the visible-input Bayes error is .25, binary Brier risk .125 and log loss .346574 nats. Observing unquantized $W$ reduces log loss to .294249; observing $Z$ gives zero. A latent oracle and the posterior given visible features answer different questions. Correct loss-only conditional-label averaging can remain unbiased, but evaluating a model against unattainable latent certainty would misdiagnose uncertainty as model failure.
+
+Finally, consider twelve uniform binary features and thirty-two noiseless context rows. A prior assigning independent fair labels to all $2^{12}$ input cells has Bayes error
+\[
+ \tfrac12(1-2^{-12})^{32}=.4961085.
+\]
+For a uniformly drawn affine parity rule on the same inputs, exact propagation of the binary design-matrix rank gives error $4.7672\times10^{-7}$. The feature occupancy is identical. Shared algebraic structure makes the inference problems radically different. Occupancy is useful within a specified mechanism family; it cannot rank all priors or justify rejecting every high-order task.
+
+The checks use seed 20261003, with 50,000 independent replicates for the normal/coarsening calculations and 4,000 for occupancy/parity. Seven independent identity tests include exhaustive small-state enumeration. This is evidence that the stated toy calculations are correct; neural transfer and latency remain unmeasured.
+
+% Exact integer-n diagnostic curves generated from prior_information_analysis.py
+% All scientific results are idealized Bayes calculations, not model scores.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,font=\fontsize{10}{12}\selectfont]
+\path[use as bounding box] (0,-.05) rectangle (16.5,6.1);
+\begin{scope}[shift={(1.1,1.1)}]
+
+  \foreach \yy/\yl in {0/0,0.76/0.2,1.52/0.4,2.28/0.6,3.04/0.8,3.8/1.0} {
+    \draw[black!12,very thin] (0,\yy) -- (6.6,\yy);
+    \draw[black!65] (-.06,\yy) -- (0,\yy);
+    \node[anchor=east] at (-.12,\yy) {\yl};
+  }
+  \foreach \xx/\xl in {0/1,1.32/4,2.64/16,3.96/64,5.28/256,6.6/1024} {
+    \draw[black!12,very thin] (\xx,0) -- (\xx,3.8);
+    \draw[black!65] (\xx,-.06) -- (\xx,0);
+    \node[anchor=north] at (\xx,-.12) {\xl};
+  }
+  \draw[black!65] (0,3.8) -- (0,0) -- (6.6,0);
+  \node[anchor=north] at (3.3,-.57) {Support rows $n$ (log scale)};
+
+  \node[anchor=west,font=\fontsize{10}{12}\selectfont\bfseries] at (-.6,4.65)
+    {(a) Category effects and support size};
+  \node[rotate=90] at (-1.0,1.9) {Latent-effect Bayes MSE};
+  \draw[pfnblue,line width=1.2pt] plot coordinates {(0.00000,3.04000) (0.66000,2.53333) (1.04608,2.17143) (1.32000,1.90000) (1.53247,1.68889) (1.70608,1.52000) (1.85285,1.38182) (1.98000,1.26667) (2.09215,1.16923) (2.19247,1.08571) (2.28322,1.01333) (2.36608,0.95000) (2.44229,0.89412) (2.51285,0.84444) (2.57855,0.80000) (2.64000,0.76000) (2.69773,0.72381) (2.75215,0.69091) (2.80363,0.66087) (2.85247,0.63333) (2.89893,0.60800) (2.98555,0.56296) (3.02608,0.54286) (3.06495,0.52414) (3.13823,0.49032) (3.20627,0.46061) (3.23855,0.44706) (3.30000,0.42222) (3.35773,0.40000) (3.41215,0.38000) (3.46363,0.36190) (3.51247,0.34545) (3.58133,0.32340) (3.62462,0.31020) (3.68608,0.29231) (3.74380,0.27636) (3.79823,0.26207) (3.84971,0.24918) (3.89855,0.23750) (3.96000,0.22353) (4.01773,0.21111) (4.07215,0.20000) (4.12363,0.19000) (4.18430,0.17882) (4.23020,0.17079) (4.29514,0.16000) (4.34608,0.15200) (4.40380,0.14340) (4.45823,0.13571) (4.50971,0.12881) (4.56645,0.12160) (4.62000,0.11515) (4.67773,0.10857) (4.73215,0.10270) (4.78363,0.09744) (4.83841,0.09212) (4.89578,0.08686) (4.94990,0.08216) (5.00608,0.07755) (5.05912,0.07343) (5.11381,0.06941) (5.16971,0.06552) (5.22645,0.06179) (5.28000,0.05846) (5.33422,0.05527) (5.38884,0.05223) (5.44363,0.04935) (5.50136,0.04648) (5.55578,0.04393) (5.60990,0.04153) (5.66608,0.03918) (5.71912,0.03707) (5.77602,0.03494) (5.82971,0.03304) (5.88448,0.03121) (5.94000,0.02946) (5.99422,0.02784) (6.05050,0.02625) (6.10520,0.02480) (6.15988,0.02342) (6.21439,0.02213) (6.26990,0.02088) (6.32483,0.01971) (6.38029,0.01860) (6.43491,0.01757) (6.48971,0.01659) (6.54547,0.01565) (6.60000,0.01479)};
+  \draw[pfnblue,line width=1.2pt] (2.6,3.47) -- (3.1,3.47);
+  \node[anchor=west] at (3.18,3.47) {$R_\theta(n)=4/(n+4)$};
+  \fill[pfnblue] (0,3.04) circle (1.8pt);
+  \node[anchor=south west,text=pfnblue] at (.11,3.04) {$n=1:\;0.80$};
+  \fill[pfnblue] (2.64,.76) circle (1.8pt);
+  \node[anchor=south west,text=pfnblue] at (2.74,.85) {$n=16:\;0.20$};
+\end{scope}
+\begin{scope}[shift={(9.2,1.1)}]
+
+  \foreach \yy/\yl in {0/0,0.76/0.2,1.52/0.4,2.28/0.6,3.04/0.8,3.8/1.0} {
+    \draw[black!12,very thin] (0,\yy) -- (6.6,\yy);
+    \draw[black!65] (-.06,\yy) -- (0,\yy);
+    \node[anchor=east] at (-.12,\yy) {\yl};
+  }
+  \foreach \xx/\xl in {0/1,1.32/4,2.64/16,3.96/64,5.28/256,6.6/1024} {
+    \draw[black!12,very thin] (\xx,0) -- (\xx,3.8);
+    \draw[black!65] (\xx,-.06) -- (\xx,0);
+    \node[anchor=north] at (\xx,-.12) {\xl};
+  }
+  \draw[black!65] (0,3.8) -- (0,0) -- (6.6,0);
+  \node[anchor=north] at (3.3,-.57) {Support rows $n$ (log scale)};
+
+  \node[anchor=west,font=\fontsize{10}{12}\selectfont\bfseries] at (-.6,4.65)
+    {(b) Equal cardinality, different coverage};
+  \node at (3.3,4.13) {$U(n)=\sum_j p_j(1-p_j)^n$};
+  \node[rotate=90] at (-1.0,1.9) {Unseen query mass};
+  \draw[pfnblue,line width=1.2pt] plot coordinates {(0.00000,3.77031) (0.66000,3.74086) (1.04608,3.71163) (1.32000,3.68263) (1.53247,3.65386) (1.70608,3.62532) (1.85285,3.59700) (1.98000,3.56889) (2.09215,3.54101) (2.19247,3.51335) (2.28322,3.48590) (2.36608,3.45867) (2.44229,3.43165) (2.51285,3.40484) (2.57855,3.37824) (2.64000,3.35184) (2.69773,3.32566) (2.75215,3.29967) (2.80363,3.27390) (2.85247,3.24832) (2.89893,3.22294) (2.98555,3.17278) (3.02608,3.14799) (3.06495,3.12340) (3.13823,3.07479) (3.20627,3.02693) (3.23855,3.00328) (3.30000,2.95654) (3.35773,2.91052) (3.41215,2.86522) (3.46363,2.82063) (3.51247,2.77673) (3.58133,2.71216) (3.62462,2.66995) (3.68608,2.60786) (3.74380,2.54721) (3.79823,2.48798) (3.84971,2.43012) (3.89855,2.37361) (3.96000,2.30030) (4.01773,2.22925) (4.07215,2.16040) (4.12363,2.09367) (4.18430,2.01316) (4.23020,1.95098) (4.29514,1.86129) (4.34608,1.78971) (4.40380,1.70744) (4.45823,1.62895) (4.50971,1.55407) (4.56645,1.47105) (4.62000,1.39246) (4.67773,1.30778) (4.73215,1.22824) (4.78363,1.15354) (4.83841,1.07492) (4.89578,0.99384) (4.94990,0.91887) (5.00608,0.84292) (5.05912,0.77324) (5.11381,0.70379) (5.16971,0.63556) (5.22645,0.56947) (5.28000,0.51025) (5.33422,0.45362) (5.38884,0.40012) (5.44363,0.35017) (5.50136,0.30169) (5.55578,0.25992) (5.60990,0.22219) (5.66608,0.18698) (5.71912,0.15734) (5.77602,0.12933) (5.82971,0.10630) (5.88448,0.08601) (5.94000,0.06851) (5.99422,0.05415) (6.05050,0.04180) (6.10520,0.03202) (6.15988,0.02414) (6.21439,0.01792) (6.26990,0.01299) (6.32483,0.00927) (6.38029,0.00646) (6.43491,0.00444) (6.48971,0.00297) (6.54547,0.00193) (6.60000,0.00124)};
+  \draw[pfnamber,line width=1.2pt,dashed] plot coordinates {(0.00000,3.36100) (0.66000,3.02787) (1.04608,2.77135) (1.32000,2.57061) (1.53247,2.41076) (1.70608,2.28111) (1.85285,2.17401) (1.98000,2.08392) (2.09215,2.00683) (2.19247,1.93981) (2.28322,1.88071) (2.36608,1.82794) (2.44229,1.78030) (2.51285,1.73690) (2.57855,1.69704) (2.64000,1.66019) (2.69773,1.62594) (2.75215,1.59394) (2.80363,1.56393) (2.85247,1.53568) (2.89893,1.50901) (2.98555,1.45981) (3.02608,1.43703) (3.06495,1.41533) (3.13823,1.37480) (3.20627,1.33764) (3.23855,1.32018) (3.30000,1.28723) (3.35773,1.25664) (3.41215,1.22812) (3.46363,1.20144) (3.51247,1.17638) (3.58133,1.14149) (3.62462,1.11981) (3.68608,1.08937) (3.74380,1.06115) (3.79823,1.03486) (3.84971,1.01028) (3.89855,0.98721) (3.96000,0.95854) (4.01773,0.93196) (4.07215,0.90722) (4.12363,0.88410) (4.18430,0.85721) (4.23020,0.83712) (4.29514,0.80906) (4.34608,0.78736) (4.40380,0.76309) (4.45823,0.74053) (4.50971,0.71946) (4.56645,0.69656) (4.62000,0.67526) (4.67773,0.65263) (4.73215,0.63161) (4.78363,0.61201) (4.83841,0.59146) (4.89578,0.57027) (4.94990,0.55061) (5.00608,0.53052) (5.05912,0.51186) (5.11381,0.49294) (5.16971,0.47394) (5.22645,0.45499) (5.28000,0.43743) (5.33422,0.41997) (5.38884,0.40271) (5.44363,0.38573) (5.50136,0.36821) (5.55578,0.35204) (5.60990,0.33630) (5.66608,0.32032) (5.71912,0.30556) (5.77602,0.29011) (5.82971,0.27588) (5.88448,0.26172) (5.94000,0.24775) (5.99422,0.23447) (6.05050,0.22107) (6.10520,0.20843) (6.15988,0.19617) (6.21439,0.18434) (6.26990,0.17269) (6.32483,0.16155) (6.38029,0.15071) (6.43491,0.14044) (6.48971,0.13053) (6.54547,0.12086) (6.60000,0.11181)};
+  \draw[pfnblue,line width=1.2pt] (3.45,3.43) -- (3.95,3.43);
+  \node[anchor=west] at (4.06,3.43) {Uniform};
+  \draw[pfnamber,line width=1.2pt,dashed] (3.45,2.99) -- (3.95,2.99);
+  \node[anchor=west] at (4.06,2.99) {Zipf ($1.25$)};
+\end{scope}
+\end{tikzpicture}
+\caption{Exact diagnostics for the distribution of evidence in a synthetic prior. (a) For a category effect $\theta\sim\mathcal N(0,1)$ and $y_i\mid\theta\sim\mathcal N(\theta,4)$, the posterior-mean risk for $\theta$ is $4/(n+4)$; risk for a new noisy response adds $4$. (b) Support and query categories are independent draws from the same law over $128$ categories: either uniform or $p_j\propto j^{-1.25}$. Curves connect exact values at integer support sizes. Unseen query mass weights categories by their population frequency and therefore differs from the fraction of category identities absent from context. Neither calculation estimates benchmark accuracy or identifies optimal mixture weights.}
+\label{fig:prior-information-diagnostics}
+\end{figure}
+
+\subsection{Choosing the mixture within the compute budget}
+
+The first phase, P, compares eight distributions: unchanged R; R with the observation mixture; R with 20\% F; R with 15\% H; R with 10\% S; R with 5\% I; full Q with identity observation; and full Q with the observation mixture. The individual mechanism additions use identity observation. Each arm uses seeds 0 and 1 and a 300 GPU-hour allowance per seed, totaling 4,800 hours. Classification and regression share that allowance. This phase tests the additions separately, then asks whether their combination and the observation process produce further benefit.
+
+Phase M varies the graph share across $.70,.50,.30$, preserving the F/H/S/I ratio $4:3:2:1$ in the remainder. The vectors are $(.70,.12,.09,.06,.03)$, $(.50,.20,.15,.10,.05)$ and $(.30,.28,.21,.14,.07)$. All three use the same observation law and fresh seeds 2 and 3 at 300 hours per seed, totaling 1,800 hours. Fresh seeds prevent the central mixture from repeating the identical Q run in phase P. Before launch, one recorded slot may instead test complexity-on/off or filter sensitivity if the diagnostics make that uncertainty more pressing. The replacement uses the existing allowance. Removing a family likewise creates a newly identified candidate, whose weights must be recorded before the run.
+
+Phase A crosses R and the selected challenger with the authored compressed architecture and a compact persistent-cell alternative. Four cells, two seeds and 400 hours per run require 3,200 hours. Different parameter counts make this an equal-cost system comparison, and the compact architecture still needs implementation. Phase V then confirms the complete reference and finalist using fresh seeds 4 and 5 at 700 hours per run, totaling 2,800 hours.
+
+The remaining 2,400 hours form phase F: three continuations from a common standard parent, each using seeds 6 and 7 and 400 hours per seed. The continuations are standard replay, fraud training with reservoir-plus-observed-positive context, and fraud training with the full selector. Both fraud arms hide H, retain the legal label-availability rules and use correct population weights.
+
+The five phases use 15,000 GPU-hours and replace the earlier screening allocation in Section~\ref{sec:revised-budget}. Optimizer, head, codec, length-scaling and sharing settings remain fixed; separate sweeps of these factors are deferred. The existing 10,000-hour size/bridge phase is retained: two sizes by two seeds at 500 hours, reference and challenger bridges at 3,000 hours each, and two 1,000-hour runs to resolve remaining questions. R reaches the longer bridge even if a small pilot ranks it lower, since early rankings may change with training scale. Including final training, evaluation and reserve, the project remains within 50,000 hours.
+
+\paragraph{Real-data selection.}
+The search requires separate development, confirmation and final evaluation data. Before training, register at least twenty independent dataset lineages for each of binary classification, multiclass classification and regression in the development panel, and at least ten per task type in the confirmation panel. These are coverage targets, not a power calculation. The panels should span the intended feature types, widths, context sizes and missingness patterns. Duplicates, derived targets and related datasets belong to the same lineage. Official final benchmark folds and customer evaluation periods remain outside mixture selection. If sufficiently disjoint data are unavailable, the scope of the claim must be reduced rather than the final benchmark reused.
+
+For each dataset, average folds within training seed, then compare paired seed averages. The primary normalized improvement is reduction in log loss for classification and MSE for regression relative to the reference, divided by the constant-predictor loss estimated from that dataset's training split. Fix denominator floors before evaluation and report raw metrics as well. Average datasets equally within each task type and the three task types equally overall. Report binary AUC, multiclass log loss, regression RMSE and distributional calibration separately so an aggregate cannot hide a regression in one objective.
+
+Development results rank the exploratory arms, with uncertainty retained. A finalist is assessed on the untouched confirmation panel: the 95\% paired dataset-lineage bootstrap interval must exclude zero overall improvement, and its lower bound must exceed $-.005$ normalized units for each task type. The .005 tolerance is a declared design choice. All paired predictions are resampled together by lineage, using 10,000 bootstrap draws. Training-seed variation is reported separately because two seeds estimate it poorly. If no candidate passes, the search has not selected a stronger bank. Once confirmation results are repeatedly used to revise the recipe, that panel becomes development data and another holdout is required.
+
+Preprocessing, support size and inference policy remain fixed during prior selection. The surviving systems are then compared for cold context setup, cached GPU batch prediction, peak memory and accuracy at 1/4/8 views. Predictive performance takes priority on the measured accuracy--latency frontier. A prior changes what the model learns, not its arithmetic at a fixed shape. It can improve latency indirectly if the resulting model reaches comparable accuracy with less context, fewer views, a smaller architecture or a more efficient implementation.
+
+For reproducibility, the classification constant predictor uses training class counts with Jeffreys smoothing, $(n_k+1/2)/(n+K/2)$. Regression losses in the search objective are computed after the existing support-only target standardization. For both objectives, divide the paired loss reduction by $\max(10^{-6},L_0)$, where $L_0$ is the training loss of the corresponding constant predictor in those units. This fixes the denominator before query evaluation. Raw-unit regression RMSE remains a separate reported endpoint. Bootstrap conclusions are conditional on the trained checkpoints; the small number of training seeds remains a distinct source of uncertainty.
+
+\paragraph{Cheap diagnostics before GPU screens.}
+Before GPU training, the generators are audited on at least 1,000 independent worlds per family and stage, stratified by observation mode and task type. The audit records actual informative dimensions, type masks, support occupancy, missingness, coarsening contradictions, class frequencies and rejection costs, and checks query-label independence, category renaming and calibration separation.
+
+A smaller stratified subset is used for finite-context learning curves. Ridge/logistic, kernel or nearest-neighbor and tree learners receive the same support; any learner selection uses internal support cross-validation, and a separate query set measures performance. These losses are attainable reference values, not Bayes risks. Teacher comparisons retain negative estimated gaps and uncertainty, and failure of one learner is not a reason to remove a whole prior family.
+
+The planner in \path{scripts/plan_prior_selection.py} reads \path{research/specs/prior_selection_v1.json} and produces forty trial records with their costs, mixture exposure and unresolved dependencies. The operating instructions are in \path{docs/prior_selection.md}. These artifacts make the experiment reviewable, but do not launch training. The new sampler, its distributional tests and the compact architecture must be implemented before the proposed trials can run.
+
+
+\section{Implemented reference and authored standard generators}
 \label{app:staticrecipe}
 
-Standard pretraining begins with the released TabICLv2 generator and adds hierarchical category tasks on eligible draws. This choice separates the breadth of the reference distribution from the specific question of whether repeated identities improve inference. We describe the reference mixture and its generation procedure first, then give the complete authored P0/P1/P4 distribution used in the replacement comparisons. Its configuration is \path{research/specs/static_recipe_v3.json}. Unless a draw is identified as row-specific, the authored generator samples it once per world and shares the resulting parameters across calibration, support and query records.
+The executable pilot begins with the released TabICLv2 generator and adds hierarchical category tasks on eligible draws. Its sampler is the reference implementation against which the proposed challenger will be developed. This choice separates the breadth of the reference distribution from the specific question of whether repeated identities improve inference. We describe the reference mixture and its generation procedure first, then give the complete authored P0/P1/P4 distribution used in the replacement comparisons. Its configuration is \path{research/specs/static_recipe_v3.json}. Unless a draw is identified as row-specific, the authored generator samples it once per world and shares the resulting parameters across calibration, support and query records.
 
 The authored bank covers smooth responses, sharp boundaries, joint causal dependence, local similarity, category pooling and count or amount outcomes. Two further comparisons examine how these tasks are learned: context conditioning changes mechanism complexity while holding the rest of the bank fixed, whereas conditional-label supervision changes the estimator of the training objective. They are evaluated separately from changes to the mixture itself.
 
@@ -444,7 +742,7 @@ The generator interface and batching also delimit the comparison with the publis
 
 The current trainer requests one episode at a time. Although this preserves the per-table sampling procedure, it omits the first-stage grouping in which four tables share their row count, support split and requested width. Class budgets and graphs are sampled separately even within that group. The batch API preserves the released grouping, while the later stages already use groups of one.
 
-The first development comparisons address category occupancy and conditional uncertainty, followed by zeros, exposure and dispersion. Results within the relevant real-data strata determine whether either addition merits a larger share. Structured missingness and coarsening remain important coverage controls, although they are established prior ingredients. Context caps, conditional-label losses, adaptive weights and real-data continuation are treated as separate factors. If G or C fails its comparison, the corresponding choice remains R; the result does not trigger an open-ended search through additional families.
+The earlier development plan addressed category occupancy and conditional uncertainty, followed by zeros, exposure and dispersion. Its G/C controls remain specified here; the current funded comparisons are those in Section~\ref{sec:prior-selection}. Results within the relevant real-data strata determine whether either addition merits a larger share. Structured missingness and coarsening remain important coverage controls, although they are established prior ingredients. Context caps, conditional-label losses, adaptive weights and real-data continuation are treated as separate factors. If G or C fails its comparison, the corresponding choice remains R; the result does not trigger an open-ended search through additional families.
 
 \paragraph{Native and expanded envelopes.} The released curriculum increases the number of rows from a fixed 1,024 in the first stage to 400--10,240 in the second and 400--60,000 in the third. Native R permits at most 100 features and ten class-budget slots, with additional width caps for long tables. The candidate retains this law on 80\% of later-stage requests. The other 20\% use maxima of 256 features and 32 classes in stage two, and 512 features and 256 classes in stage three. These settings are recorded as changes to the generator distribution.
 
@@ -471,33 +769,73 @@ These stages are executed by the retained generator through \path{reference_prio
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\node[pfnhidden,text width=2.9cm,minimum height=17mm] (h) at (0,0)
-  {Latent value $h$\\Shared mechanism};
-\node[font=\small\bfseries,above=5mm of h] {\textbf{(a)} Compositional graph};
-\node[pfndata,text width=1.8cm,minimum height=18mm] (x1) at (-2.45,-2.35)
-  {$x_1=h$\\Linear};
-\node[pfndata,text width=1.8cm,minimum height=18mm] (x2) at (0,-2.35)
-  {$x_2=h^2$\\Quadratic};
-\node[pfnbox,text width=1.8cm,minimum height=18mm] (y) at (2.45,-2.35)
-  {$y=\ind_{h>0}$\\Threshold};
-\draw[pfnarrow] (h) -- (x1);
-\draw[pfnarrow] (h) -- (x2);
-\draw[pfnarrow] (h) -- (y);
-\node[pfnhidden,text width=2.9cm,minimum height=17mm] (group) at (8.3,0)
-  {Group A\\Shared group effect};
-\node[font=\small\bfseries,above=5mm of group] {\textbf{(b)} Category hierarchy};
-\node[pfndata,text width=1.8cm,minimum height=18mm] (a) at (5.85,-2.35)
-  {Category a\\8 observed};
-\node[pfndata,text width=1.8cm,minimum height=18mm] (b) at (8.3,-2.35)
-  {Category b\\1 observed};
-\node[pfndata,text width=1.8cm,minimum height=18mm] (c) at (10.75,-2.35)
-  {Category c\\0 observed};
-\draw[pfnarrow] (group) -- (a);
-\draw[pfnarrow] (group) -- (b);
-\draw[pfnarrow] (group) -- (c);
+\begin{tikzpicture}[x=1cm,y=1cm,
+  font=\small,
+  panel/.style={draw=pfnblue!20,line width=.5pt,rounded corners=2pt,fill=white},
+  title/.style={font=\small\bfseries,text=pfnblue,anchor=west},
+  note/.style={font=\footnotesize,align=center,text=black!75},
+  process/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!5,rounded corners=2pt,align=center,inner sep=5pt},
+  support/.style={font=\footnotesize,draw=pfngreen!75,fill=pfngreen!9,align=center,inner sep=4pt},
+  query/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!8,align=center,inner sep=4pt},
+  hidden/.style={font=\footnotesize,draw=pfnamber!80,fill=pfnamber!8,align=center,inner sep=4pt,dashed},
+  flow/.style={-{Latex[length=2mm]},draw=pfnblue!85,line width=.8pt},
+  target/.style={-{Latex[length=2mm]},draw=pfnamber!90,line width=.8pt,dashed},
+  reuse/.style={-{Latex[length=2mm]},draw=pfngreen!90,line width=.8pt,dashed}]
+
+\path[use as bounding box] (0,.2) rectangle (16,-7.15);
+\draw[panel] (0,0) rectangle (7.6,-7);
+\draw[panel] (8.05,0) rectangle (15.95,-7);
+\node[title] at (.25,-.4) {(a) Dependence through a shared cause};
+\node[title] at (8.3,-.4) {(b) Evidence shared across categories};
+\node[hidden,circle,minimum size=13mm] (h) at (3.8,-1.55) {$h$};
+\node[note,anchor=west] at (4.65,-1.55) {latent value};
+\node[support,text width=1.75cm,minimum height=11mm] (linear) at (1.45,-3.05)
+  {Linear\\$x_1=h$};
+\node[support,text width=1.75cm,minimum height=11mm] (quad) at (3.8,-3.05)
+  {Quadratic\\$x_2=h^2$};
+\node[query,text width=1.75cm,minimum height=11mm] (threshold) at (6.15,-3.05)
+  {Threshold\\$y=\ind_{h>0}$};
+\draw[flow] (h)--(linear);
+\draw[flow] (h)--(quad);
+\draw[flow] (h)--(threshold);
+\draw[black!35] (.6,-5.5)--(2.3,-5.5);
+\draw[black!35] (.6,-5.5)--(.6,-4.1);
+\draw[pfngreen,line width=1pt] (.7,-5.35)--(2.2,-4.15);
+\draw[black!35] (2.95,-5.5)--(4.65,-5.5);
+\draw[black!35] (2.95,-5.5)--(2.95,-4.1);
+\draw[pfngreen,line width=1pt] (3.05,-4.2) .. controls (3.65,-5.75) and (3.95,-5.75) .. (4.55,-4.2);
+\node[query,minimum width=6mm,minimum height=6mm] (leaf0) at (5.55,-5.2) {$0$};
+\node[query,minimum width=6mm,minimum height=6mm] (leaf1) at (6.8,-5.2) {$1$};
+\draw[flow] (threshold.south)--(leaf0.north);
+\draw[flow] (threshold.south)--(leaf1.north);
+\node[note,anchor=east] at (5.6,-4.15) {$h\leq0$};
+\node[note,anchor=west] at (6.65,-4.15) {$h>0$};
+\node[note,text width=6.8cm] at (3.8,-6.35)
+  {Different functions of the same hidden state create dependence among observed columns and the target.};
+\node[hidden,text width=3.15cm,minimum height=13mm] (group) at (12,-1.55)
+  {Group A\\Shared effect $u_A$\\(latent)};
+\node[support,text width=1.8cm,minimum height=11mm] (a) at (9.45,-3.05)
+  {Category a\\$n_a=8$};
+\node[support,text width=1.8cm,minimum height=11mm] (b) at (12,-3.05)
+  {Category b\\$n_b=1$};
+\node[query,text width=1.8cm,minimum height=11mm] (c) at (14.55,-3.05)
+  {Category c\\$n_c=0$};
+\draw[flow] (group)--(a);
+\draw[flow] (group)--(b);
+\draw[flow] (group)--(c);
+\foreach \rr in {0,1}
+  \foreach \cc in {0,1,2,3}
+    \fill[pfngreen!85] (8.87+.38*\cc,-4.2-.38*\rr) circle (2.5pt);
+\fill[pfngreen!85] (12,-4.4) circle (2.5pt);
+\draw[draw=pfnblue!60,dashed] (14.55,-4.4) circle (3pt);
+\node[note,text width=2.1cm] at (9.45,-5.2) {Substantial category evidence};
+\node[note,text width=2.1cm] at (12,-5.2) {Limited category evidence};
+\node[note,text width=2.1cm] at (14.55,-5.2) {Group evidence only};
+\node[note,text width=7.15cm] at (12,-6.35)
+  {Observed group IDs link a, b and c.\\Unseen category residuals remain unknown.};
+
 \end{tikzpicture}
-\caption{Illustrative structures in the standard bank. (a) A common latent ancestor induces dependence among features and the target. (b) A shared group effect allows information to transfer to categories with few or no support observations. Counts denote support rows. These are schematic examples, rather than outputs of the native generator; latent effects are not model inputs.}
+\caption{Illustrative structures in the standard bank. (a) A common latent ancestor induces dependence among features and the target. (b) A shared group effect allows information to transfer to categories with few or no support observations when an observed group identifier or metadata exposes that relationship. Counts denote support rows. These are schematic examples, rather than outputs of the native generator; latent effects are not model inputs.}
 \label{fig:prior-mechanisms}
 \end{figure}
 
@@ -531,7 +869,7 @@ The coordinates $v$ are latent features before rendering, masking and column per
 
 In the illustration, eight observations of category a provide direct information about its effect. For the absent category c, prediction instead relies on its group, metadata and other features, with uncertainty remaining about the hidden residual. The shared structure supports \emph{partial pooling} without requiring equal effects for all entities. The network is trained on this inference problem across tasks; no programmed partial-pooling estimator is inserted into it. The implementation is in \path{static_prior.py}, particularly \texttt{\_p1()}, the feature factory and the response compiler.
 
-The selected standard mixture currently has a limited missingness component. Native R does not deliberately corrupt cells with NaNs. P1 enables independent MCAR masking on 30\% of its tasks, drawing a cell-mask rate from $U(.01,.20)$; the remaining P1 tasks have no such masking. After requested-width eligibility, masking is therefore enabled on approximately 1.402\% of all standard tasks, or 897,454 of the 64 million-task plan, in expectation. These are task-level exposure counts, not a measured robustness result. Finance uses the structured missingness modes specified below, but its separate specialization does not fill this coverage gap in the standard checkpoint. Evaluation must therefore distinguish support for missing inputs from robustness learned across missingness mechanisms.
+Missingness is underrepresented in the executable R/P1 pilot, motivating the observation law in Section~\ref{sec:prior-selection}. Native R adds no deliberate NaN corruption. P1 enables independent MCAR masking on 30\% of its tasks at cell-mask rate $U(.01,.20)$; its other tasks have no such masking. After width eligibility is accounted for, approximately 1.402\% of all standard tasks enable masking, or 897,454 tasks in the 64 million-task plan, in expectation. These counts describe training exposure, not measured robustness. The finance specialist has the structured missingness mechanisms specified below, but that separate continuation cannot improve the retained standard checkpoint. Evaluation must distinguish accepting missing inputs from predicting reliably under different missingness mechanisms.
 
 \subsection{Authored-bank control: mixture and variants}
 
@@ -750,7 +1088,7 @@ Pilot readiness requires deterministic replay and invariance checks for row orde
 \section{Prior bank for rare-event financial tables}
 \label{sec:finance}
 
-Financial specialization addresses a different statistical regime: millions of transactions, bursts in arrivals, substantial missingness and outcomes occurring approximately once in $10^4$ records. Both the population prior and the way evidence enters context must reflect that regime. Broad tabular benchmark rank and useful fraud detection are consequently separate selection objectives, evaluated on separate panels. A candidate must satisfy both rather than treating success on either panel as evidence for the other.
+Financial specialization must handle millions of transactions, bursts in arrivals, substantial missingness and outcomes occurring approximately once in $10^4$ records. These conditions affect both the generated population and the evidence available to the context. We therefore evaluate fraud detection and broad tabular benchmark performance on separate panels. The candidate must meet both objectives; success on one does not establish success on the other.
 
 Three components define a financial episode. The generator determines which transactions, features and revealed labels exist. The context policy in Section~\ref{sec:finance-context} selects what the predictor can use from that population. The objective in Section~\ref{sec:finance-objective} then uses sampled future queries to estimate population risk. This separation keeps enrichment of context or queries from creating artificial positive evidence or silently changing the deployment target to a selected-sample posterior.
 
@@ -853,29 +1191,85 @@ Future queries provide training supervision through a proposal that can over-sam
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\node[pfnhidden,text width=4cm,minimum height=21mm] (risk) at (0,0)
-  {\textbf{Risk world}\\Regions, effects, dates\\Expected rate $10^{-4}$};
-\node[pfndata,text width=4cm,minimum height=21mm] (population) at (5.3,0)
-  {\textbf{Finite population}\\Counts and row identities\\Random event counts};
-\node[pfndata,text width=4cm,minimum height=21mm] (observed) at (10.6,0)
-  {\textbf{Available history}\\Observed features\\Revealed labels only};
-\node[pfnbox,text width=4cm,minimum height=21mm] (context) at (10.6,-4.1)
-  {\textbf{Selected context}\\Reservoir + known events\\Local rows for each route};
-\node[pfnbox,text width=4cm,minimum height=21mm] (query) at (5.3,-4.1)
-  {\textbf{Predict future queries}\\Query features + context\\Withhold query labels};
-\node[pfnhidden,text width=4cm,minimum height=21mm] (weighted) at (0,-4.1)
-  {\textbf{Weighted loss}\\Predictions and targets\\Population risk objective};
-\draw[pfnarrow] (risk) -- (population);
-\draw[pfnarrow] (population) -- (observed);
-\draw[pfnarrow] (observed) -- (context);
-\draw[pfnarrow] (context) -- (query);
-\draw[pfnarrow] (population) -- node[right=2mm,font=\small,align=left]
-  {Future\\features} (query);
-\draw[pfnarrow] (query) -- (weighted);
-\draw[pfnloss] (population.south west) -- (2.65,-2.05) -- (0,-2.05) -- (weighted.north);
-\node[font=\small,align=center,fill=white,inner sep=2pt] at (1.6,-1.68)
-  {Query labels and\\proposal weights};
+\begin{tikzpicture}[x=1cm,y=1cm,
+  font=\small,
+  panel/.style={draw=pfnblue!20,line width=.5pt,rounded corners=2pt,fill=white},
+  title/.style={font=\small\bfseries,text=pfnblue,anchor=west},
+  note/.style={font=\footnotesize,align=center,text=black!75},
+  process/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!5,rounded corners=2pt,align=center,inner sep=5pt},
+  support/.style={font=\footnotesize,draw=pfngreen!75,fill=pfngreen!9,align=center,inner sep=4pt},
+  query/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!8,align=center,inner sep=4pt},
+  hidden/.style={font=\footnotesize,draw=pfnamber!80,fill=pfnamber!8,align=center,inner sep=4pt,dashed},
+  flow/.style={-{Latex[length=2mm]},draw=pfnblue!85,line width=.8pt},
+  target/.style={-{Latex[length=2mm]},draw=pfnamber!90,line width=.8pt,dashed},
+  reuse/.style={-{Latex[length=2mm]},draw=pfngreen!90,line width=.8pt,dashed}]
+
+\path[use as bounding box] (0,.2) rectangle (16,-11.1);
+\draw[panel] (0,0) rectangle (4.6,-4.3);
+\draw[panel] (5.65,0) rectangle (10.15,-4.3);
+\draw[panel] (11.2,0) rectangle (15.95,-4.3);
+\node[title] at (.2,-.4) {(a) Risk world};
+\node[title] at (5.85,-.4) {(b) Finite population};
+\node[title] at (11.4,-.4) {(c) Decision-time history};
+\node[note] at (2.3,-.95) {Risk regions $g$ and dates $t$};
+\foreach \rr/\shade in {0/12,1/28}
+  \foreach \cc in {0,1,2,3}
+    \draw[draw=white,line width=.8pt,fill=pfnamber!\shade]
+      (.8+.75*\cc,-1.35-.5*\rr) rectangle ++(.75,-.5);
+\node[note,text width=4cm] at (2.3,-2.8)
+  {$p_{tg}=\sigma(a+\log c_t+u_g)$\\Historical rate: $10^{-4}$};
+\draw[flow] (4.6,-1.85)--(5.65,-1.85);
+\node[note,text width=4cm] at (7.9,-1.05)
+  {Finite counts\\Stable row identities};
+\node[font=\small,align=center] at (7.9,-1.85)
+  {$M_{tg}\sim\operatorname{Binomial}(N_{tg},p_{tg})$};
+\draw[pfnblue!35] (6.15,-2.4)--(9.65,-2.4);
+\node[note,text width=3.9cm] at (7.9,-3.05)
+  {3M historical records\\300 events in expectation};
+\draw[flow] (10.15,-1.85)--(11.2,-1.85);
+\draw[-{Latex[length=1.5mm]},black!45] (11.65,-1.55)--(15.5,-1.55);
+\draw[black!55,line width=.8pt] (14.6,-1.35)--(14.6,-1.8);
+\node[note,anchor=south] at (14.6,-1.3) {cutoff};
+\fill[pfngreen] (12,-1.55) circle (2pt);
+\fill[pfngreen] (13,-1.55) circle (2pt);
+\draw[pfnamber] (14.1,-1.55) circle (2pt);
+\node[note,align=left,anchor=west] at (11.75,-2.6)
+  {Revealed outcome: $0$ or $1$\\Unresolved outcome: withheld\\Missing features: explicit mask};
+\node[note,text width=4.1cm] at (13.6,-3.75)
+  {Only labels revealed by the cutoff may enter support.};
+\draw[panel] (11.2,-6.5) rectangle (15.95,-10.05);
+\node[title] at (11.4,-6.9) {(d) Bounded support};
+\node[support,text width=3.8cm,minimum height=7mm] at (13.6,-7.6)
+  {Representative reservoir};
+\node[support,text width=3.8cm,minimum height=7mm] at (13.6,-8.35)
+  {Available verified events};
+\node[support,text width=3.8cm,minimum height=7mm] at (13.6,-9.1)
+  {Local rows for each route};
+\draw[flow] (13.6,-4.3)--(13.6,-6.5);
+\node[note,fill=white,inner sep=3pt,text width=3.7cm] at (13.6,-5.1)
+  {Selection uses permitted historical information.};
+\draw[panel] (5.65,-6.5) rectangle (10.15,-10.05);
+\node[title] at (5.85,-6.9) {(e) Future prediction};
+\node[process,text width=3.3cm,minimum height=12mm] (predict) at (7.9,-8)
+  {Query features\\+ labeled support\\Frozen-weight ICL};
+\node[note,text width=3.9cm] at (7.9,-9.45)
+  {No query labels or proposal weights in model inputs.};
+\draw[flow] (11.2,-8)--(predict.east);
+\draw[flow] (7.9,-4.3)--(7.9,-6.5);
+\node[note,fill=white,inner sep=4pt] at (7.9,-5.1) {Future features};
+\draw[panel] (0,-6.5) rectangle (4.6,-10.05);
+\node[title] at (.2,-6.9) {(f) Population-risk loss};
+\node[hidden,text width=3.4cm,minimum height=12mm] (loss) at (2.3,-8)
+  {$\frac{1}{n_q}\sum_j w_j\,\ell(\hat p_j,y_j)$\\Natural-prevalence objective};
+\node[note,text width=4cm] at (2.3,-9.45)
+  {Balanced query proposal:\\$w_+=2\pi_Q$, $w_-=2(1-\pi_Q)$};
+\draw[flow] (predict.west)--(loss.east);
+\draw[target] (6.25,-4.3)--(6.25,-4.6)--(2.3,-4.6)--(2.3,-6.5);
+\node[note,text=pfnamber,fill=white,inner sep=3pt,text width=4cm] at (2.3,-5.35)
+  {Withheld future labels\\and query-proposal weights};
+\node[note,text width=15cm] at (8,-10.65)
+  {Volume bursts and risk changes are distinct.\\The population is generated lazily; only selected rows enter context.};
+
 \end{tikzpicture}
 \caption{Finite-population finance prior. Historical labels enter the context only after their reveal times. Future labels determine the training-query proposal and its importance weights, but are withheld from the predictor. Counts and deterministic row identities represent the population lazily, allowing a large history to supply a bounded context. Solid arrows show data and prediction flow; the dashed arrow carries training targets.}
 \label{fig:finance-generation}
@@ -919,39 +1313,92 @@ Column processing supplies a learned description of each feature's support value
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\node[pfndata,text width=5.4cm,minimum height=14mm] (support) at (0,0)
-  {\textbf{Labeled support}\\$X_s:n_s\times F$, labels $y_s$};
-\node[pfndata,text width=5.4cm,minimum height=14mm] (query) at (8,0)
-  {\textbf{Query rows}\\$X_q:n_q\times F$; labels withheld};
-\node[pfnbox,text width=13.4cm,anchor=north] (codec) at (4,-1.55)
-  {\textbf{Support-fitted codec and cell encoder}\\Numerical values and ranks; 64 categorical hash bits; missingness flags\\Support-label encoding; zero query-label contribution. Cell width: 128.};
-\node[pfnbox,text width=13.4cm,below=6mm of codec] (front)
-  {\textbf{Two frontend stages}\\Per stage: 3 column summary blocks, then 3 within-row attention blocks\\Column summaries read support cells only.\\Within-row attention mixes $F$ cells and 8 summary tokens.};
-\node[pfnbox,text width=13.4cm,below=6mm of front] (compress)
-  {\textbf{One vector per row}\\Concatenate $8\times128$ summary coordinates into width 1,024\\Add support-label, task and role encodings.};
-\node[pfnbox,text width=5.4cm,anchor=north,minimum height=23mm] (strunk)
-  at ($(compress.south)+(-4,-.85)$)
-  {\textbf{Support path: 24 blocks}\\Width 1,024; 16 attention heads\\Support attends to support\\Full 16-head K/V};
-\node[pfnbox,text width=5.4cm,anchor=north,minimum height=23mm] (qtrunk)
-  at ($(compress.south)+(4,-.85)$)
-  {\textbf{Query path: shared weights}\\24 blocks; 16 query heads\\Queries attend to support\\2 shared KV heads};
-\node[pfndata,text width=5.4cm,below=6mm of strunk,minimum height=19mm] (cache)
-  {\textbf{Reusable support cache}\\K/V retained for queries\\Frontend inducing summaries};
-\node[pfndata,text width=5.4cm,below=6mm of qtrunk,minimum height=19mm] (output)
-  {\textbf{Shared readout and task head}\\Classification: up to 256 slots\\Regression: 999 quantiles};
-\draw[pfnarrow] (support.south) -- (support.south |- codec.north);
-\draw[pfnarrow] (query.south) -- (query.south |- codec.north);
-\draw[pfnarrow] (codec) -- (front);
-\draw[pfnarrow] (front) -- (compress);
-\draw[pfnarrow] (compress.south -| strunk.north) -- (strunk.north);
-\draw[pfnarrow] (compress.south -| qtrunk.north) -- (qtrunk.north);
-\draw[pfnarrow] (strunk.east) -- node[above=2mm,font=\footnotesize,align=center,text width=1.7cm]
-  {Per-layer\\support K/V} (qtrunk.west);
-\draw[pfnarrow] (strunk) -- (cache);
-\draw[pfnarrow] (qtrunk) -- (output);
+\begin{tikzpicture}[x=1cm,y=1cm,
+  font=\small,
+  panel/.style={draw=pfnblue!20,line width=.5pt,rounded corners=2pt,fill=white},
+  title/.style={font=\small\bfseries,text=pfnblue,anchor=west},
+  note/.style={font=\footnotesize,align=center,text=black!75},
+  process/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!5,rounded corners=2pt,align=center,inner sep=5pt},
+  support/.style={font=\footnotesize,draw=pfngreen!75,fill=pfngreen!9,align=center,inner sep=4pt},
+  query/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!8,align=center,inner sep=4pt},
+  hidden/.style={font=\footnotesize,draw=pfnamber!80,fill=pfnamber!8,align=center,inner sep=4pt,dashed},
+  flow/.style={-{Latex[length=2mm]},draw=pfnblue!85,line width=.8pt},
+  target/.style={-{Latex[length=2mm]},draw=pfnamber!90,line width=.8pt,dashed},
+  reuse/.style={-{Latex[length=2mm]},draw=pfngreen!90,line width=.8pt,dashed}]
+
+\path[use as bounding box] (0,.2) rectangle (16,-15.65);
+\node[title] at (.05,-.2) {(a) Typed cell inputs};
+\node[font=\small\bfseries,text=pfngreen] at (3.65,-.8) {Labeled support: $X_s,y_s$};
+\node[font=\small\bfseries,text=pfnblue] at (12.35,-.8) {Query rows: $X_q$};
+\foreach \rr in {0,1,2}
+  \foreach \cc in {0,1,2,3}{
+    \draw[draw=pfngreen!35,fill=pfngreen!8] (1.05+.68*\cc,-1.15-.42*\rr) rectangle ++(.68,-.42);
+    \draw[draw=pfnblue!35,fill=pfnblue!7] (9.7+.68*\cc,-1.15-.42*\rr) rectangle ++(.68,-.42);
+  }
+\foreach \rr/\val in {0/0,1/1,2/0}{
+  \draw[draw=pfngreen!70,fill=pfngreen!18] (4.05,-1.15-.42*\rr) rectangle ++(.68,-.42);
+  \node[font=\footnotesize] at (4.39,-1.36-.42*\rr) {$\val$};
+  \draw[draw=pfnblue!45,dashed] (12.7,-1.15-.42*\rr) rectangle ++(.68,-.42);
+  \node[font=\footnotesize,text=pfnblue] at (13.04,-1.36-.42*\rr) {?};
+}
+\node[note,text width=2cm] at (5.8,-1.78) {$n_s\times F$\\known labels};
+\node[note,text width=2cm] at (14.5,-1.78) {$n_q\times F$\\labels withheld};
+\node[font=\footnotesize,text=pfngreen] at (1.39,-1.36) {2.1};
+\node[font=\footnotesize,text=pfngreen] at (2.07,-1.78) {A};
+\node[font=\footnotesize,text=pfngreen] at (2.75,-2.2) {?};
+\node[font=\footnotesize,text=pfnblue] at (10.04,-1.36) {1.8};
+\node[font=\footnotesize,text=pfnblue] at (10.72,-1.78) {B};
+\node[font=\footnotesize,text=pfnblue] at (11.4,-2.2) {?};
+\draw[panel] (.25,-3.05) rectangle (15.75,-4.55);
+\node[title] at (.5,-3.42) {(b) Support-fitted codec and cell encoder: width 128};
+\node[note,text width=14.5cm] at (8,-4.05)
+  {Numerical values + ranks \quad $\vert$ \quad 64 categorical hash bits \quad $\vert$ \quad missingness flags\\Support-label encoding is added; the query-label contribution is zero.};
+\draw[flow] (3.65,-2.45)--(3.65,-3.05);
+\draw[flow] (12.35,-2.45)--(12.35,-3.05);
+\draw[panel] (.25,-5.15) rectangle (15.75,-8.1);
+\node[title] at (.5,-5.55) {(c) Two frontend stages};
+\node[process,text width=5.65cm,minimum height=15.5mm] (column) at (3.75,-6.75)
+  {\textbf{3 column blocks per stage}\\Support-only inducing summaries\\Reused by query cells};
+\node[process,text width=5.65cm,minimum height=15.5mm] (row) at (12.25,-6.75)
+  {\textbf{3 row-attention blocks per stage}\\Within-row mixing of $F$ cells\\and 8 learned summary tokens};
+\draw[flow] (8,-4.55)--(8,-5.15);
+\draw[flow] (column.east)--(row.west);
+\node[note] at (8,-6.05) {column $\rightarrow$ row};
+\node[note] at (3.75,-7.82) {2 attention calls per column block};
+\foreach \cc in {0,1,2,3,4,5,6,7}
+  \draw[draw=pfnblue!65,fill=pfnblue!13] (10.45+.43*\cc,-7.68) rectangle ++(.32,-.32);
+\node[process,text width=10.5cm,minimum height=9mm] (compress) at (8,-8.95)
+  {Concatenate 8 summaries: $8\times128=1{,}024$ per row\\Add support-label, task and role encodings.};
+\draw[flow] (8,-8.1)--(compress.north);
+\node[title] at (.5,-10.05) {(d) Support prefill};
+\node[title] at (9.85,-10.05) {(e) Query inference};
+\draw[draw=pfngreen!30,fill=pfngreen!3] (.7,-10.5) rectangle (6.1,-12.35);
+\draw[draw=pfngreen!50,fill=pfngreen!5] (.6,-10.4) rectangle (6,-12.25);
+\node[support,text width=5.05cm,minimum height=17mm] (strunk) at (3.25,-11.22)
+  {\textbf{24 transformer blocks}\\Width 1,024; 16 attention heads\\Support $\rightarrow$ support: 16 K/V heads};
+\draw[draw=pfnblue!30,fill=pfnblue!3] (9.95,-10.5) rectangle (15.35,-12.35);
+\draw[draw=pfnblue!50,fill=pfnblue!5] (9.85,-10.4) rectangle (15.25,-12.25);
+\node[query,text width=5.05cm,minimum height=17mm] (qtrunk) at (12.5,-11.22)
+  {\textbf{24 blocks; shared weights}\\16 query heads attend to support\\Queries share 2 K/V heads};
+\draw[flow] (3.25,-9.48)--(.1,-9.48)--(.1,-11.22)--(strunk.west);
+\draw[flow] (12.5,-9.48)--(15.85,-9.48)--(15.85,-11.22)--(qtrunk.east);
+\draw[flow] (strunk.east)--(qtrunk.west);
+\node[note,fill=white,inner sep=2pt,text width=2.65cm] at (7.85,-10.75)
+  {Same-layer\\support K/V};
+\node[support,text width=5.05cm,minimum height=14mm] (cache) at (3.25,-13.65)
+  {\textbf{Reusable support state}\\2 retained K/V heads per layer\\+ frontend inducing summaries};
+\node[query,text width=5.05cm,minimum height=14mm] (head) at (12.5,-13.65)
+  {\textbf{Shared readout; task-specific output}\\Classification: up to 256 slots\\Regression: 999 quantiles};
+\draw[flow] (strunk.south)--(cache.north);
+\draw[flow] (qtrunk.south)--(head.north);
+\draw[reuse] (cache.east)--(7.85,-13.65)--(7.85,-11.85)--(qtrunk.west |- 7.85,-11.85);
+\node[note,text=pfngreen,fill=white,inner sep=2pt,text width=2.2cm] at (7.85,-12.75)
+  {Reuse for later\\query batches};
+\node[note,text width=14.7cm] at (8,-15.15)
+  {No query-to-query attention; queries never update support.\\The frontend has 18 attention blocks in total.\\The eight summaries are learned representations, not selected features.};
+
 \end{tikzpicture}
-\caption{The proposed 317,116,304-parameter model. Support and query paths share weights. Each column summary block contains two attention calls, giving 18 frontend attention blocks in total. The query path shares two KV heads, reducing retained cache storage; support prefill uses all 16 heads. Queries neither attend to one another nor update support states. The optional severity head is omitted here and is not trained by the standard and binary-fraud runs.}
+\caption{The proposed 317,116,304-parameter model. Support and query paths share weights. Each column summary block contains two attention calls, giving 18 frontend attention blocks in total. The query path shares two KV heads, reducing retained cache storage; support prefill uses all 16 heads. Queries neither attend to one another nor update support states. The optional severity head is omitted here and is not trained by the standard and binary-fraud runs. Matrices and layer stacks are schematic; dimensions are stated explicitly.}
 \label{fig:model-overview}
 \end{figure}
 
@@ -1059,7 +1506,7 @@ Both the finer-histogram and 999-quantile alternatives are implemented, with the
 \subsection{Finance metadata and the realized-loss readout}
 \label{sec:finance-head}
 
-Selected finance contexts combine evidence gathered for different purposes. A representative reservoir $R$ describes the labeled pool, a capped eventful sample $P$ retains rare outcomes, and route-specific local rows $L_c$ provide nearby examples. Their deduplicated union is $C_c$. In this subsection, $N$ is the size of the eligible labeled history, $M$ its eventful count and $M_R$ the eventful count in $R$; this historical $N$ is distinct from the row count of a model forward pass. Section~\ref{sec:finance-context} specifies how the sources are selected. The associated counts describe historical evidence that the learner is permitted to observe, rather than hidden future prevalence.
+A finance context combines three sources of evidence. The representative reservoir $R$ describes the labeled pool, the capped eventful sample $P$ retains rare outcomes, and route-specific local rows $L_c$ supply nearby examples. Their deduplicated union is $C_c$. Here $N$ denotes the number of eligible labeled historical records, $M$ their eventful count and $M_R$ the eventful count in $R$; this historical $N$ is not the row count of a model forward pass. Section~\ref{sec:finance-context} gives the selection procedure. All these counts concern historical evidence available to the learner, not hidden future prevalence.
 
 The model needs to know how a selected context relates to its available history. Ordinary feature standardization would remove quantities that are constant across that context, so they enter through a separate metadata vector. Its 14 coordinates are
 \begin{align*}
@@ -1301,7 +1748,7 @@ Length scaling addresses a separate source of information loss: useful keys can 
 
 A single useful anchor makes the dilution mechanism explicit. Suppose its logit has a fixed advantage $\Delta$ over each of $n-1$ irrelevant keys. Its attention mass is $[1+(n-1)e^{-\Delta}]^{-1}$, so maintaining mass $\alpha$ requires $\Delta\geq\log((n-1)\alpha/(1-\alpha))$. A gap that gives mass $0.5$ at 4,096 keys gives only $0.111$ at 32,768. Learned representations may change this gap, making the calculation a stress case rather than an impossibility result.
 
-The independent audit consequently places length-scaling and dilution checks ahead of MoE in the funded selection sequence. A comparison described as QASSMax must match the released reference exactly; the clipped control and the implemented logarithmic alternative are different mechanisms \cite{tabicl2}.
+The independent audit places length-scaling and dilution diagnostics ahead of MoE. The dedicated GPU length-scaling comparison is deferred in the revised allocation; the current logarithmic rule stays fixed during prior selection. A comparison described as QASSMax must match the released reference exactly; the clipped control and the implemented logarithmic alternative are different mechanisms \cite{tabicl2}.
 
 More scored queries could increase supervision obtained from an expensive support prefill. At 32,768 support rows, changing the query count from 128 to 512 adds only $384/32768=1.171875\%$ of the dense support-square pair count. The resulting gradients share a world and are correlated, however. The comparison therefore retains episode-mean loss, matches GPU-hours, records unique worlds as well as targets, and recomputes cell-cap conditioning for the actual query count.
 
@@ -1340,32 +1787,72 @@ Loss reduction and compute accounting both use a logical batch of 256 macroepiso
 
 The forward computation is shared by pretraining and deployment. During pretraining, the model predicts the withheld targets in a logical batch of 256 macroepisodes, and the resulting losses are backpropagated into its shared weights. At deployment, a checkpoint instead conditions on a new labeled context and predicts the query rows with fixed weights; the loss and update loop is absent.
 
-The proposed sequence first trains on ordinary binary, multiclass and regression tasks from R/P1. That standard checkpoint is retained, while a copy begins synthetic binary-fraud continuation with a fresh optimizer and schedule. The result is a second deployable model without altering the standard checkpoint. Fraud continuation is part of pretraining, rather than a gradient fit repeated for each finance customer.
+The executable pilot first trains on ordinary binary, multiclass and regression tasks from R/P1. For a final run, the selected bank from Section~\ref{sec:prior-selection} replaces that pilot distribution. That standard checkpoint is retained, while a copy begins synthetic binary-fraud continuation with a fresh optimizer and schedule. The result is a second deployable model without altering the standard checkpoint. Fraud continuation is part of pretraining, rather than a gradient fit repeated for each finance customer.
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\node[pfndata,text width=4cm,minimum height=27mm] (standard) at (0,0)
-  {\textbf{Standard prior}\\R + eligible 5\% P1\\50\% classification\\50\% regression};
-\node[pfnbox,text width=4cm,minimum height=27mm] (standardrun) at (5.3,0)
-  {\textbf{Standard training}\\64 million episodes\\250,000 updates\\9,000 GPU-hours};
-\node[pfndata,text width=4cm,minimum height=27mm] (base) at (10.6,0)
-  {\textbf{Standard checkpoint}\\Classification and regression\\Retain original weights};
-\node[pfndata,text width=4cm,minimum height=27mm] (finance) at (0,-5)
-  {\textbf{Finance prior}\\Risk-partition worlds\\Hidden H; rate $10^{-4}$\\Weighted query loss};
-\node[pfnbox,text width=4cm,minimum height=27mm] (financerun) at (5.3,-5)
-  {\textbf{Fraud continuation}\\1.024M macroepisodes\\4,000 updates\\3,000 GPU-hours};
-\node[pfndata,text width=4cm,minimum height=27mm] (specialist) at (10.6,-5)
-  {\textbf{Fraud checkpoint}\\Binary classification\\Selected context};
-\draw[pfnarrow] (standard) -- (standardrun);
-\draw[pfnarrow] (standardrun) -- (base);
-\draw[pfnarrow] (finance) -- (financerun);
-\draw[pfnarrow] (financerun) -- (specialist);
-\draw[pfnarrow] (base.south) -- (10.6,-2.5) -- (5.3,-2.5) -- (financerun.north);
-\node[font=\small,align=center,fill=white,inner sep=3pt] at (7.95,-2.5)
-  {Copy weights\\Reset optimizer and schedule};
+\begin{tikzpicture}[x=1cm,y=1cm,
+  font=\small,
+  panel/.style={draw=pfnblue!20,line width=.5pt,rounded corners=2pt,fill=white},
+  title/.style={font=\small\bfseries,text=pfnblue,anchor=west},
+  note/.style={font=\footnotesize,align=center,text=black!75},
+  process/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!5,rounded corners=2pt,align=center,inner sep=5pt},
+  support/.style={font=\footnotesize,draw=pfngreen!75,fill=pfngreen!9,align=center,inner sep=4pt},
+  query/.style={font=\footnotesize,draw=pfnblue!70,fill=pfnblue!8,align=center,inner sep=4pt},
+  hidden/.style={font=\footnotesize,draw=pfnamber!80,fill=pfnamber!8,align=center,inner sep=4pt,dashed},
+  flow/.style={-{Latex[length=2mm]},draw=pfnblue!85,line width=.8pt},
+  target/.style={-{Latex[length=2mm]},draw=pfnamber!90,line width=.8pt,dashed},
+  reuse/.style={-{Latex[length=2mm]},draw=pfngreen!90,line width=.8pt,dashed}]
+
+\path[use as bounding box] (0,.2) rectangle (16,-12.4);
+\node[title] at (.05,-.2) {(a) Reference-derived planning example: R + eligible 5\% P1};
+\node[note,anchor=west,align=left] at (.05,-.85)
+  {50\% classification / 50\% regression; 64M accepted episodes; 250,000 updates; 9,000 GPU-hour ceiling.};
+\draw[draw=pfnblue!55,fill=pfnblue!11] (.05,-1.35) rectangle (5.2,-3.25);
+\draw[draw=pfnblue!55,fill=pfnblue!7] (5.45,-1.35) rectangle (10.3,-3.25);
+\draw[draw=pfnblue!55,fill=pfnblue!4] (10.55,-1.35) rectangle (15.8,-3.25);
+\node[align=center] at (2.625,-2.3)
+  {\textbf{Stage 1: 90\%}\\57.60M episodes\\1,024 table rows};
+\node[align=center] at (7.875,-2.3)
+  {\textbf{Stage 2: 9\%}\\5.76M episodes\\400--10,240 table rows};
+\node[align=center] at (13.175,-2.3)
+  {\textbf{Stage 3: 1\%}\\0.64M episodes\\400--60,000 table rows};
+\draw[flow] (5.2,-2.3)--(5.45,-2.3);
+\draw[flow] (10.3,-2.3)--(10.55,-2.3);
+\draw[panel] (.05,-4.15) rectangle (10.3,-7.55);
+\node[title] at (.25,-4.55) {(b) One logical optimizer update};
+\node[support,text width=2.15cm,minimum height=12mm] (producer) at (1.65,-5.7)
+  {Online CPU\\task producer};
+\node[process,text width=2.15cm,minimum height=12mm] (model) at (5.15,-5.7)
+  {ICL forward\\query loss};
+\node[process,text width=2.15cm,minimum height=12mm] (optim) at (8.65,-5.7)
+  {Muon\\+ AdamW};
+\draw[flow] (producer)--(model);
+\draw[flow] (model)--(optim);
+\node[note,text width=9.4cm] at (5.15,-6.95)
+  {256 macroepisodes; synchronized gradients across workers.\\Save task schedule, curriculum and optimizer state.};
+\draw[flow] (5.15,-3.25)--(5.15,-4.15);
+\node[support,text width=4.1cm,minimum height=23mm] (standard) at (13.4,-5.7)
+  {\textbf{Standard checkpoint}\\Retain original weights\\Classification / regression\\Frozen ICL at deployment};
+\draw[flow] (optim.east)--(standard.west);
+\draw[panel] (.05,-9.1) rectangle (4.65,-11.55);
+\node[title] at (.25,-9.5) {(c) Finance worlds};
+\node[note,text width=4.05cm] at (2.35,-10.5)
+  {Finite risk populations\\H is hidden; rate $10^{-4}$\\Population-weighted loss};
+\node[process,text width=4.15cm,minimum height=23mm] (continuation) at (7.95,-10.35)
+  {\textbf{Fraud continuation}\\1.024M macroepisodes; 4,000 updates\\3,000 GPU-hour ceiling};
+\node[support,text width=4.1cm,minimum height=23mm] (specialist) at (13.4,-10.35)
+  {\textbf{Fraud checkpoint}\\Binary prediction\\Selected context\\Frozen ICL at deployment};
+\draw[flow] (4.65,-10.35)--(continuation.west);
+\draw[flow] (continuation.east)--(specialist.west);
+\draw[flow] (standard.south)--(13.4,-8.05)--(7.95,-8.05)--(continuation.north);
+\node[note,fill=white,inner sep=3pt,text width=4.9cm] at (10.7,-8.05)
+  {Copy standard weights;\\reset optimizer and schedule.};
+\node[note,text width=15.4cm] at (8,-12.1)
+  {Both phases use 90/9/1 task allocation. The proposed Q bank enters only after the prior-selection study; it is not substituted into this runnable reference-derived recipe.};
+
 \end{tikzpicture}
-\caption{Pretraining and synthetic fraud specialization. Each run allocates 90/9/1\% of its accepted tasks to the three curriculum stages. Task counts are planning targets constrained by the GPU-hour ceilings and measured throughput; the repository configurations specify shorter pilots. Both resulting checkpoints use frozen-weight ICL at deployment.}
+\caption{Pretraining and synthetic fraud specialization, shown for the reference-derived planning recipe. Each run allocates 90/9/1\% of its accepted tasks to the three curriculum stages; stage boxes are not drawn in proportion to exposure. Task counts are planning targets constrained by the GPU-hour ceilings and measured throughput; the repository configurations specify shorter pilots. Both resulting checkpoints use frozen-weight ICL at deployment. The proposed Q challenger requires separate implementation and selection before replacing the standard prior.}
 \label{fig:training-run}
 \end{figure}
 
@@ -1537,7 +2024,7 @@ The horizon $T$ is derived once from the declared run budget and measured stage-
 \subsection{Shape and class curriculum}
 \label{sec:curriculum}
 
-The schedule in Section~\ref{sec:optimizer} spans each \emph{declared run horizon}. For the selected candidate, the provisional 90/9/1 episode allocation in Section~\ref{sec:volume} determines stage proportions. Measured costs may reduce the horizon before its total $T$ and stage boundaries are fixed. One warmup/cosine schedule spans all three stages, without restarting either the optimizer or learning-rate schedule at a boundary. The charged GPU-hour cap remains binding if actual costs exceed the estimate.
+One warmup/cosine schedule covers each \emph{declared run horizon} in Section~\ref{sec:optimizer}. For the selected candidate, the provisional 90/9/1 episode allocation in Section~\ref{sec:volume} sets the stage proportions. Measured costs may require a shorter run; its total $T$ and stage boundaries are fixed before launch. Neither the optimizer nor the learning-rate schedule restarts at a stage boundary. The charged GPU-hour cap still applies if the run costs more than estimated.
 
 Compute-scaling comparisons require each intended endpoint to complete its own schedule or a matched terminal cooldown. An intermediate checkpoint from a much longer unfinished decay is not equivalent to such a run. Recovery therefore preserves model, optimizer, sampler and compute state at least hourly and at stage boundaries; restart tests verify episode IDs and loss masks.
 
@@ -1617,10 +2104,10 @@ The standard default draws an independent world for every episode. Finance reuse
 For example, an episode containing 1,024 support rows, 128 queries and 64 features presents 1,152 row tokens, 73,728 raw cells and 128 supervised targets. These counts do not convert mechanically into independent examples. Independent 4,096-row calibration also consumes generation time even though its draws are not model-training tokens, so its cost belongs in sampler profiling.
 
 
-\subsection{How many tasks to generate from each prior}
+\subsection{Volume accounting for the executable reference pilot}
 \label{sec:volume}
 
-The proposed final training volume is \textbf{64,000,000 accepted standard tasks}, followed by \textbf{1,024,000 finance macroepisodes} for the separate specialist. Each task is a support/query problem, rather than one row or cell. These are explicit planning targets, not an optimum inferred from a scaling law, and the respective 9,000 and 3,000 GPU-hour ceilings remain binding.
+The reference-pilot volume plan specifies \textbf{64,000,000 accepted standard tasks}, followed by \textbf{1,024,000 finance macroepisodes} for the separate specialist. Each task is a support/query problem, rather than one row or cell. These are explicit planning targets, not an optimum inferred from a scaling law, and the respective 9,000 and 3,000 GPU-hour ceilings remain binding.
 
 Deterministic seeds and ordered prefetch generate tasks when needed; the full bank need not be materialized in advance. Validation uses separate fixed namespaces whose worlds are never recycled into training.
 
@@ -1642,7 +2129,7 @@ With global batch 256, the standard target requires 250,000 updates. Stages one,
 
 Eligibility determines the realized source mixture. If $E_s$ requested-width slots in stage $s$ have at least eight features, the exact conditional expectation of P1 exposure is $0.05\sum_s E_s$ and R receives the remainder. The five-percent branch would select 3.2 million P1 slots before eligibility. Integrating the rounded-uniform width laws and long-row caps instead gives expected accepted exposures of about 2.992 million P1 and 61.008 million R tasks. With feature ceiling $F_{\max}$, eligibility has probability $P(F\geq8)=(F_{\max}-7.5)/(F_{\max}-1)$; stage three averages this over its log-uniform row law and width caps.
 
-These expectations assume the declared envelopes, no diagnostic shape overrides, and no failed, skipped or replayed updates. They are neither fixed quotas nor hard bounds on a finite draw. P4 contributes zero main-run tasks and remains a separately funded count/amount control. Within R, the eight function types occur as components of graphs rather than as eight disjoint table families. Equal division of R exposure among MLPs, trees, products and other node functions would change the prior. The pinned graph and function-sampling laws are therefore retained, with their realized properties audited.
+The expected counts assume the declared envelopes, no diagnostic shape overrides, and no failed, skipped or replayed updates. Actual finite runs need not meet those counts exactly, and the expectations are not hard bounds. P4 contributes zero reference-pilot tasks and remains an unfunded count/amount control in the current allocation. R's eight function types are components inside graphs, not eight separate table families. Dividing R's task allocation equally among MLPs, trees, products and the other node functions would therefore define a different prior. We retain the pinned graph and function-sampling laws and audit the properties they produce.
 
 Classification and regression are equiprobable package draws, each accounting for 32 million tasks in expectation. The classification budget follows the native integer law, modified on envelope-extension slots, so binary and multiclass tasks are not equiprobable. Under the proposed envelopes, expected exposures are approximately 3.503 million binary, 28.497 million multiclass and 32 million regression tasks. The number of observed classes can still collapse during native generation.
 
@@ -1741,7 +2228,7 @@ Predictive performance is the primary selection criterion. A larger model can th
 GPU-hours & Purpose & Release condition\\
 \midrule
 5,000 & Systems, reference and evaluation acceptance & 2,500 reference inference/reproduction; 1,500 backend/profiling/recovery; 1,000 benchmark integration and cost forecasts.\\
-15,000 & Mandatory controlled screens & Exact breakdown below; numerical probes precede expensive runs.\\
+15,000 & Mandatory controlled screens & Current breakdown in Section~\ref{sec:prior-selection}; it supersedes the earlier allocation preserved below.\\
 10,000 & Size and longer finalist comparisons & Two sizes/two seeds at 500 hours; two 3,000-hour bridges; two 1,000-hour confirmations or ranking-resolution runs.\\
 12,000 & Conditional final training & Total across all selected checkpoints, after bridge and confirmation gates. No automatic one-shared-model commitment.\\
 5,000 & Locked evaluation & Cost the official roster and finance periods before launch; failures and inference ensembles count.\\
@@ -1752,41 +2239,9 @@ GPU-hours & Purpose & Release condition\\
 \end{tabularx}
 \end{table}
 
-\begin{longtable}{@{}p{0.57\linewidth}p{0.23\linewidth}r@{}}
-\toprule Mandatory screen & Arithmetic & GPU-hours\\\midrule\endfirsthead
-\toprule Mandatory screen & Arithmetic & GPU-hours\\\midrule\endhead
-Prior triage: R, R+P1, R+P4, authored replacement & $4\times2\times250$ & 2,000\\
-Prior/backbone crossing: two priors; released, authored compressed, compact persistent-cell & $6\times2\times350$ & 4,200\\
-Regression head: reference quantiles versus finer histogram & $2\times2\times150$ & 600\\
-Category codec: scalar Fourier versus hash-bit candidate & $2\times2\times150$ & 600\\
-Length scaling: current cap versus one chosen alternative & $2\times2\times150$ & 600\\
-Shared versus classifier/regressor checkpoint packages & $2\times2\times200$ & 800\\
-Muon/AdamW versus all-AdamW, including rate triage & $2\times2\times150$ & 600\\
-Six finance controls & $6\times2\times200$ & 2,400\\
-At most two complete combinations, two new seeds each & $2\times2\times800$ & 3,200\\
-\midrule Total & & 15,000\\\bottomrule
-\end{longtable}
+The current screen is specified in Section~\ref{sec:prior-selection}. The earlier allocation and its controls are retained in Appendix~\ref{app:earlier-allocation} for reproducibility; they do not add to the budget.
 
-Each row in the allocation table multiplies arms by seeds and \emph{total package} hours. Initial task-specific packages divide time equally between classification and regression under a fixed binary/multiclass policy; the allowance is shared across checkpoints rather than granted independently to each.
-
-The prior/backbone comparison holds heads, supported class range, feature/target interface and optimizer convention fixed. Adapters for the reference generator and new heads are executable. Faithful training interfaces for the native backbone and compact CAST comparison still require implementation. Capacity differences across families remain part of the system comparison. The smaller head, codec and attention studies fund fresh paired controls; an arbitrary partial checkpoint from a longer cosine run cannot serve as a completed control at a matched horizon.
-
-The second factorial prior will be a graft supported by triage, or the authored replacement if a recorded decision assigns it that role. If neither is supported, R is retained and the unused cells of the comparison matrix receive no automatic allocation. A combined P1/P4 graft also has no automatic funding.
-
-The finer-histogram and reference-quantile comparison tests two viable readouts, with the coarse histogram retained as an inexpensive falsification baseline. The analytic stress test will select one length-scaling alternative for the paired GPU comparison. All short learning-rate trials belong within the 600-hour optimizer allowance, rather than an additional search budget.
-
-The six historical finance comparisons hold the legacy class-conditional mechanism, population seeds, arrival process and observation law fixed except for the named intervention. The risk-partition candidate belongs to the complete-configuration confirmation and specialist runs. Isolating its mechanism would require a matched legacy comparison within those existing slots.
-
-The controls are standard-only F0; joint 80/20 with the full selector and unit normalization F1; the same with entropy normalization F2; F2 with explicit H removed from both selector and model F3; F2 with a nondiscriminative generative H law F4; and reservoir-plus-positive selection F5 using the normalization fixed before that run. Every applicable arm retains the correct population importance weights. F5 requires a comparison with matching normalization to identify a selection effect.
-
-For the pure-standard finance control, untrained finance-only adapters must be neutralized consistently to avoid introducing random metadata effects. Reference-present and reference-absent worlds are reported separately. The two funded final-confirmation slots include a challenger and its required full-selector control; they do not fund two new candidates plus an additional control.
-
-Confirmation will train at most two complete configurations, including any required paired control, and evaluate finance alongside all three standard task types. It tests the combination because separately observed gains need not add. Short runs provide triage evidence rather than proof of final superiority. If 150--350 hours cannot cover the intended contexts at measured hardware speeds, the number of arms or their allocations must change before launch. An early-curriculum checkpoint in one arm is not comparable to a completed curriculum in another.
-
-Generation, indexing, calibration, every routed prefill and failed allocations all contribute to cost. The reference prior, candidate heads and codecs, and grouped-query cache are runnable. The compact cell architecture and complete paired statistical runner still require implementation for their research comparisons.
-
-MoE, general sparse attention, adaptive priors and auxiliary objectives remain deferred. Query-only KV grouping is implemented and will be assessed within the existing architecture/confirmation allocation, without additional funding. Final training shares a 12,000-hour ceiling between 9,000 standard hours and 3,000 fraud hours; these are combined allowances rather than separate entitlements for each checkpoint.
-
+\paragraph{Conditions shared by the current and earlier allocations.}
 A fresh final run fixes a new horizon. Continuation after a change in recipe or horizon is a separately accounted experiment, whereas exact-config recovery preserves the original run. Failed reproduction, negative transfer or unresolved bridge comparisons prevent automatic release of the final allocation. Any unassigned reserve remains unspent.
 
 Model and optimizer state are replicated in the trainer, which explicitly synchronizes gradients after each logical batch. At the selected size, optimizer-state memory alone is unlikely to justify aggressive parameter sharding; long-context activations may be more demanding. Activation checkpointing will be used where measurements show a benefit. Muon's updates continue to act on complete matrices, since independently orthogonalizing sharded pieces changes the method.
@@ -1895,11 +2350,11 @@ Any acceptable noninferiority margin must be fixed before the relevant confirmat
 
 The statistical analysis retains separate scorecards for binary classification, multiclass classification and regression, alongside the official overall aggregation. Comparisons are paired by independent source dataset; repeated folds are repeated measurements rather than new independent datasets. Reports include raw task metrics, benchmark ranks and uncertainty. Elo values from different competitor rosters are not combined into a universal score. Proper predictive losses and calibration complement the official primary metric rather than replace it.
 
-The provisional engineering criterion is positive mean normalized improvement on all three development panels, targeting at least 1\% on a predeclared loss scale, confirmation intervals excluding zero, and no more than 2\% deterioration on predeclared important slices. These thresholds are decisions to fix before observing results, not universal statistical rules.
+The current prior-selection criterion is the paired proper-loss rule in Section~\ref{sec:prior-selection}. The earlier proposal targeted positive improvement on all three panels, at least 1\% on a predeclared loss scale and no more than 2\% deterioration on important slices. Those earlier thresholds are retained for provenance and are not additional promotion requirements for the new search.
 
-Binary loss is normalized as $1-\mathrm{AUC}$ for its official endpoint; other tasks use fixed positive scales defined on development data. The analysis accounts for candidate selection and multiple comparisons. Improvement on two task types at the expense of the third is reported as a tradeoff and prompts reconsideration of the shared/specialist design.
+The earlier ranking rule used $1-\mathrm{AUC}$ for binary classification; the new prior search uses log loss, while official benchmark reporting retains AUC. Other benchmark metrics are reported on their original scales. The analysis accounts for candidate selection and multiple comparisons. Improvement on two task types at the expense of the third is reported as a tradeoff and prompts reconsideration of the shared/specialist design.
 
-The scientific comparisons and their funded or deferred status are retained in \path{research/specs/ablation_plan.csv}. The allocation is defined by Section~\ref{sec:revised-budget} and \path{research/specs/prior_bank_spec.json}. Confirmation fixes the comparator roster, dataset lineages, per-task normalization, practical margins, candidate set, inference policy, failure policy and scheduled analysis points in advance.
+The earlier comparison catalog is retained in \path{research/specs/ablation_plan.csv}; current funded comparisons are specified in \path{research/specs/prior_selection_v1.json}. The allocation is defined by Section~\ref{sec:revised-budget} and \path{research/specs/prior_bank_spec.json}. Confirmation fixes the comparator roster, dataset lineages, per-task normalization, practical margins, candidate set, inference policy, failure policy and scheduled analysis points in advance.
 
 Repeated folds are first averaged within lineage. Paired lineage resampling then incorporates training-seed variation rather than treating every fold as independent. Multiple separately selected claims call for a familywise procedure such as Holm. A single claim requiring improvement on all three task types instead requires each of its three constituent tests to pass. Failure to reject a difference does not establish equivalence.
 
@@ -1923,12 +2378,12 @@ The default package already retains the standard checkpoint and assigns 9,000 ho
 \section{Implementation and validation}
 \label{sec:experiments}
 
-The codebase provides the selected standard and finance generators, dense ICL model and size grid, AdamW/Muon optimization, mixed-task training, checkpoint recovery, exact support caches, bounded finance inference and data/evaluation commands. The root \texttt{README.md} links to operating instructions in \path{docs/training.md} and \path{docs/data_and_evaluation.md}. The optional TabArena wrapper is described in \path{docs/tabarena.md}.
+The codebase provides the reference and authored control generators, the finance generator, dense ICL model and size grid, AdamW/Muon optimization, mixed-task training, checkpoint recovery, exact support caches, bounded finance inference and data/evaluation commands. The root \texttt{README.md} links to operating instructions in \path{docs/training.md} and \path{docs/data_and_evaluation.md}. The optional TabArena wrapper is described in \path{docs/tabarena.md}.
 
 \subsection{Map from the recipe to the implementation}
 \label{sec:code-map}
 
-The modules under \path{src/tabular_foundation/} implement the recipe as mapped in Table~\ref{tab:code-map}. The conceptual records from Section~\ref{sec:training-contract} use \texttt{schema.Episode}, whose \texttt{model\_inputs()} method explicitly allowlists forward inputs. Additional priors and retrieval policies enter through this contract, preserving the exclusion of hidden simulator state from the predictor.
+The modules under \path{src/tabular_foundation/} implement the reference pilot and finance workflow mapped in Table~\ref{tab:code-map}. The proposed Q sampler remains separate implementation work. The conceptual records from Section~\ref{sec:training-contract} use \texttt{schema.Episode}, whose \texttt{model\_inputs()} method explicitly allowlists forward inputs. Additional priors and retrieval policies enter through this contract, preserving the exclusion of hidden simulator state from the predictor.
 
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{.22\linewidth}>{\raggedright\arraybackslash}p{.29\linewidth}>{\raggedright\arraybackslash}p{.41\linewidth}@{}}
 \caption{Scientific components and executable code. Module paths are relative to \texttt{src/tabular\_foundation/}.}\label{tab:code-map}\\
@@ -1950,7 +2405,7 @@ Comparisons & \path{profile.py}, \path{baselines.py}, \path{tabarena_adapter.py}
 
 The scientific specifications are stored in \path{research/specs/static_recipe_v3.json}, \path{research/specs/icl_architecture_v3.json}, \path{research/specs/finance_recipe_v3.json}, the latency/MoE specification \path{research/specs/latency_recipe_v3.json}, and the coordinating \path{research/specs/prior_bank_spec.json}. Executable modules reside in \path{src/tabular_foundation}, with run configurations in \texttt{configs} and instructions in \texttt{README.md}.
 
-The coordinating specification's \texttt{main\_candidate} block and \path{docs/main_recipe.md} define the recommendation, while the older v3 specifications retain the authored controls. These research JSON files describe the scientific recipe rather than the trainer's configuration format. The standalone \LaTeX{} source contains the full recipe without external input files.
+The coordinating specification's \texttt{prior\_selection} block identifies the current research recommendation. Its \texttt{main\_candidate} block and \path{docs/main_recipe.md} retain the executable pilot, while the older v3 specifications define authored controls. These research JSON files describe the scientific recipe rather than the trainer's configuration format. The standalone \LaTeX{} source contains the full recipe without external input files.
 
 Implemented components comprise the base and context-conditioned standard priors, eligible optional conditional classification targets, the finance generator and selector, and the dense architecture. Available options include the reference prior, hash-bit codec, selectable heads, logarithmic scaling, query KV grouping, risk-partition finance law and ordered process producer.
 
@@ -1993,7 +2448,7 @@ Tests cover parameter counts, generator replay and moments, query-label isolatio
 \subsection{Design implications of the implementation audit}
 \label{sec:independent-disposition}
 
-Review of the implemented paths retained the support/query boundary, finite-population accounting, population-weighted loss, frozen-weight caches and explicit optimizer partition; no direct query-label input leak was found. Identified failure cases motivated precise affine target transforms, finer head alternatives, discrete identity inputs, logarithmic attention scaling, query KV sharing and finance worlds that hide H from both selection and prediction. The comparisons above assess whether these corrections improve real-data accuracy.
+The implementation audit found no direct query-label input leak and retained the support/query boundary, finite-population accounting, population-weighted loss, frozen-weight caches and explicit optimizer partition. Its counterexamples led to more precise affine target transforms, finer prediction heads, discrete identity inputs, logarithmic attention scaling and query KV sharing. They also motivated finance worlds that hide H from both the selector and predictor. The comparisons above will determine whether these corrections improve real-data accuracy.
 
 The affine precision failure arose before histogram quantization. Targets $10^8$ and $10^8+1$, with center $10^8$ and scale $0.5$, were cast to FP32 before subtraction and both standardized to zero. The implementation now retains FP64 affine quantities through standardization and inversion to original units, while neural probability calculations remain in FP32. Serving preserves the recovered original-unit precision.
 
@@ -2003,7 +2458,9 @@ These results motivate studying prior coverage and information preservation toge
 
 \subsection{Validation and limitations}
 
-The codebase passed \textbf{200 tests with no skips}, treating warnings as errors and including the two-process Gloo test. The suite covers source verification and replay, task and shape preservation, rejection accounting, categorical encoding, prediction heads, optimizer partitioning, support caches, checkpoint recovery and per-prior task counts. Environment details and results are retained in \path{research/results/code_validation.json}, with earlier records in \path{docs/audit.md}.
+The earlier runtime audit passed \textbf{200 tests with no skips}, treating warnings as errors and including the two-process Gloo test. The suite covers source verification and replay, task and shape preservation, rejection accounting, categorical encoding, prediction heads, optimizer partitioning, support caches, checkpoint recovery and per-prior task counts. Environment details and results are retained in \path{research/results/code_validation.json}, with earlier records in \path{docs/audit.md}.
+
+The prior-selection follow-up adds analytical identities, exposure accounting, dependency validation and invalid-input checks. Its focused run passes 45 tests, including the new tests and existing volume/compute tests, with warnings treated as errors. Runtime generator/model files and candidate configs are unchanged by that follow-up.
 
 Integration tests trained tiny CPU models on standard and finance tasks. Over three updates, the two-process mixed-profile run differed from its serial counterpart by at most $6\times10^{-8}$ in any parameter. A separate three-update reference-prior run continued for four binary-specialist updates, exercising initialization and world reuse. That continuation represented a one-million-row lazy history at prevalence $10^{-4}$ and used a 256-candidate diagnostic selector.
 
@@ -2015,6 +2472,50 @@ The 317M candidate has neither been pretrained nor evaluated on competitive benc
 
 The next experiments combine reproduction of the released reference with stage-specific training-cost measurements and fixed-budget comparisons of prior and architecture changes. Standard benchmarks and chronological finance evaluation remain separate endpoints throughout selection. The question is whether the proposed conditional structure survives context selection and representation well enough to improve prediction over reference foundation models and trees trained on the full history.
 
+\appendix
+\section{Earlier screening allocation and controls}
+\label{app:earlier-allocation}
+
+\paragraph{Earlier allocation retained for experiment provenance.}
+The following table and its associated controls describe the previous screening plan. The selection program in Section~\ref{sec:prior-selection} replaces them, with phase budgets of 4,800, 1,800, 3,200, 2,800 and 2,400 GPU-hours. Running both programs would exceed the allocation. Their specifications remain available for an explicitly budgeted replacement experiment.
+
+\begin{longtable}{@{}p{0.57\linewidth}p{0.23\linewidth}r@{}}
+\toprule Earlier screen & Arithmetic & GPU-hours\\\midrule\endfirsthead
+\toprule Earlier screen & Arithmetic & GPU-hours\\\midrule\endhead
+Prior triage: R, R+P1, R+P4, authored replacement & $4\times2\times250$ & 2,000\\
+Prior/backbone crossing: two priors; released, authored compressed, compact persistent-cell & $6\times2\times350$ & 4,200\\
+Regression head: reference quantiles versus finer histogram & $2\times2\times150$ & 600\\
+Category codec: scalar Fourier versus hash-bit candidate & $2\times2\times150$ & 600\\
+Length scaling: current cap versus one chosen alternative & $2\times2\times150$ & 600\\
+Shared versus classifier/regressor checkpoint packages & $2\times2\times200$ & 800\\
+Muon/AdamW versus all-AdamW, including rate triage & $2\times2\times150$ & 600\\
+Six finance controls & $6\times2\times200$ & 2,400\\
+At most two complete combinations, two new seeds each & $2\times2\times800$ & 3,200\\
+\midrule Total & & 15,000\\\bottomrule
+\end{longtable}
+
+Each row in the allocation table multiplies arms by seeds and \emph{total package} hours. Initial task-specific packages divide time equally between classification and regression under a fixed binary/multiclass policy; the allowance is shared across checkpoints rather than granted independently to each.
+
+The prior/backbone comparison holds heads, supported class range, feature/target interface and optimizer convention fixed. Adapters for the reference generator and new heads are executable. Faithful training interfaces for the native backbone and compact CAST comparison still require implementation. Capacity differences across families remain part of the system comparison. The smaller head, codec and attention studies fund fresh paired controls; an arbitrary partial checkpoint from a longer cosine run cannot serve as a completed control at a matched horizon.
+
+The second factorial prior will be a graft supported by triage, or the authored replacement if a recorded decision assigns it that role. If neither is supported, R is retained and the unused cells of the comparison matrix receive no automatic allocation. A combined P1/P4 graft also has no automatic funding.
+
+The finer-histogram and reference-quantile comparison tests two viable readouts, with the coarse histogram retained as an inexpensive falsification baseline. The analytic stress test will select one length-scaling alternative for the paired GPU comparison. All short learning-rate trials belong within the 600-hour optimizer allowance, rather than an additional search budget.
+
+The six historical finance comparisons hold the legacy class-conditional mechanism, population seeds, arrival process and observation law fixed except for the named intervention. The risk-partition candidate belongs to the complete-configuration confirmation and specialist runs. Isolating its mechanism would require a matched legacy comparison within those existing slots.
+
+The controls are standard-only F0; joint 80/20 with the full selector and unit normalization F1; the same with entropy normalization F2; F2 with explicit H removed from both selector and model F3; F2 with a nondiscriminative generative H law F4; and reservoir-plus-positive selection F5 using the normalization fixed before that run. Every applicable arm retains the correct population importance weights. F5 requires a comparison with matching normalization to identify a selection effect.
+
+For the pure-standard finance control, untrained finance-only adapters must be neutralized consistently to avoid introducing random metadata effects. Reference-present and reference-absent worlds are reported separately. The two funded final-confirmation slots include a challenger and its required full-selector control; they do not fund two new candidates plus an additional control.
+
+Confirmation will train at most two complete configurations, including any required paired control, and evaluate finance alongside all three standard task types. It tests the combination because separately observed gains need not add. Short runs provide triage evidence rather than proof of final superiority. If 150--350 hours cannot cover the intended contexts at measured hardware speeds, the number of arms or their allocations must change before launch. An early-curriculum checkpoint in one arm is not comparable to a completed curriculum in another.
+
+Generation, indexing, calibration, every routed prefill and failed allocations all contribute to cost. The reference prior, candidate heads and codecs, and grouped-query cache are runnable. The compact cell architecture and complete paired statistical runner still require implementation for their research comparisons.
+
+MoE, general sparse attention, adaptive priors and auxiliary objectives remain deferred. Query-only KV grouping is implemented and will be assessed within the existing architecture/confirmation allocation, without additional funding. Final training shares a 12,000-hour ceiling between 9,000 standard hours and 3,000 fraud hours; these are combined allowances rather than separate entitlements for each checkpoint.
+
+
+\clearpage
 \begin{thebibliography}{99}
 \small
 \bibitem{tabpfn} Hollmann et al. \emph{TabPFN: A Transformer That Solves Small Tabular Classification Problems in a Second}. ICLR 2023. Supplied \texttt{tabpfn.pdf}. \url{https://arxiv.org/abs/2207.01848}.

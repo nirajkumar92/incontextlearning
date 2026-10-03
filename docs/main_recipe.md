@@ -1,4 +1,6 @@
-# Main training recipe
+# Executable reference pilot and specialist training
+
+The [prior-selection recipe](prior_selection.md) is the current research recommendation. It specifies a stronger challenger and experiments to select the final bank. The new sampler is not yet integrated; the commands below retain the runnable reference-derived pilot.
 
 Use the **317,116,304-parameter dense candidate** for a protected standard checkpoint, then initialize a separate binary-fraud specialist from it. Both perform frozen-weight in-context prediction at deployment. The standard target is **64 million accepted episodes**; the finance target is **1.024 million macroepisodes**. Their final-training ceilings are **9,000 and 3,000 allocated GPU-hours**, respectively, within the existing 50,000-hour research program. These are concrete targets and budget limits, not measured MI355X throughput or established accuracy wins.
 
@@ -106,4 +108,4 @@ The measured config filenames above are outputs you prepare, not bundled final c
 
 Evaluate frozen checkpoints under fixed support, preprocessing, estimator and latency budgets. Standard binary, multiclass and regression results require separate reporting; compare against released models through their actual supported protocols. The pinned prior adapter alone does not reproduce an official model or establish a TabArena result.
 
-Finance evaluation uses chronological cutoffs, revealed history, natural future prevalence and full-history tuned LightGBM/CatBoost baselines alongside frozen TFMs and bounded-context controls. Report AP, review-budget precision/recall, probability scores, actual positives and time/entity uncertainty. Synthetic law tests establish correct sampling, not production fraud performance. No MI355X calibration or competitive pretrained checkpoint is supplied; the candidate is the recommended next recipe, with hardware-calibrated volume still to be set.
+Finance evaluation uses chronological cutoffs, revealed history, natural future prevalence and full-history tuned LightGBM/CatBoost baselines alongside frozen TFMs and bounded-context controls. Report AP, review-budget precision/recall, probability scores, actual positives and time/entity uncertainty. Synthetic law tests establish correct sampling, not production fraud performance. No MI355X calibration or competitive pretrained checkpoint is supplied; this is the executable pilot, with final prior selection and hardware-calibrated volume still unresolved.

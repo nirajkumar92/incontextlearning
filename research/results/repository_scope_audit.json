@@ -1616,6 +1616,70 @@
       "pdf_pages": 82,
       "documentation_correction": "Codec does not automatically detect or log query-code collisions.",
       "new_repository_files": []
+    },
+    {
+      "date": "2026-10-03",
+      "reason": "Proposed stronger standard prior, costed selection study, analytical diagnostics, clearer prose and six reviewed figures.",
+      "modified_files": [
+        "README.md",
+        "docs/implementation.md",
+        "docs/main_recipe.md",
+        "docs/prior_volume.md",
+        "docs/repository_scope.md",
+        "prior_bank_assessment.pdf",
+        "prior_bank_assessment.tex",
+        "research/README.md",
+        "research/results/code_validation.json",
+        "research/results/document_validation.json",
+        "research/results/repository_scope_audit.json",
+        "research/reviews/prior_literature.md",
+        "research/reviews/tabpfn_audit.md",
+        "research/specs/ablation_plan.csv",
+        "research/specs/prior_bank_spec.json"
+      ],
+      "new_repository_files": [
+        "docs/prior_selection.md",
+        "scripts/plan_prior_selection.py",
+        "tests/test_prior_selection_plan.py",
+        "tests/test_prior_information_analysis.py",
+        "research/probes/prior_information_analysis.py",
+        "research/results/prior_selection_plan.json",
+        "research/results/prior_information_analysis.json",
+        "research/reviews/prior_selection_evidence.md",
+        "research/specs/prior_selection_v1.json"
+      ],
+      "runtime_code_changed": false,
+      "research_code_added": true,
+      "validation": "research/results/document_validation.json:prior_selection_followup",
+      "tex_sha256": "4a72d9bb09ef0357c9c0a73486e6ca1b6b676cc75684e6d5edcd0f285eb507cf",
+      "pdf_sha256": "b92cdc827bb8917f10d79b8c806ca7e476ae0d1855426883c8dd3fc49dec016d",
+      "pdf_pages": 92,
+      "focused_tests_passed": 45,
+      "unchanged_runtime_hashes_verified": 52,
+      "new_files_rationale": {
+        "docs/prior_selection.md": "Readable selection and implementation guide",
+        "scripts/plan_prior_selection.py": "Deterministic unexecuted experiment and exposure planner",
+        "tests/test_prior_selection_plan.py": "Accounting and validation invariants",
+        "tests/test_prior_information_analysis.py": "Independent checks of mathematical diagnostics",
+        "research/probes/prior_information_analysis.py": "CPU information and coverage analysis",
+        "research/results/prior_selection_plan.json": "Exact proposed 40-run manifest",
+        "research/results/prior_information_analysis.json": "Compact executed CPU evidence",
+        "research/reviews/prior_selection_evidence.md": "Primary-source evidence and its limits",
+        "research/specs/prior_selection_v1.json": "Detailed proposed generator law and selection contract"
+      },
+      "temporary_drafts_renderings_logs": "Outside repository only",
+      "new_training_generators": "Specified, not implemented",
+      "source_hashes": {
+        "docs/prior_selection.md": "2cd0cab76fd9720ea8044e90b5a4017e277f9827008040ae0938b35a6ef7994e",
+        "scripts/plan_prior_selection.py": "c4618e99f00bb1716281a6eb3e35206e3e3635c35024d9863e0861edd39571a5",
+        "tests/test_prior_selection_plan.py": "23b73c59a4683b6fef83976e9d0b575eb56a1e285c739dbbf834e664bfa82c40",
+        "tests/test_prior_information_analysis.py": "14ab79dc316343a343e423d4e858fa0bf161a0b797a029a805d7cb44cfe6e798",
+        "research/probes/prior_information_analysis.py": "4cffcce3699f8bf37dcfb761031657a92b186e96b1ecf0af233f19202e88976f",
+        "research/results/prior_selection_plan.json": "c12cc4711741baf53ea2d0a3b98daf3b722b90d9ec355b07be042575f5e4ed97",
+        "research/results/prior_information_analysis.json": "de9469e89e8794ff8aefd2cbd2ce957d5fc89087000dfda6faeac17f4cd11da5",
+        "research/reviews/prior_selection_evidence.md": "4150cb294d911d50e4967e72e84bef74c3e7eea6d6b7477a5a5e58f9942565a9",
+        "research/specs/prior_selection_v1.json": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f"
+      }
     }
   ]
 }

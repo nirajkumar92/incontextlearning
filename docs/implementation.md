@@ -68,3 +68,7 @@ The primary training sequence protects the standard checkpoint and then trains a
 The repository contains the new prior controls, encoding/head/attention options, process producer, explicit continuation and volume planner. It does not supply competitive trained checkpoints, official full-model reproduction, MI355X throughput calibration, a completed broad benchmark run or production fraud validation. The standard adapter and real-data finance evaluation have different coverage obligations; keep their results separate.
 
 MoE, general sparse support graphs, feature-feedback training, auxiliary consistency, adaptive prior mixtures and real-data pretraining remain research branches. No production producer farm, FSDP or expert-parallel backend is claimed. Improvements to systems code must preserve deterministic consumption, finite populations, selection laws and accounting. See [training](training.md), [data/evaluation](data_and_evaluation.md) and the [audit](audit.md) for operational boundaries.
+
+## Proposed prior-selection program
+
+[prior_selection.md](prior_selection.md) specifies the new standard challenger and its costed trials. `scripts/plan_prior_selection.py` and `research/probes/prior_information_analysis.py` are implemented accounting/analysis tools. The new family versions, common observation wrapper and compact architecture are not integrated training components. Existing candidate configs keep their reference-pilot meaning.
