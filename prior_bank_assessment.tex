@@ -20,6 +20,7 @@
  pfnloss/.style={-{Latex[length=2.2mm]},thick,dashed,draw=pfnamber!90}
 }
 \usepackage{enumitem}
+\usepackage{needspace}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{listings}
@@ -85,7 +86,7 @@ The main recipe and its alternatives are distinguished throughout. A \emph{contr
 \subsection{Proposed model and training sequence}
 \label{sec:main-candidate}
 
-The model first represents individual cells, then forms row representations that can interact through labeled context. Two cell-encoding stages feed a 24-layer, width-1,024 row transformer. Categorical inputs use \texttt{hash\_bits}, ordinary regression uses 999 quantiles, and logarithmic length scaling adjusts attention with context size. The query path shares two KV heads, while support processing retains full-head attention.
+The model first represents individual cells, then forms row representations that can interact through labeled context. Two cell-encoding stages feed a 24-layer, width-1,024 row transformer. Categorical inputs use \texttt{hash\_bits}, ordinary regression uses 999 quantiles, and logarithmic length scaling adjusts attention with context size. The query path shares two KV heads, while support processing retains full-head attention. Section~\ref{sec:architecture-terms} explains these three architectural choices before their detailed specifications.
 
 The resulting model has \textbf{317,116,304 parameters}. This count includes an optional realized-loss head with a zero atom and a 1,025-bin positive density, reserved for a separate finance-regression experiment. The 94M model and released compact architectures provide lower-cost comparisons. Section~\ref{sec:compute} describes the experiments that will determine whether the additional capacity is useful.
 
@@ -98,6 +99,43 @@ The finance model begins with the standard checkpoint and continues training on 
 The optimizer follows the parameter partition in Section~\ref{sec:optimizer}: Muon updates hidden matrices and AdamW updates the remaining parameters. Weight decay is zero in the candidate, following the released TabICLv2 script, and .01 in the authored control. Auxiliary, contrastive and adaptive-mixture losses are disabled in the main run, so the initial comparison concerns the prior and representation under supervised prediction losses.
 
 The supplied \path{configs/candidate_standard.json} and \path{configs/candidate_fraud.json} configurations are bounded pilots. Section~\ref{sec:volume} specifies the proposed full task volumes and their throughput requirements; \path{docs/main_recipe.md} gives the run procedure.
+
+\subsection{Categorical inputs, regression outputs and query attention}
+\label{sec:architecture-terms}
+
+The three terms describe different parts of the predictor. Categorical hash bits specify how a category enters the network. The quantile head specifies what the network predicts for a numerical target. Shared query KV heads specify how an unlabeled row reads information from labeled support.
+
+\paragraph{Categorical hash-bit inputs.}
+A categorical value identifies a group, such as a merchant or product, without defining a numerical order. Assigning merchant IDs 1, 2 and 3 does not make the third merchant three times the first. The encoder therefore gives each category a deterministic bit pattern. For a fixed feature namespace and recoding seed, the same category receives the same pattern in support and query.
+
+The implementation takes 64 bits from a SHA-256 hash of the typed category key, feature identity and seed, then represents each bit by $-1$ or $+1$. For illustration, the four-bit pattern \texttt{1010} would become $(+1,-1,+1,-1)$; the actual representation has 64 coordinates. It appends support frequency, an unseen-category flag and a missing-value flag, giving 67 input coordinates. A learned linear projection converts these coordinates into the cell representation used by the transformer. Thus the hash is fixed, while the network learns how to use its output.
+
+This representation accommodates categories absent from pretraining without allocating a separate learned lookup entry to every possible ID. It also keeps each raw identity bit exactly representable in BF16, unlike nearby scalar codes that can become indistinguishable after rounding. The bit pattern itself carries no merchant semantics or target risk: those relationships must be inferred from the other features and labeled context. Hash collisions and information loss after the learned projection remain possible. Section~\ref{sec:codec} specifies the support-only collision checks, missing-category encoding and precision tests.
+
+\paragraph{A quantile regression head.}
+A prediction head is the final learned mapping from a query's hidden representation to its outputs. For classification, those outputs determine class probabilities. For regression, the selected head predicts conditional percentiles of the numerical target, given the query features and labeled support. The 0.5 quantile is a median; the 0.9 quantile is an upper percentile intended to place approximately 90\% of conditional outcomes at or below it, with the usual qualification for discrete distributions.
+
+For example, predicted 0.1, 0.5 and 0.9 quantiles of 20, 35 and 80 describe a median prediction of 35 and an intended central 80\% prediction interval from 20 to 80. This is an interval for an individual outcome, not a confidence interval for a fitted mean. Its actual coverage must be checked on held-out data. The model predicts 999 such values, at levels $\tau_k=k/1000$ for $k=1,\ldots,999$, through one shared network.
+
+Each output is trained with the asymmetric absolute-error loss called the \emph{pinball loss}. If $e=z-\widehat q_\tau$ is the difference between the support-standardized target and its predicted quantile, then
+\[
+ \rho_\tau(e)=
+ \begin{cases}
+  \tau e,& e\geq0,\\
+  (\tau-1)e,& e<0.
+ \end{cases}
+\]
+At $\tau=0.9$, an underestimate has nine times the penalty of an equally large overestimate. This asymmetry makes the population loss favor the requested percentile. Training averages the 999 losses on the raw outputs. Prediction transforms them back to the target's original units and sorts them to give an ordered quantile curve. The point prediction averages the grid, approximating a conditional mean; it is distinct from taking the median. A finite grid does not specify a complete density or resolve arbitrarily rare tails. Section~\ref{sec:heads} gives the head specification, its comparison with histogram outputs and a rare-tail counterexample.
+
+\paragraph{Shared query key/value heads.}
+Attention uses learned \emph{query} (Q), \emph{key} (K) and \emph{value} (V) vectors. In the row transformer's prediction path, an unlabeled row supplies Q, and labeled support rows supply K and V. Comparing Q with each K determines attention weights; the weighted combination of V supplies information from support. An attention head performs this operation in one learned subspace. Different query heads can assign different weights to the same support rows.
+
+The candidate retains 16 query heads but shares two sets of support K/V vectors among them. The first eight query heads use the first K/V head, and the remaining eight use the second. Their Q vectors are still distinct, so sharing K/V does not force their attention weights or outputs to be identical. The implementation first computes support self-attention with all 16 heads, then keeps the first two K/V heads in the cache used for queries. This is query-only grouped attention, applied consistently during training and inference.
+
+At fixed support size and head dimension, retaining two K/V heads instead of sixteen makes the persistent trunk K/V cache eight times smaller. It does not remove support rows, reduce the number of query heads, or make the complete model eight times faster. Support preparation still uses full-head attention, other caches and activations remain, and backend kernels determine the realized bandwidth benefit. It also changes the predictor relative to independent K/V heads, so predictive quality requires comparison. Section~\ref{sec:latency-moe} gives the exact cache sizes and latency protocol.
+
+\Needspace{4\baselineskip}
+These mechanisms are implemented in \path{codec.py}, \path{model.py} and \path{distributions.py}: the codec constructs category identities, the model projects inputs and produces quantiles and attention states, and the loss module evaluates pinball scores. Section~\ref{sec:code-map} locates these modules in the repository.
 
 \subsection{Scope of the empirical claims}
 
@@ -226,6 +264,7 @@ The review covers nineteen retained papers, supplemented by official repositorie
 
 Recent models usually change the generator, representation and training scale together. A stronger benchmark result therefore identifies a better system, but does not by itself identify the component responsible. The review below separates disclosed methods from system-level results so that the proposed comparisons can hold the relevant factors fixed.
 
+\Needspace{10\baselineskip}
 \subsection{Synthetic task distributions and their limits}
 
 \begin{longtable}{@{}p{0.17\linewidth}p{0.46\linewidth}p{0.30\linewidth}@{}}
@@ -941,7 +980,7 @@ Under an ideal random hash, a million keys have collision probability approximat
 
 The retained scalar-Fourier control makes the representational difference explicit. Its categorical vector starts with four channels: a deterministic random code in $[-1,1)$, support relative frequency, an unseen-in-support flag and a missing flag. Adding 32 learned Fourier pairs of the code gives 68 channels. The scalar code uses the first 53 SHA256 bits of a length-prefixed serialization of encoding seed, stable feature identity and type-tagged category value. It is a random identity representation rather than a language embedding.
 
-Collision handling is restricted to observed support keys. A collision redraws the encoding stream up to eight times, after which the episode fails explicitly. Query-code collisions are recorded as diagnostics but cannot change the encoding seed, support codes or task acceptance; unseen keys can therefore still have finite hash collisions. The same dictionary/hash rule applies to support and query values, including unseen queries. Missing categories receive zero payload/Fourier features together with their missing flag.
+Collision handling is restricted to observed support keys. A collision redraws the encoding stream up to eight times, after which the episode fails explicitly. The current codec does not detect or log query-code collisions; query values cannot change the encoding seed, support codes or task acceptance. Unseen keys can therefore still have finite hash collisions. The same dictionary/hash rule applies to support and query values, including unseen queries. Missing categories receive zero payload/Fourier features together with their missing flag.
 
 The reference codec computes codes, normalization/ranks, Fourier phases and trigonometric features in FP64, then casts completed vectors to FP32 before BF16 projection. An FP32 codec fast path requires independent validation. The audit includes collisions after casting on fixed inputs, because distinct source hashes alone do not establish distinct numerical representations.
 
@@ -1380,6 +1419,7 @@ The optional queue adapter below would make up to eight attempts within the orig
 
 Thus \texttt{validity\_only} acceptance in the authored control and the native teacher filter in R define different training laws. The optional adaptive policy in Section~\ref{sec:adaptive-training} changes future sampling weights using independent calibration worlds. It does not add an easy/medium/hard acceptance mixture to the base sampler.
 
+\Needspace{7\baselineskip}
 \begin{lstlisting}
 for request_id in deterministic_request_stream:
     spec = sample_family_shape_task(request_id)

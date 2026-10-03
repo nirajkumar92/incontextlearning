@@ -1599,6 +1599,23 @@
           "reason": "Regenerated Finder metadata"
         }
       ]
+    },
+    {
+      "date": "2026-10-03",
+      "reason": "Introductory explanations of categorical hash-bit inputs, quantile regression and query-only KV sharing; examples, loss definition and implementation references added.",
+      "modified_files": [
+        "prior_bank_assessment.tex",
+        "prior_bank_assessment.pdf",
+        "docs/repository_scope.md",
+        "research/results/document_validation.json"
+      ],
+      "code_changed": false,
+      "validation": "research/results/document_validation.json:architecture_terms_followup",
+      "tex_sha256": "632a83ce99aabc993cbbcf1b7e21d89f8077bd9028f1c8fa1c81d9c36c6ec199",
+      "pdf_sha256": "99ef6d47a5f6887999e2f2edda85f05b01f35f1bb23f40903ca6a85b8b5bed4a",
+      "pdf_pages": 82,
+      "documentation_correction": "Codec does not automatically detect or log query-code collisions.",
+      "new_repository_files": []
     }
   ]
 }
