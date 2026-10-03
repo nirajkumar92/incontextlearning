@@ -1,6 +1,6 @@
 {
   "source": "prior_bank_assessment.tex",
-  "sha256": "2fdf6099a2546de3bc80a09ce20524651d6543a8af0cdc138f634a594716e309",
+  "sha256": "760c3836f9b740b4c4cdefb72772c97bb2fb64c8677bc24e1dec4d5d7a81754a",
   "resolved_citation_keys": 59,
   "bibliography_entries": 59,
   "ablation_rows": 28,
@@ -14,21 +14,22 @@
   "native_compile": "success",
   "competitive_performance": "not evaluated",
   "date": "2026-10-03",
-  "revision": "Executable Q prior-selection recipe, persistent-cell comparator, exact code map and launch/evaluation workflow; earlier controls preserved.",
+  "revision": "Section-by-section prose rewrite; starting 317M architecture and separate 41M comparator introduced early; reference priors and deferred experiments moved to appendices.",
   "native_compiler": "Codex desktop compile_latex_document",
   "pdf_export_engine": "Tectonic 0.17.0",
   "pdf": "prior_bank_assessment.pdf",
   "pdf_pages": 95,
-  "pdf_sha256": "67f11cf81a7c5ec780b14af074a5d503b89b2f53c3936ffa361de0e309ffdb8d",
+  "pdf_sha256": "281cb93e96f846833eebf2028ce266a65ea553db6c17b0330ea20f26fa8ab012",
   "source_is_standalone": true,
-  "inline_tikz_figures": 6,
+  "inline_tikz_figures": 7,
   "figure_pages": {
-    "1": 8,
-    "2": 24,
-    "3": 29,
-    "4": 44,
-    "5": 47,
-    "6": 65
+    "1": 6,
+    "2": 8,
+    "3": 25,
+    "4": 29,
+    "5": 35,
+    "6": 48,
+    "7": 74
   },
   "overfull_box_count": 0,
   "missing_character_warnings": 0,
@@ -36,19 +37,121 @@
   "visual_layout_inspection": {
     "all_pages_contact_sheets": true,
     "page_count": 95,
-    "all_six_figures_inspected_at_full_resolution": true,
+    "all_seven_figures_inspected_at_full_resolution": true,
     "overlaps_or_clipping_found_after_repair": false,
-    "independent_internal_figure_review": "All six full-resolution figures independently inspected; final Figure6 Q labels and updated operations pages rechecked by root.",
-    "additional_full_resolution_pages": [
-      65
+    "independent_review": "Two independent reviewers checked all seven figure pages and the first 72 pages; root checked the remaining pages and final repaired contents, opening narrative and Figures 1 and 2.",
+    "repairs": [
+      "Break three overflowing prose lines without changing formulas or settings",
+      "Keep the Bayesian example together below its figure",
+      "Fit contents into two pages",
+      "Remove a long filename from the architecture caption to avoid stretched spaces"
     ]
   },
-  "runtime_code_changed": true,
+  "editorial_review": {
+    "scope": "Every main section and appendix; purpose before mechanism, current method before historical controls, code status distinguished from proposed experiments.",
+    "architecture_checked_against_implementation": true,
+    "clarifications": [
+      "317,116,304-parameter base is the starting configuration, not an experimentally selected winner",
+      "41,089,248-parameter persistent_small is a separate model, not an ensemble branch",
+      "Column blocks and within-row blocks are counted per stage",
+      "16 support heads apply to the trunk; frontend blocks use eight",
+      "Persistent cells remain until the final readout despite intermediate inducing and summary tokens",
+      "Current Q and earlier R/P1 configurations are distinguished",
+      "The 0.01 weight-decay control differs from both current and reference-pilot zero-decay configurations",
+      "The paired evaluator implements its specified confirmation rule; official cross-suite and wider finance inference remain separate"
+    ],
+    "structure": [
+      "Prediction problem and architecture overview",
+      "Bayesian interpretation",
+      "Previous work",
+      "Research hypotheses",
+      "Current standard prior Q",
+      "Finite-population finance prior",
+      "Architecture specification and comparator",
+      "Context selection and caching",
+      "Training",
+      "Scaling and budget",
+      "Evaluation",
+      "Implementation and validation",
+      "Appendix: earlier priors",
+      "Appendix: deferred methods",
+      "Appendix: earlier allocation"
+    ]
+  },
+  "detail_preservation": {
+    "display_math": {
+      "original": 60,
+      "revised": 60,
+      "removed_count": 0,
+      "added_count": 0
+    },
+    "inline_math": {
+      "original": 1003,
+      "revised": 1019,
+      "removed_count": 6,
+      "added_count": 22,
+      "removed": [
+        "$K$",
+        "$Y=0$",
+        "$z$",
+        "$C_c$",
+        "$\\times$",
+        "$\\times$"
+      ]
+    },
+    "tikz": {
+      "original": 6,
+      "revised": 7,
+      "removed_count": 0,
+      "added_count": 1
+    },
+    "listings": {
+      "original": 6,
+      "revised": 6,
+      "removed_count": 0,
+      "added_count": 0
+    },
+    "labels": {
+      "original": 57,
+      "revised": 60,
+      "removed_count": 0,
+      "added_count": 3
+    },
+    "citations": {
+      "original": 76,
+      "revised": 76,
+      "removed_count": 0,
+      "added_count": 0
+    },
+    "paths": {
+      "original": 95,
+      "revised": 98,
+      "removed_count": 0,
+      "added_count": 3
+    },
+    "urls": {
+      "original": 59,
+      "revised": 59,
+      "removed_count": 0,
+      "added_count": 0
+    },
+    "bibliography_identical": true,
+    "original_sha256": "2fdf6099a2546de3bc80a09ce20524651d6543a8af0cdc138f634a594716e309",
+    "revised_sha256": "760c3836f9b740b4c4cdefb72772c97bb2fb64c8677bc24e1dec4d5d7a81754a"
+  },
+  "inline_math_review": "Six fewer repeated one-symbol expressions: K, Y=0, z, C_c and two multiplication signs. Their meanings are retained in prose, definitions or formulas. No display equation, code listing, citation, original diagram or linked path was removed.",
+  "runtime_code_changed": false,
+  "implementation_files_hash_verified": 76,
+  "implementation_files_changed": [],
   "latest_code_test_record": "research/results/selection_implementation_validation.json",
   "latest_code_tests_passed": 354,
+  "test_scope": "The existing 354-test run remains applicable to the byte-identical implementation; no model training or tests were rerun for prose edits.",
+  "foundation_model_pretraining_performed": false,
+  "competitor_benchmark_performed": false,
+  "gpu_latency_measured": false,
   "previous_revision": {
     "source": "prior_bank_assessment.tex",
-    "sha256": "4a72d9bb09ef0357c9c0a73486e6ca1b6b676cc75684e6d5edcd0f285eb507cf",
+    "sha256": "2fdf6099a2546de3bc80a09ce20524651d6543a8af0cdc138f634a594716e309",
     "resolved_citation_keys": 59,
     "bibliography_entries": 59,
     "ablation_rows": 28,
@@ -62,12 +165,12 @@
     "native_compile": "success",
     "competitive_performance": "not evaluated",
     "date": "2026-10-03",
-    "revision": "Specified broader prior challenger and costed selection program; simplified research narrative; redesigned five schematics and added exact analytical figure.",
+    "revision": "Executable Q prior-selection recipe, persistent-cell comparator, exact code map and launch/evaluation workflow; earlier controls preserved.",
     "native_compiler": "Codex desktop compile_latex_document",
     "pdf_export_engine": "Tectonic 0.17.0",
     "pdf": "prior_bank_assessment.pdf",
-    "pdf_pages": 92,
-    "pdf_sha256": "b92cdc827bb8917f10d79b8c806ca7e476ae0d1855426883c8dd3fc49dec016d",
+    "pdf_pages": 95,
+    "pdf_sha256": "67f11cf81a7c5ec780b14af074a5d503b89b2f53c3936ffa361de0e309ffdb8d",
     "source_is_standalone": true,
     "inline_tikz_figures": 6,
     "figure_pages": {
@@ -75,273 +178,322 @@
       "2": 24,
       "3": 29,
       "4": 44,
-      "5": 46,
-      "6": 64
+      "5": 47,
+      "6": 65
     },
     "overfull_box_count": 0,
     "missing_character_warnings": 0,
     "extracted_replacement_characters": 0,
     "visual_layout_inspection": {
       "all_pages_contact_sheets": true,
-      "page_count": 92,
+      "page_count": 95,
       "all_six_figures_inspected_at_full_resolution": true,
       "overlaps_or_clipping_found_after_repair": false,
-      "independent_internal_figure_review": "All six figure pages and all 92 pages reviewed after figure repairs. Final paragraph-width change leaves zero overfull warnings.",
-      "repairs": [
-        "Separate plot axis titles from tick labels; remove overlapping internal annotations",
-        "Reserve heading and note space in finance, architecture and training panels",
-        "Route architecture arrows around headings",
-        "Protect finance arrow labels with white backgrounds",
-        "Use explicit line breaks and shorter diagram labels without dropping scientific content"
+      "independent_internal_figure_review": "All six full-resolution figures independently inspected; final Figure6 Q labels and updated operations pages rechecked by root.",
+      "additional_full_resolution_pages": [
+        65
       ]
     },
-    "explanatory_content": [
-      "Prior, latent world, table, episode and learned weights",
-      "Beta-Bernoulli posterior predictive example",
-      "Population target objective and amortized Bayesian inference",
-      "Contract-conditioned acceptance law",
-      "Native R, hierarchical P1 and finite-population finance generation",
-      "Model masks, representations and caches",
-      "Protected standard checkpoint and synthetic specialist continuation",
-      "Per-stage expected R/P1 and finance counts",
-      "Categorical hash-bit identity example and learned projection",
-      "Conditional quantile example, pinball loss and interval interpretation",
-      "Q/K/V roles, grouped query heads and cache-versus-latency distinction",
-      "Broader five-component prior and independent observation process",
-      "Selection allocation, equal-dataset objective and lineage-based uncertainty",
-      "Exact finite-context information and coverage diagnostics"
-    ],
-    "prose_review": "New selection section follows evidence, proposed distribution, generation, analytical checks, experimental selection and implementation status. Twelve independently reviewed revisions simplify the abstract and prose across the introduction, literature, hypotheses, missingness, finance, schedule, volumes and audit. Their math, numeric tokens, citations and paths were checked. Earlier full-prose preservation audit is retained under its original scope.",
-    "document_corrections": [
-      "Native R retains its released predictability filter",
-      "Finance hard-label explanation applies to covariate-first worlds",
-      "Initialization-only gradient probe no longer described as learning",
-      "Removed unsupported claim that the codec automatically records query-code collision diagnostics"
-    ],
-    "latest_code_test_record": "research/results/code_validation.json:prior_selection_followup",
-    "latest_code_tests_passed": 45,
-    "code_changed_in_document_revision": true,
-    "source_files_verified": 52,
-    "changed_since_200_test_run": [],
-    "local_markdown_links_checked": 47,
-    "broken_links": [],
-    "foundation_model_pretraining_performed": false,
-    "competitor_benchmark_performed": false,
-    "gpu_latency_measured": false,
-    "detail_preservation": {
-      "baseline_sha256": "3a3d8c0fce012069cda55bbeb4ccf3efcd67ec46c3e5b98e5902564f752b811e",
-      "protected_content": {
-        "display_math": {
-          "original_count": 50,
-          "revised_count": 50,
-          "removed": 0,
-          "added_count": 0
-        },
-        "inline_math": {
-          "original_count": 847,
-          "revised_count": 848,
-          "removed": 0,
-          "added_count": 1,
-          "added": [
-            "$U(.01,.20)$"
-          ]
-        },
-        "figures": {
-          "original_count": 5,
-          "revised_count": 5,
-          "removed": 0,
-          "added_count": 0
-        },
-        "tables": {
-          "original_count": 13,
-          "revised_count": 13,
-          "removed": 0,
-          "added_count": 0
-        },
-        "listings": {
-          "original_count": 5,
-          "revised_count": 5,
-          "removed": 0,
-          "added_count": 0
-        },
-        "paths": {
-          "original_count": 69,
-          "revised_count": 69,
-          "removed": 0,
-          "added_count": 0
-        },
-        "labels": {
-          "original_count": 51,
-          "revised_count": 51,
-          "removed": 0,
-          "added_count": 0
-        },
-        "citations": {
-          "original_count": 71,
-          "revised_count": 71,
-          "removed": 0,
-          "added_count": 0
-        },
-        "urls": {
-          "original_count": 63,
-          "revised_count": 63,
-          "removed": 0,
-          "added_count": 0
-        },
-        "numbers": {
-          "original_count": 2077,
-          "revised_count": 2083,
-          "removed": 0,
-          "added_count": 6,
-          "added": [
-            "90",
-            "64",
-            "30",
-            "01,.20",
-            "1.402",
-            "897,454"
-          ]
-        },
-        "headings": {
-          "original_count": 114,
-          "revised_count": 114,
-          "removed": 0,
-          "added_count": 0
-        },
-        "literal_code": {
-          "original_count": 81,
-          "revised_count": 81,
-          "removed": 0,
-          "added_count": 0
-        },
-        "references": {
-          "original_count": 49,
-          "revised_count": 49,
-          "removed": 0,
-          "added_count": 0
-        },
-        "tabular_blocks": {
-          "original_count": 9,
-          "revised_count": 9,
-          "removed": 0,
-          "added_count": 0
-        }
-      },
-      "bibliography_unchanged": true,
-      "source_files_verified": 52,
-      "changed_since_200_test_run": [],
-      "validated_revision_sha256": "e00dc7bcd08772c94993fc58e22befc09bbc41b8dd67103f5c128ce6e9a2b81c",
-      "record_scope": "Preservation audit for the preceding full prose rewrite; the subsequent explanatory addition is recorded separately."
-    },
-    "missing_feature_verification": {
-      "existing_focused_tests_passed": 9,
-      "warnings_as_errors": true,
-      "test_scope": [
-        "tests/test_model.py::test_codec_reservoir_nominal_and_nonfinite_contract",
-        "tests/test_candidate_representation.py::test_hash_bits_have_stable_typed_identity_missingness_and_support_only_counts",
-        "tests/test_finance_prior.py::FinancePriorTests::test_missingness_keeps_reserved_decision_features_observable",
-        "tests/test_inference_audit.py",
-        "tests/test_static_prior.py::StaticPriorTests::test_categorical_codes_are_nominal_and_missing_values_are_explicit"
-      ],
-      "scope": "Explicit numerical and nominal missingness encoding, safe inference and synthetic masking; verifies implementation, not trained robustness. These are existing tests, not nine additions to the 200-test suite.",
-      "standard_prior_gap": "Native R has no deliberate NaN corruption; P1 has a 0.3 mask-enabled probability. Eligibility-weighted expectation is approximately 1.402% mask-enabled standard tasks. Finance has structured missingness in a separate continuation."
-    },
-    "architecture_terms_followup": {
-      "section": "1.2",
-      "purpose": "Explain the meaning, mechanism, examples and limits of the three architecture terms before their full implementation specifications.",
-      "concepts": [
-        "Fixed 64-bit categorical identity plus three metadata channels and learned projection",
-        "999 conditional quantiles, pinball loss, sorting and approximate mean",
-        "16 query heads sharing two support KV heads, with full-head support preparation"
-      ],
-      "code_review": "Independently compared with codec.py, model.py and distributions.py; no changes to implementation or configuration.",
-      "preservation": {
-        "figures": {
-          "preserved": 5,
-          "added": 0
-        },
-        "tables": {
-          "preserved": 13,
-          "added": 0
-        },
-        "listings": {
-          "preserved": 5,
-          "added": 0
-        },
-        "old_inline_math": {
-          "preserved": 848,
-          "added": 7
-        },
-        "old_display_math": {
-          "preserved": 50,
-          "added": 1
-        }
-      },
-      "correction": "The codec checks collisions among support keys but does not automatically detect or log query-code collisions.",
-      "compile": "success",
-      "pdf_pages": 82,
-      "spacing_repairs": [
-        "Keep the subsection heading with the opening literature table",
-        "Keep the opening pseudocode lines together",
-        "Keep the code-pointer paragraph together"
-      ]
-    },
-    "previous_explanatory_revision": {
-      "sha256": "632a83ce99aabc993cbbcf1b7e21d89f8077bd9028f1c8fa1c81d9c36c6ec199",
-      "revision": "Full research narrative with an introductory explanation of categorical hash-bit inputs, quantile regression and query-only KV sharing; quantitative recipe unchanged.",
-      "pdf_pages": 82,
-      "pdf_sha256": "99ef6d47a5f6887999e2f2edda85f05b01f35f1bb23f40903ca6a85b8b5bed4a",
-      "inline_tikz_figures": 5,
+    "runtime_code_changed": true,
+    "latest_code_test_record": "research/results/selection_implementation_validation.json",
+    "latest_code_tests_passed": 354,
+    "previous_revision": {
+      "source": "prior_bank_assessment.tex",
+      "sha256": "4a72d9bb09ef0357c9c0a73486e6ca1b6b676cc75684e6d5edcd0f285eb507cf",
+      "resolved_citation_keys": 59,
+      "bibliography_entries": 59,
+      "ablation_rows": 28,
+      "retained_source_hashes_verified": 19,
+      "selected_specs_and_budget": "passed",
+      "screening_and_bridge_budget_arithmetic": "passed",
+      "candidate_config_volume_consistency": "passed",
+      "pinned_reference_files_verified": 35,
+      "internal_references_and_environment_nesting": "passed",
+      "target_fraud_rate": 0.0001,
+      "native_compile": "success",
+      "competitive_performance": "not evaluated",
+      "date": "2026-10-03",
+      "revision": "Specified broader prior challenger and costed selection program; simplified research narrative; redesigned five schematics and added exact analytical figure.",
+      "native_compiler": "Codex desktop compile_latex_document",
+      "pdf_export_engine": "Tectonic 0.17.0",
+      "pdf": "prior_bank_assessment.pdf",
+      "pdf_pages": 92,
+      "pdf_sha256": "b92cdc827bb8917f10d79b8c806ca7e476ae0d1855426883c8dd3fc49dec016d",
+      "source_is_standalone": true,
+      "inline_tikz_figures": 6,
       "figure_pages": {
         "1": 8,
-        "2": 20,
-        "3": 35,
-        "4": 37,
-        "5": 55
+        "2": 24,
+        "3": 29,
+        "4": 44,
+        "5": 46,
+        "6": 64
       },
+      "overfull_box_count": 0,
+      "missing_character_warnings": 0,
+      "extracted_replacement_characters": 0,
       "visual_layout_inspection": {
         "all_pages_contact_sheets": true,
-        "page_count": 82,
-        "all_five_figures_inspected_at_full_resolution": true,
-        "additional_full_resolution_pages": [
-          5,
-          6,
-          7,
-          11,
-          57
-        ],
+        "page_count": 92,
+        "all_six_figures_inspected_at_full_resolution": true,
         "overlaps_or_clipping_found_after_repair": false,
-        "independent_internal_figure_review": "All five figure pages and all 82 pages rechecked after final spacing repairs; no overlaps, clipping or orphaned major content."
+        "independent_internal_figure_review": "All six figure pages and all 92 pages reviewed after figure repairs. Final paragraph-width change leaves zero overfull warnings.",
+        "repairs": [
+          "Separate plot axis titles from tick labels; remove overlapping internal annotations",
+          "Reserve heading and note space in finance, architecture and training panels",
+          "Route architecture arrows around headings",
+          "Protect finance arrow labels with white backgrounds",
+          "Use explicit line breaks and shorter diagram labels without dropping scientific content"
+        ]
       },
-      "prose_review": "388 narrative passages/items rewritten across background, priors, architecture, training, compute and evaluation; selected method introduced before controls, rationale before operations, and implemented versus proposed versus measured claims distinguished. Independent semantic reviews corrected acceptance-law attribution, feedback-state wording, KL direction, funded status and prospective TALENT/feedback validation.",
-      "latest_code_test_record": "research/results/code_validation.json:reference_derived_candidate_followup",
-      "latest_code_tests_passed": 200,
-      "code_changed_in_document_revision": false
-    },
-    "new_research_tests_passed": 45,
-    "old_source_hashes_reverified": 52,
-    "runtime_source_changes": [],
-    "local_links_checked": 47,
-    "new_plan_spec_sha256": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f",
-    "new_plan_run_count": 40,
-    "latest_test_scope": "Focused planner, information-diagnostic, volume and compute tests: 26 new plus 19 existing. The earlier 200-test runtime suite was not repeated.",
-    "runtime_code_changed": false,
-    "prior_selection_followup": {
-      "spec": "research/specs/prior_selection_v1.json",
-      "spec_sha256": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f",
-      "proposed_runs": 40,
-      "completed_runs": 0,
-      "screening_gpu_hour_ceiling": 15000,
-      "project_gpu_hour_ceiling": 50000,
-      "new_generator_status": "specified_not_implemented",
-      "architecture_comparator_status": "compact persistent-cell comparator specified, not implemented",
-      "selection_objective": "Equal-dataset improvement within task type; equal task-type mean; paired lineage bootstrap for uncertainty",
-      "cpu_diagnostics": "Exact and Monte Carlo checks of hierarchical shrinkage, occupancy, coarsening and parity; not neural benchmark results",
-      "measurement_limits": [
-        "No foundation-model pretraining",
-        "No competitor benchmark execution",
-        "No GPU latency measurement"
-      ]
+      "explanatory_content": [
+        "Prior, latent world, table, episode and learned weights",
+        "Beta-Bernoulli posterior predictive example",
+        "Population target objective and amortized Bayesian inference",
+        "Contract-conditioned acceptance law",
+        "Native R, hierarchical P1 and finite-population finance generation",
+        "Model masks, representations and caches",
+        "Protected standard checkpoint and synthetic specialist continuation",
+        "Per-stage expected R/P1 and finance counts",
+        "Categorical hash-bit identity example and learned projection",
+        "Conditional quantile example, pinball loss and interval interpretation",
+        "Q/K/V roles, grouped query heads and cache-versus-latency distinction",
+        "Broader five-component prior and independent observation process",
+        "Selection allocation, equal-dataset objective and lineage-based uncertainty",
+        "Exact finite-context information and coverage diagnostics"
+      ],
+      "prose_review": "New selection section follows evidence, proposed distribution, generation, analytical checks, experimental selection and implementation status. Twelve independently reviewed revisions simplify the abstract and prose across the introduction, literature, hypotheses, missingness, finance, schedule, volumes and audit. Their math, numeric tokens, citations and paths were checked. Earlier full-prose preservation audit is retained under its original scope.",
+      "document_corrections": [
+        "Native R retains its released predictability filter",
+        "Finance hard-label explanation applies to covariate-first worlds",
+        "Initialization-only gradient probe no longer described as learning",
+        "Removed unsupported claim that the codec automatically records query-code collision diagnostics"
+      ],
+      "latest_code_test_record": "research/results/code_validation.json:prior_selection_followup",
+      "latest_code_tests_passed": 45,
+      "code_changed_in_document_revision": true,
+      "source_files_verified": 52,
+      "changed_since_200_test_run": [],
+      "local_markdown_links_checked": 47,
+      "broken_links": [],
+      "foundation_model_pretraining_performed": false,
+      "competitor_benchmark_performed": false,
+      "gpu_latency_measured": false,
+      "detail_preservation": {
+        "baseline_sha256": "3a3d8c0fce012069cda55bbeb4ccf3efcd67ec46c3e5b98e5902564f752b811e",
+        "protected_content": {
+          "display_math": {
+            "original_count": 50,
+            "revised_count": 50,
+            "removed": 0,
+            "added_count": 0
+          },
+          "inline_math": {
+            "original_count": 847,
+            "revised_count": 848,
+            "removed": 0,
+            "added_count": 1,
+            "added": [
+              "$U(.01,.20)$"
+            ]
+          },
+          "figures": {
+            "original_count": 5,
+            "revised_count": 5,
+            "removed": 0,
+            "added_count": 0
+          },
+          "tables": {
+            "original_count": 13,
+            "revised_count": 13,
+            "removed": 0,
+            "added_count": 0
+          },
+          "listings": {
+            "original_count": 5,
+            "revised_count": 5,
+            "removed": 0,
+            "added_count": 0
+          },
+          "paths": {
+            "original_count": 69,
+            "revised_count": 69,
+            "removed": 0,
+            "added_count": 0
+          },
+          "labels": {
+            "original_count": 51,
+            "revised_count": 51,
+            "removed": 0,
+            "added_count": 0
+          },
+          "citations": {
+            "original_count": 71,
+            "revised_count": 71,
+            "removed": 0,
+            "added_count": 0
+          },
+          "urls": {
+            "original_count": 63,
+            "revised_count": 63,
+            "removed": 0,
+            "added_count": 0
+          },
+          "numbers": {
+            "original_count": 2077,
+            "revised_count": 2083,
+            "removed": 0,
+            "added_count": 6,
+            "added": [
+              "90",
+              "64",
+              "30",
+              "01,.20",
+              "1.402",
+              "897,454"
+            ]
+          },
+          "headings": {
+            "original_count": 114,
+            "revised_count": 114,
+            "removed": 0,
+            "added_count": 0
+          },
+          "literal_code": {
+            "original_count": 81,
+            "revised_count": 81,
+            "removed": 0,
+            "added_count": 0
+          },
+          "references": {
+            "original_count": 49,
+            "revised_count": 49,
+            "removed": 0,
+            "added_count": 0
+          },
+          "tabular_blocks": {
+            "original_count": 9,
+            "revised_count": 9,
+            "removed": 0,
+            "added_count": 0
+          }
+        },
+        "bibliography_unchanged": true,
+        "source_files_verified": 52,
+        "changed_since_200_test_run": [],
+        "validated_revision_sha256": "e00dc7bcd08772c94993fc58e22befc09bbc41b8dd67103f5c128ce6e9a2b81c",
+        "record_scope": "Preservation audit for the preceding full prose rewrite; the subsequent explanatory addition is recorded separately."
+      },
+      "missing_feature_verification": {
+        "existing_focused_tests_passed": 9,
+        "warnings_as_errors": true,
+        "test_scope": [
+          "tests/test_model.py::test_codec_reservoir_nominal_and_nonfinite_contract",
+          "tests/test_candidate_representation.py::test_hash_bits_have_stable_typed_identity_missingness_and_support_only_counts",
+          "tests/test_finance_prior.py::FinancePriorTests::test_missingness_keeps_reserved_decision_features_observable",
+          "tests/test_inference_audit.py",
+          "tests/test_static_prior.py::StaticPriorTests::test_categorical_codes_are_nominal_and_missing_values_are_explicit"
+        ],
+        "scope": "Explicit numerical and nominal missingness encoding, safe inference and synthetic masking; verifies implementation, not trained robustness. These are existing tests, not nine additions to the 200-test suite.",
+        "standard_prior_gap": "Native R has no deliberate NaN corruption; P1 has a 0.3 mask-enabled probability. Eligibility-weighted expectation is approximately 1.402% mask-enabled standard tasks. Finance has structured missingness in a separate continuation."
+      },
+      "architecture_terms_followup": {
+        "section": "1.2",
+        "purpose": "Explain the meaning, mechanism, examples and limits of the three architecture terms before their full implementation specifications.",
+        "concepts": [
+          "Fixed 64-bit categorical identity plus three metadata channels and learned projection",
+          "999 conditional quantiles, pinball loss, sorting and approximate mean",
+          "16 query heads sharing two support KV heads, with full-head support preparation"
+        ],
+        "code_review": "Independently compared with codec.py, model.py and distributions.py; no changes to implementation or configuration.",
+        "preservation": {
+          "figures": {
+            "preserved": 5,
+            "added": 0
+          },
+          "tables": {
+            "preserved": 13,
+            "added": 0
+          },
+          "listings": {
+            "preserved": 5,
+            "added": 0
+          },
+          "old_inline_math": {
+            "preserved": 848,
+            "added": 7
+          },
+          "old_display_math": {
+            "preserved": 50,
+            "added": 1
+          }
+        },
+        "correction": "The codec checks collisions among support keys but does not automatically detect or log query-code collisions.",
+        "compile": "success",
+        "pdf_pages": 82,
+        "spacing_repairs": [
+          "Keep the subsection heading with the opening literature table",
+          "Keep the opening pseudocode lines together",
+          "Keep the code-pointer paragraph together"
+        ]
+      },
+      "previous_explanatory_revision": {
+        "sha256": "632a83ce99aabc993cbbcf1b7e21d89f8077bd9028f1c8fa1c81d9c36c6ec199",
+        "revision": "Full research narrative with an introductory explanation of categorical hash-bit inputs, quantile regression and query-only KV sharing; quantitative recipe unchanged.",
+        "pdf_pages": 82,
+        "pdf_sha256": "99ef6d47a5f6887999e2f2edda85f05b01f35f1bb23f40903ca6a85b8b5bed4a",
+        "inline_tikz_figures": 5,
+        "figure_pages": {
+          "1": 8,
+          "2": 20,
+          "3": 35,
+          "4": 37,
+          "5": 55
+        },
+        "visual_layout_inspection": {
+          "all_pages_contact_sheets": true,
+          "page_count": 82,
+          "all_five_figures_inspected_at_full_resolution": true,
+          "additional_full_resolution_pages": [
+            5,
+            6,
+            7,
+            11,
+            57
+          ],
+          "overlaps_or_clipping_found_after_repair": false,
+          "independent_internal_figure_review": "All five figure pages and all 82 pages rechecked after final spacing repairs; no overlaps, clipping or orphaned major content."
+        },
+        "prose_review": "388 narrative passages/items rewritten across background, priors, architecture, training, compute and evaluation; selected method introduced before controls, rationale before operations, and implemented versus proposed versus measured claims distinguished. Independent semantic reviews corrected acceptance-law attribution, feedback-state wording, KL direction, funded status and prospective TALENT/feedback validation.",
+        "latest_code_test_record": "research/results/code_validation.json:reference_derived_candidate_followup",
+        "latest_code_tests_passed": 200,
+        "code_changed_in_document_revision": false
+      },
+      "new_research_tests_passed": 45,
+      "old_source_hashes_reverified": 52,
+      "runtime_source_changes": [],
+      "local_links_checked": 47,
+      "new_plan_spec_sha256": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f",
+      "new_plan_run_count": 40,
+      "latest_test_scope": "Focused planner, information-diagnostic, volume and compute tests: 26 new plus 19 existing. The earlier 200-test runtime suite was not repeated.",
+      "runtime_code_changed": false,
+      "prior_selection_followup": {
+        "spec": "research/specs/prior_selection_v1.json",
+        "spec_sha256": "21d9097a12c6493f3bd1645fb2811b9d5f15b60c175632ab566463cf8dadec6f",
+        "proposed_runs": 40,
+        "completed_runs": 0,
+        "screening_gpu_hour_ceiling": 15000,
+        "project_gpu_hour_ceiling": 50000,
+        "new_generator_status": "specified_not_implemented",
+        "architecture_comparator_status": "compact persistent-cell comparator specified, not implemented",
+        "selection_objective": "Equal-dataset improvement within task type; equal task-type mean; paired lineage bootstrap for uncertainty",
+        "cpu_diagnostics": "Exact and Monte Carlo checks of hierarchical shrinkage, occupancy, coarsening and parity; not neural benchmark results",
+        "measurement_limits": [
+          "No foundation-model pretraining",
+          "No competitor benchmark execution",
+          "No GPU latency measurement"
+        ]
+      }
     }
   }
 }
